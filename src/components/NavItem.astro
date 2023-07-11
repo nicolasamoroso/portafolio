@@ -4,11 +4,13 @@ export interface Props {
 }
 
 const { href } = Astro.props;
-const currentPath = Astro.url.pathname;
+
+const { pathname } = Astro.url;
+const isActive = href === pathname || href === pathname.replace(/\/$/, "");
 ---
 
 <li>
-  <a href={href} class={currentPath === href + "/" ? "font-medium" : undefined}>
+  <a href={href} class={isActive ? "font-medium" : undefined}>
     <slot />
   </a>
 </li>
