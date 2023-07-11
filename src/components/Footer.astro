@@ -1,0 +1,38 @@
+---
+const currentPath = Astro.url.pathname;
+import ContactArrow from "./ContactArrow.astro";
+---
+
+<footer
+  class="relative z-50 min-h[15rem] mt-[15vh] border-t border-gray-300 flex-grow-0"
+>
+  <section class="max-w-[1000px] m-auto px-10">
+    <div
+      class=`flex items-center ${currentPath !== "/contact" ? 'justify-between' : 'justify-end'} md:my-[1rem]`
+    >
+      {
+        currentPath !== "/contact" ? (
+          <a
+            href="/contact"
+            class="flex text-lg select-none items-center gap-3 font-semibold hover:underline"
+          >
+            Get in touch
+            <ContactArrow />
+          </a>
+        ) : null
+      }
+      <div class="flex flex-col xs:flex-row gap-3">
+        <a
+          href="https://www.linkedin.com/in/nicolas-amoroso/"
+          target="_blank"
+          class="text-lg hover:underline">LinkedIn</a
+        >
+        <a
+          href="https://github.com/nicolasamoroso"
+          target="_blank"
+          class="text-lg hover:underline">GitHub</a
+        >
+      </div>
+    </div>
+  </section>
+</footer>

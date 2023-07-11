@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+import NavBar from "../components/NavBar.astro";
+import Footer from "../components/Footer.astro";
+import Overlay from "../components/Overlay.astro";
+---
+
+<Layout title="404">
+  <main
+    class="my-10 relative z-50 m-auto flex-grow text-[#001024] items-center flex flex-col gap-10"
+  >
+    <NavBar />
+    <div class="flex flex-col items-center justify-center gap-10">
+      <div class="flex flex-col gap-3">
+        <h1 class="text-8xl font-bold">Oops</h1>
+        <h2 class="text-2xl font-medium text-center">Page not found</h2>
+      </div>
+      <div>
+        <img src="/img/this-is-fine-404.gif" alt="404" class="w-full h-auto" />
+      </div>
+    </div>
+  </main>
+  <Footer />
+  <Overlay />
+</Layout>

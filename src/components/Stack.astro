@@ -1,0 +1,23 @@
+---
+type StackItem = {
+  href: string;
+  name: string;
+};
+
+export interface Props {
+  arr: StackItem[];
+}
+
+const { arr } = Astro.props;
+---
+
+<p class="text-md md:text-lg font-medium">Stack</p>
+<ul class="flex flex-wrap gap-2 cursor-pointer text-sm md:text-md">
+  {
+    arr.map(({ href, name }) => (
+      <li class="bg-[#001024] text-white rounded-full px-3 py-1">
+        <a href={href}>{name}</a>
+      </li>
+    ))
+  }
+</ul>

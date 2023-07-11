@@ -1,0 +1,18 @@
+---
+import Layout from "../layouts/Layout.astro";
+import NavBar from "../components/NavBar.astro";
+import About from "../components/AboutMe.astro";
+import Projects from "../components/Projects.astro";
+import Footer from "../components/Footer.astro";
+import Overlay from "../components/Overlay.astro";
+---
+
+<Layout title="Nicolás Amoroso">
+  <main class="max-w-[1000px] m-auto px-10 flex-grow text-[#001024]">
+    <NavBar />
+    <About />
+    <Projects />
+  </main>
+  <Footer />
+  <Overlay />
+</Layout>

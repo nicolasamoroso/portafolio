@@ -1,0 +1,14 @@
+---
+export interface Props {
+  href: string;
+}
+
+const { href } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<li>
+  <a href={href} class={currentPath === href ? "font-medium" : ""}>
+    <slot />
+  </a>
+</li>
