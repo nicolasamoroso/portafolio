@@ -11,7 +11,7 @@ import ContactArrow from "./ContactArrow.astro";
       class=`flex items-center ${currentPath !== "/contact/" ? 'justify-between' : 'justify-end'} md:my-[1rem]`
     >
       {
-        currentPath !== "/contact" ? (
+        currentPath !== "/contact/" ? (
           <a
             href="/contact"
             class="flex text-lg select-none items-center gap-3 font-semibold hover:underline"
