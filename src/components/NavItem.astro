@@ -8,11 +8,7 @@ const currentPath = Astro.url.pathname;
 ---
 
 <li>
-  href: {href}
-  <div>--</div>
-  currentPath: {currentPath}
-  <div>--</div>
-  <a href={href}>
+  <a href={href} class={currentPath === href + "/" ? "font-medium" : undefined}>
     <slot />
   </a>
 </li>
