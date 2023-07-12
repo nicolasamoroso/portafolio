@@ -1,14 +1,14 @@
 {
   "redirects": [
-    { "source": "/cv", "destination": "/public/resumes/Esp.pdf" },
-    { "source": "/cv-En", "destination": "/public/resumes/En.pdf" },
-    { "source": "/cvEn", "destination": "/public/resumes/En.pdf" },
-    { "source": "/cv-Esp", "destination": "/public/resumes/Esp.pdf" },
-    { "source": "/cvEsp", "destination": "/public/resumes/Esp.pdf" },
-    { "source": "/resume", "destination": "/public/resumes/En.pdf" },
-    { "source": "/resume-En", "destination": "/public/resumes/En.pdf" },
-    { "source": "/resumeEn", "destination": "/public/resumes/En.pdf" },
-    { "source": "/resume-Esp", "destination": "/public/resumes/Esp.pdf" },
-    { "source": "/resumeEsp", "destination": "/public/resumes/Esp.pdf" }
+    { "source": "/cv", "destination": "/resumes/Esp.pdf" },
+    { "source": "/cv-En", "destination": "/resumes/En.pdf" },
+    { "source": "/cvEn", "destination": "/resumes/En.pdf" },
+    { "source": "/cv-Esp", "destination": "/resumes/Esp.pdf" },
+    { "source": "/cvEsp", "destination": "/resumes/Esp.pdf" },
+    { "source": "/resume", "destination": "/resumes/En.pdf" },
+    { "source": "/resume-En", "destination": "/resumes/En.pdf" },
+    { "source": "/resumeEn", "destination": "/resumes/En.pdf" },
+    { "source": "/resume-Esp", "destination": "/resumes/Esp.pdf" },
+    { "source": "/resumeEsp", "destination": "/resumes/Esp.pdf" }
   ]
 }
