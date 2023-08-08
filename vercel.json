@@ -9,6 +9,8 @@
     { "source": "/resume-En", "destination": "/resumes/En.pdf" },
     { "source": "/resumeEn", "destination": "/resumes/En.pdf" },
     { "source": "/resume-Esp", "destination": "/resumes/Esp.pdf" },
-    { "source": "/resumeEsp", "destination": "/resumes/Esp.pdf" }
+    { "source": "/resumeEsp", "destination": "/resumes/Esp.pdf" },
+    { "source": "/JaPCert", "destination": "/certificadoJaP.pdf" },
+    { "source": "/JaPCertificado", "destination": "/certificadoJaP.pdf" }
   ]
 }
