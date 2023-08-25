@@ -7,21 +7,23 @@ import ContactArrow from "./ContactArrow.astro";
   class="relative z-50 min-h[15rem] mt-[15vh] border-t border-gray-300 flex-grow-0"
 >
   <section class="max-w-[1000px] m-auto px-3 md:px-10">
-    <div
+    <article
       class=`flex items-center ${currentPath !== "/contact/" ? 'justify-between' : 'justify-end'} my-[1rem]`
     >
       {
         currentPath !== "/contact/" ? (
-          <a
-            href="/contact"
-            class="flex text-sm md:text-lg select-none items-center gap-3 font-semibold hover:underline"
-          >
-            Get in touch
-            <ContactArrow />
-          </a>
+          <p>
+            <a
+              href="/contact"
+              class="flex text-sm md:text-lg select-none items-center gap-3 font-semibold hover:underline"
+            >
+              Get in touch
+              <ContactArrow />
+            </a>
+          </p>
         ) : null
       }
-      <div class="flex gap-3 text-md md:text-lg">
+      <p class="flex gap-3 text-md md:text-lg">
         <a
           href="https://www.linkedin.com/in/nicolas-amoroso/"
           target="_blank"
@@ -32,7 +34,7 @@ import ContactArrow from "./ContactArrow.astro";
           target="_blank"
           class="text-sm md:text-lg hover:underline">GitHub</a
         >
-      </div>
-    </div>
+      </p>
+    </article>
   </section>
 </footer>
