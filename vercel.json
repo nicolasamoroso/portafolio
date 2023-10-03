@@ -10,7 +10,19 @@
     { "source": "/resumeEn", "destination": "/resumes/En.pdf" },
     { "source": "/resume-Esp", "destination": "/resumes/Esp.pdf" },
     { "source": "/resumeEsp", "destination": "/resumes/Esp.pdf" },
-    { "source": "/JaPCert", "destination": "/certificadoJaP.pdf" },
-    { "source": "/JaPCertificado", "destination": "/certificadoJaP.pdf" }
+    { "source": "/JaPCert", "destination": "/certificates/certificadoJaP.pdf" },
+    {
+      "source": "/JaPCertificado",
+      "destination": "/certificates/certificadoJaP.pdf"
+    },
+    {
+      "source": "/Certificado",
+      "destination": "/certificates/certificadoJaP.pdf"
+    },
+    {
+      "source": "/CertificadoJAP",
+      "destination": "/certificates/certificadoJaP.pdf"
+    },
+    { "source": "/JAP", "destination": "/certificates/certificadoJaP.pdf" }
   ]
 }
