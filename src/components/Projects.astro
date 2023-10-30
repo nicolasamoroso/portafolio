@@ -1,70 +1,69 @@
----
-// import Stack from "./Stack.astro";
-
-// const stackEcommerce = [
-//   {
-//     href: "https://en.wikipedia.org/wiki/HTML",
-//     name: "HTML",
-//   },
-//   {
-//     href: "https://en.wikipedia.org/wiki/CSS",
-//     name: "CSS",
-//   },
-//   {
-//     href: "https://en.wikipedia.org/wiki/Bootstrap_(front-end_framework)",
-//     name: "Bootstrap",
-//   },
-//   {
-//     href: "https://en.wikipedia.org/wiki/JavaScript",
-//     name: "JavaScript",
-//   },
-//   {
-//     href: "https://es.wikipedia.org/wiki/MongoDB",
-//     name: "MongoDB",
-//   },
-//   {
-//     href: "https://en.wikipedia.org/wiki/Vercel",
-//     name: "Vercel",
-//   },
-// ];
----
-
 <section class="relative z-50 mt-15 md:mt-10 flex flex-col gap-5">
   <h1 class="text-xl md:text-3xl font-medium">Projects</h1>
-  <article class="grid lg:grid-cols-2 gap-5">
-    <article class="card p-3 md:p-5 rounded-2xl flex flex-col gap-5">
-      <figure class="rounded-xl bg-[#ffffffab] p-3">
-        <img
-          src="/img/ecommerce.png"
-          alt="ecommerce preview"
-          width="1080"
-          height="542"
-          class="select-none"
-        />
-      </figure>
-      <div class="flex flex-col gap-2">
-        <h2 class="text-lg md:text-xl font-medium">e-commerce</h2>
-        <p class="text-sm md:text-lg text-[#001024c3]">
-          A web app that allows you to buy products and manage your cart.
+  <div class="grid grid-cols-2 gap-4">
+    <article>
+      <div class="card p-3 md:p-5 rounded-2xl flex flex-col gap-5">
+        <figure class="rounded-xl bg-[#ffffffab] p-3">
+          <img
+            src="/img/ecommerce.png"
+            alt="ecommerce preview"
+            width="1080"
+            height="542"
+            class="select-none"
+          />
+        </figure>
+        <div class="flex flex-col gap-2">
+          <h2 class="text-lg md:text-xl font-medium">e-commerce</h2>
+          <p class="text-sm md:text-lg text-[#001024c3]">
+            'Jovenes a Programar' Program course project
+          </p>
+        </div>
+        <p class="flex gap-5 font-medium text-md select-none">
+          <a
+            href="https://jap.nicoamoroso.me/"
+            target="_blank"
+            class="text-md hover:underline">View Project</a
+          >
+          <a
+            href="https://github.com/nicolasamoroso/ecommerceRes"
+            target="_blank"
+            class="text-md hover:underline">GitHub</a
+          >
         </p>
       </div>
-      <!-- <div class="flex flex-col gap-2">
-        <Stack arr={stackEcommerce} />
-      </div> -->
-      <p class="flex gap-5 font-medium text-md select-none">
-        <a
-          href="https://jap.nicoamoroso.me/"
-          target="_blank"
-          class="text-md hover:underline">View Project</a
-        >
-        <a
-          href="https://github.com/nicolasamoroso/ecommerceRes"
-          target="_blank"
-          class="text-md hover:underline">GitHub</a
-        >
-      </p>
     </article>
-  </article>
+    <article>
+      <div class="card p-3 md:p-5 rounded-2xl flex flex-col gap-5">
+        <figure class="rounded-xl bg-[#ffffffab] p-3">
+          <img
+            src="/img/basementchallenge.png"
+            alt="basement preview"
+            width="1080"
+            height="542"
+            class="select-none"
+          />
+        </figure>
+        <div class="flex flex-col gap-2">
+          <h2 class="text-lg md:text-xl font-medium">Basement Challenge</h2>
+          <p class="text-sm md:text-lg text-[#001024c3]">
+            Responsive e-commerce from a figma design
+          </p>
+        </div>
+        <p class="flex gap-5 font-medium text-md select-none">
+          <a
+            href="https://bsmnt.nicoamoroso.me/"
+            target="_blank"
+            class="text-md hover:underline">View Project</a
+          >
+          <a
+            href="https://github.com/nicolasamoroso/basement-challenge"
+            target="_blank"
+            class="text-md hover:underline">GitHub</a
+          >
+        </p>
+      </div>
+    </article>
+  </div>
 </section>
 <style>
   .card {
