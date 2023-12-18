@@ -23,6 +23,34 @@
       "source": "/CertificadoJAP",
       "destination": "/certificates/certificadoJaP.pdf"
     },
-    { "source": "/JAP", "destination": "/certificates/certificadoJaP.pdf" }
+    { "source": "/JAP", "destination": "/certificates/certificadoJaP.pdf" },
+    {
+      "source": "/academic_transcript",
+      "destination": "/certificates/academic_transcript.pdf"
+    },
+    {
+      "source": "/academictranscript",
+      "destination": "/certificates/academic_transcript.pdf"
+    },
+    {
+      "source": "/academicTranscript",
+      "destination": "/certificates/academic_transcript.pdf"
+    },
+    {
+      "source": "/Academic_Transcript",
+      "destination": "/certificates/academic_transcript.pdf"
+    },
+    {
+      "source": "/Academictranscript",
+      "destination": "/certificates/academic_transcript.pdf"
+    },
+    {
+      "source": "/Academic_transcript",
+      "destination": "/certificates/academic_transcript.pdf"
+    },
+    {
+      "source": "/academic_Transcript",
+      "destination": "/certificates/academic_transcript.pdf"
+    }
   ]
 }
