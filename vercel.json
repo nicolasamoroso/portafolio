@@ -1,15 +1,15 @@
 {
   "redirects": [
-    { "source": "/cv", "destination": "/resumes/curriculum-Español.pdf" },
+    { "source": "/cv", "destination": "/resumes/curriculum-español.pdf" },
     { "source": "/cv-En", "destination": "/resumes/resume.pdf" },
     { "source": "/cvEn", "destination": "/resumes/resume.pdf" },
-    { "source": "/cv-Esp", "destination": "/resumes/curriculum-Español.pdf" },
-    { "source": "/cvEsp", "destination": "/resumes/curriculum-Español.pdf" },
+    { "source": "/cv-Esp", "destination": "/resumes/curriculum-español.pdf" },
+    { "source": "/cvEsp", "destination": "/resumes/curriculum-español.pdf" },
     { "source": "/resume", "destination": "/resumes/resume.pdf" },
     { "source": "/resume-En", "destination": "/resumes/resume.pdf" },
     { "source": "/resumeEn", "destination": "/resumes/resume.pdf" },
-    { "source": "/resume-Esp", "destination": "/resumes/curriculum-Español.pdf" },
-    { "source": "/resumeEsp", "destination": "/resumes/curriculum-Español.pdf" },
+    { "source": "/resume-Esp", "destination": "/resumes/curriculum-español.pdf" },
+    { "source": "/resumeEsp", "destination": "/resumes/curriculum-español.pdf" },
     { "source": "/JaPCert", "destination": "/certificates/certificadoJaP.pdf" },
     {
       "source": "/JaPCertificado",
