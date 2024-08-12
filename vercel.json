@@ -1,13 +1,13 @@
 {
   "redirects": [
     { "source": "/cv", "destination": "/resumes/cv.pdf" },
-    { "source": "/cv-En", "destination": "/resumes/resume.pdf" },
-    { "source": "/cvEn", "destination": "/resumes/resume.pdf" },
+    { "source": "/cv-En", "destination": "/resumes/resume-en.pdf" },
+    { "source": "/cvEn", "destination": "/resumes/resume-en.pdf" },
     { "source": "/cv-Esp", "destination": "/resumes/cv.pdf" },
     { "source": "/cvEsp", "destination": "/resumes/cv.pdf" },
-    { "source": "/resume", "destination": "/resumes/resume.pdf" },
-    { "source": "/resume-En", "destination": "/resumes/resume.pdf" },
-    { "source": "/resumeEn", "destination": "/resumes/resume.pdf" },
+    { "source": "/resume", "destination": "/resumes/resume-en.pdf" },
+    { "source": "/resume-En", "destination": "/resumes/resume-en.pdf" },
+    { "source": "/resumeEn", "destination": "/resumes/resume-en.pdf" },
     { "source": "/resume-Esp", "destination": "/resumes/cv.pdf" },
     { "source": "/resumeEsp", "destination": "/resumes/cv.pdf" },
     { "source": "/JaPCert", "destination": "/certificates/certificadoJaP.pdf" },
