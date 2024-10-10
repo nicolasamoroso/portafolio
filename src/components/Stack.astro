@@ -8,7 +8,7 @@ export interface Props {
   arr: StackItem[];
 }
 
-const { arr } = Astro.props;
+const { arr } = Astro.props as Props;
 ---
 
 <p class="text-md md:text-lg font-medium">Stack</p>

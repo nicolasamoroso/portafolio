@@ -10,7 +10,7 @@ const isActive = href === pathname || href === pathname.replace(/\/$/, "");
 ---
 
 <li>
-  <a href={href} class={isActive ? "font-medium" : undefined}>
+  <a href={href} class={isActive ? "font-medium dark:text-[#ffffff]" : "p-2 font-normal text-[#001024] dark:text-[#b5b5b5] hover:font-medium hover:text-black hover:dark:text-[#929292]"}>
     <slot />
   </a>
 </li>

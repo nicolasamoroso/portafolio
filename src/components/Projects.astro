@@ -1,78 +1,50 @@
+---
+import Project from "./Project.astro";
+
+const projects = [
+  {
+    //Vinos Casa Grande
+    src: "/img/vinoscasagrande.png",
+    alt: "ecommerce preview",
+    title: "Vinos Casa Grande - Store",
+    description: "Build and desing a responsive wine store using Next.js & Shopify",
+    hrefProject: "https://www.vinoscasagrande.com/",
+    hrefGitHub: "",
+  },
+  {
+    //Basement Challenge
+    src: "/img/basementchallenge.png",
+    alt: "basement preview",
+    title: "Basement Challenge",
+    description: "Responsive e-commerce from a figma design",
+    hrefProject:"https://bsmnt.nicolasamoroso.com/",
+    hrefGitHub:"https://github.com/nicolasamoroso/basement-challenge"
+  },
+  {
+    //JAP
+    src: "/img/ecommerce.png",
+    alt: "ecommerce preview",
+    title: "e-commerce",
+    description: "'Jovenes a Programar' Program course project'",
+    hrefProject:"https://jap.nicolasamoroso.com/",
+    hrefGitHub:"https://github.com/nicolasamoroso/ecommerceRes"
+  },
+]
+---
+
 <section class="relative z-50 mt-15 md:mt-10 flex flex-col gap-5">
   <h1 class="text-xl md:text-3xl font-medium">Projects</h1>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <article>
-      <div class="card p-3 md:p-5 rounded-2xl flex flex-col gap-5">
-        <figure class="rounded-[0.5rem] bg-[#ffffffab] p-3">
-          <img
-            src="/img/ecommerce.png"
-            alt="ecommerce preview"
-            width="1080"
-            height="542"
-            class="select-none"
-          />
-        </figure>
-        <div class="flex flex-col gap-2">
-          <h2 class="text-lg md:text-xl font-medium">e-commerce</h2>
-          <p class="text-sm md:text-lg text-[#001024c3]">
-            'Jovenes a Programar' Program course project
-          </p>
-        </div>
-        <p class="flex gap-5 font-medium text-md select-none">
-          <a
-            href="https://jap.nicolasamoroso.com/"
-            target="_blank"
-            class="text-md hover:underline">View Project</a
-          >
-          <a
-            href="https://github.com/nicolasamoroso/ecommerceRes"
-            target="_blank"
-            class="text-md hover:underline">GitHub</a
-          >
-        </p>
-      </div>
-    </article>
-    <article>
-      <div class="card p-3 md:p-5 rounded-2xl flex flex-col gap-5">
-        <figure class="rounded-[0.5rem] bg-[#ffffffab] p-3">
-          <img
-            src="/img/basementchallenge.png"
-            alt="basement preview"
-            width="1080"
-            height="542"
-            class="select-none"
-          />
-        </figure>
-        <div class="flex flex-col gap-2">
-          <h2 class="text-lg md:text-xl font-medium">Basement Challenge</h2>
-          <p class="text-sm md:text-lg text-[#001024c3]">
-            Responsive e-commerce from a figma design
-          </p>
-        </div>
-        <p class="flex gap-5 font-medium text-md select-none">
-          <a
-            href="https://bsmnt.nicolasamoroso.com/"
-            target="_blank"
-            class="text-md hover:underline">View Project</a
-          >
-          <a
-            href="https://github.com/nicolasamoroso/basement-challenge"
-            target="_blank"
-            class="text-md hover:underline">GitHub</a
-          >
-        </p>
-      </div>
-    </article>
+    {projects.map(({src, alt, title, description, hrefProject, hrefGitHub}) => 
+      <Project 
+        src={src}
+        alt={alt}
+        title={title}
+        description={description}
+        hrefProject={hrefProject}
+        hrefGitHub={hrefGitHub}
+      />
+    )}
   </div>
 </section>
-<style>
-  .card {
-    background-color: rgba(255, 255, 255, 0.3);
-    -webkit-box-shadow: 0 2rem 5rem -1rem rgba(0, 16, 36, 0.108),
-      inset 0 1px rgba(255, 255, 255, 0.6);
-    box-shadow: 0 2rem 5rem -1rem rgba(0, 16, 36, 0.108),
-      inset 0 1px rgba(255, 255, 255, 0.6);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-  }
-</style>
+
