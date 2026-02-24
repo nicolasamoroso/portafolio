@@ -2,13 +2,17 @@
 import Layout from "../layouts/Layout.astro";
 import NavBar from "../components/NavBar.astro";
 import About from "../components/AboutMe.astro";
+import Experience from "../components/Experience.astro";
 import Projects from "../components/Projects.astro";
 ---
 
 <Layout title="Nicolás Amoroso">
-  <main class="max-w-[1000px] m-auto px-5 md:px-10 flex-grow">
+  <div class="max-w-3xl mx-auto px-6 flex-grow">
     <NavBar />
-    <About />
-    <Projects />
-  </main>
+    <main id="main">
+      <About />
+      <Experience />
+      <Projects />
+    </main>
+  </div>
 </Layout>

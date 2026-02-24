@@ -1,38 +1,64 @@
 ---
 import Footer from '../components/Footer.astro';
-import Overlay from '../components/Overlay.astro';
 
-export interface Props {
+interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description = "Nicolás Amoroso — Fullstack Developer based in Uruguay" } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Portafolio" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/icons/code-solid.svg" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)" />
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
   </head>
-  <body class="flex flex-col min-h-screen grid-overlay text-[#001024] dark:text-white">
+  <body class="bg-white dark:bg-[#0f0f0f] text-zinc-900 dark:text-zinc-100 antialiased min-h-screen flex flex-col">
+    <a
+      href="#main"
+      class="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:px-4 focus-visible:py-2 focus-visible:bg-zinc-900 focus-visible:text-white focus-visible:rounded-md focus-visible:text-sm focus-visible:outline-none"
+    >
+      Skip to main content
+    </a>
     <slot />
     <Footer />
-    <Overlay />
   </body>
 </html>
-<style>
+
+<style is:global>
   body {
-    font-family: "Roboto", sans-serif;
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    color-scheme: light dark;
+    scroll-behavior: smooth;
+  }
+
+  ::selection {
+    background: #000;
+    color: #fff;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    ::selection {
+      background: #fff;
+      color: #000;
+    }
   }
 </style>

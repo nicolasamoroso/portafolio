@@ -1,0 +1,84 @@
+---
+const experiences = [
+  {
+    company: "iCash.One",
+    role: "Junior Fullstack Developer",
+    period: "Apr 2025 — Present",
+    items: [
+      "Key participation in multiple company products, contributing to both frontend and backend.",
+      "Complete redesign of three projects, taking full ownership of new layout, UX, and technical implementation.",
+      "New feature development in React + TypeScript with modern practices, improving critical flows and product usability.",
+      "Backend work with Java and MySQL: endpoint creation, business logic, and service integrations.",
+    ],
+  },
+  {
+    company: "Freelance",
+    role: "Web Developer",
+    period: "Aug 2024 — Apr 2025",
+    items: [
+      "Familia Dardanelli — E-commerce platform with Next.js, TypeScript, shadcn, and Shopify Storefront API. Integrated Supabase and Mercado Pago Checkout Pro.",
+      "Casa Grande — Wine catalog and tasting reservation system built with Next.js, TypeScript, and Tailwind CSS.",
+    ],
+  },
+];
+
+const education = [
+  {
+    institution: "Universidad ORT Uruguay",
+    degree: "Information Technology Analyst",
+    note: "Finishing degree",
+    period: "Mar 2023 — Present",
+  },
+];
+---
+
+<section id="experience" class="py-16 border-t border-zinc-200 dark:border-zinc-800">
+  <h2 class="text-xs font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-10">
+    Experience
+  </h2>
+  <div class="flex flex-col gap-12">
+    {experiences.map((exp) => (
+      <article class="grid grid-cols-1 sm:grid-cols-4 gap-2 sm:gap-6">
+        <div class="sm:col-span-1">
+          <p class="text-sm text-zinc-400 dark:text-zinc-500 tabular-nums">{exp.period}</p>
+        </div>
+        <div class="sm:col-span-3 flex flex-col gap-4">
+          <div>
+            <h3 class="font-medium text-zinc-900 dark:text-zinc-100">{exp.company}</h3>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">{exp.role}</p>
+          </div>
+          <ul class="flex flex-col gap-2">
+            {exp.items.map((item) => (
+              <li class="flex gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <span class="text-zinc-300 dark:text-zinc-700 mt-0.5 shrink-0" aria-hidden="true">—</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<section id="education" class="py-16 border-t border-zinc-200 dark:border-zinc-800">
+  <h2 class="text-xs font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-10">
+    Education
+  </h2>
+  <div class="flex flex-col gap-8">
+    {education.map((edu) => (
+      <article class="grid grid-cols-1 sm:grid-cols-4 gap-2 sm:gap-6">
+        <div class="sm:col-span-1">
+          <p class="text-sm text-zinc-400 dark:text-zinc-500 tabular-nums">{edu.period}</p>
+        </div>
+        <div class="sm:col-span-3">
+          <h3 class="font-medium text-zinc-900 dark:text-zinc-100">{edu.degree}</h3>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400">{edu.institution}</p>
+          {edu.note && (
+            <p class="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">{edu.note}</p>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

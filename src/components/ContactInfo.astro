@@ -1,62 +1,79 @@
-<section class="relative z-50 mt-10 flex flex-col gap-10 md:gap-10">
-  <article class="sm:grid sm:grid-cols-3">
-    <div class="flex flex-col gap-5 md:gap-7 sm:col-span-2">
-      <h1 class="text-xl md:text-3xl font-medium">Let's chat! 👋🏻</h1>
-      <p class="text-sm sm:text-md md:text-xl text-justify text-[#000c1a] dark:text-[#cacaca]">
-        Don't hesitate to contact me if you have a question, proposal, or just
-        want to have a chat, I'd love to hear from you!
+---
+const links = [
+  {
+    label: "Email",
+    value: "contact@nicolasamoroso.com",
+    href: "mailto:contact@nicolasamoroso.com",
+    external: false,
+  },
+  {
+    label: "LinkedIn",
+    value: "nicolas-amoroso ↗",
+    href: "https://www.linkedin.com/in/nicolas-amoroso/",
+    external: true,
+  },
+  {
+    label: "GitHub",
+    value: "nicolasamoroso ↗",
+    href: "https://github.com/nicolasamoroso",
+    external: true,
+  },
+];
+---
+
+<section id="contact" class="pt-4 pb-16 flex flex-col gap-12">
+  <div class="flex flex-col gap-4">
+    <h1 class="text-3xl md:text-4xl font-semibold tracking-tight" style="text-wrap: balance">
+      Get in touch
+    </h1>
+    <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-prose">
+      Don't hesitate to reach out if you have a question, proposal, or just want
+      to chat — I'd love to hear from you.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+    {
+      links.map(({ label, value, href, external }) => (
+        <div class="flex flex-col gap-1">
+          <p class="text-xs font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+            {label}
+          </p>
+          <a
+            href={href}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noopener noreferrer" : undefined}
+            class="text-zinc-900 dark:text-zinc-100 hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors text-sm"
+          >
+            {value}
+          </a>
+        </div>
+      ))
+    }
+
+    <div class="flex flex-col gap-1">
+      <p class="text-xs font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+        Resume
       </p>
-    </div>
-  </article>
-  <article
-    class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-15 text-md md:text-xl"
-  >
-    <article>
-      <h2 class="text-md font-light dark:text-[#b1b1b1]">Send me an email</h2>
-      <p>
-        <a
-          href="mailto:contact@nicolasamoroso.com"
-          class="hover:underline font-normal text-[#000c1a] dark:text-[#dbdbdb]"
-        >
-          contact@nicolasamoroso.com
-        </a>
-      </p>
-    </article>
-    <article>
-      <h2 class="text-md font-light dark:text-[#b1b1b1]">Connect on LinkedIn</h2>
-      <p>
-        <a
-          href="https://www.linkedin.com/in/nicolas-amoroso/"
-          target="_blank"
-          class="hover:underline font-normal text-[#000c1a] dark:text-[#dbdbdb]"
-        >
-          linkedin.com/nicolas-amoroso
-        </a>
-      </p>
-    </article>
-    <article>
-      <h2 class="text-md font-light dark:text-[#b1b1b1]">Download my resume</h2>
-      <p>
+      <div class="flex gap-4 text-sm">
         <a
           href="/resumes/resume-en.pdf"
           target="_blank"
-          class="hover:underline font-normal text-[#000c1a] dark:text-[#dbdbdb]"
-          type="application/pdf"
           rel="noopener noreferrer"
+          class="text-zinc-900 dark:text-zinc-100 hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors"
         >
-          English
+          English ↗
         </a>
-        -
+        <span class="text-zinc-300 dark:text-zinc-700" aria-hidden="true">·</span>
         <a
           href="/resumes/cv.pdf"
           target="_blank"
-          class="hover:underline font-normal text-[#000c1a] dark:text-[#dbdbdb]"
-          type="application/pdf"
           rel="noopener noreferrer"
+          class="text-zinc-900 dark:text-zinc-100 hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors"
         >
-          Spanish
+          Español ↗
         </a>
-      </p>
-    </article>
-  </article>
+      </div>
+    </div>
+  </div>
 </section>

@@ -3,57 +3,77 @@ import Project from "./Project.astro";
 
 const projects = [
   {
-    //Familia Dardanelli
+    src: "/img/annsweets.png",
+    alt: "AnnSweets custom cake e-commerce website",
+    title: "AnnSweets",
+    description:
+      "Degree thesis project. Custom cake e-commerce where customers can personalize size, flavors, toppings, and colors. Includes a full CMS for the admin to manage products, ingredients, and available options for each item.",
+    hrefProject: "https://annsweets.nicolasamoroso.com/",
+    hrefGitHub: "",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Mercado Pago", "Turborepo"],
+    thesis: true,
+  },
+  {
     src: "/img/familiadardanelli.png",
-    alt: "Familia Dardanelli wine page preview",
-    title: "Familia Dardanelli - Wine Page",
-    description: "Build and desing a responsive wine page using Next.js and MercadoPago Checkout Pro",
+    alt: "Familia Dardanelli wine e-commerce website",
+    title: "Familia Dardanelli",
+    description:
+      "E-commerce platform built with Next.js, TypeScript, shadcn, and Shopify Storefront API. Integrated reservation system with Supabase and Mercado Pago Checkout Pro.",
     hrefProject: "https://www.familiadardanelli.com.uy/",
     hrefGitHub: "",
+    tags: ["Next.js", "TypeScript", "Supabase", "Mercado Pago"],
   },
   {
-    //Vinos Casa Grande
     src: "/img/vinoscasagrande.png",
-    alt: "Vinos Casa Grande e-commerce preview",
-    title: "Vinos Casa Grande - E-commerce",
-    description: "Build and desing a responsive wine e-commerce using Next.js, Shopify and MercadoPago Checkout Pro",
+    alt: "Vinos Casa Grande wine catalog website",
+    title: "Casa Grande",
+    description:
+      "Wine catalog and tasting reservation system built with Next.js, TypeScript, and Tailwind CSS.",
     hrefProject: "https://www.vinoscasagrande.com/",
     hrefGitHub: "",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Mercado Pago", "Shopify"],
   },
   {
-    //Basement Challenge
     src: "/img/basementchallenge.png",
-    alt: "basement preview",
+    alt: "Basement Challenge e-commerce",
     title: "Basement Challenge",
-    description: "Responsive e-commerce from a figma design",
-    hrefProject:"https://bsmnt.nicolasamoroso.com/",
-    hrefGitHub:"https://github.com/nicolasamoroso/basement-challenge"
+    description:
+      "Pixel-perfect responsive e-commerce implementation built from a Figma design challenge.",
+    hrefProject: "https://bsmnt.nicolasamoroso.com/",
+    hrefGitHub: "https://github.com/nicolasamoroso/basement-challenge",
+    tags: ["Next.js", "CSS"],
   },
   {
-    //JAP
     src: "/img/ecommerce.png",
-    alt: "E-commerce preview",
+    alt: "e-mercado e-commerce platform",
     title: "e-mercado",
-    description: "'Jovenes a Programar' Program course project'",
-    hrefProject:"https://jap.nicolasamoroso.com/",
-    hrefGitHub:"https://github.com/nicolasamoroso/ecommerceRes"
+    description:
+      "E-commerce platform developed as a final project for the Jóvenes a Programar program.",
+    hrefProject: "https://jap.nicolasamoroso.com/",
+    hrefGitHub: "https://github.com/nicolasamoroso/ecommerceRes",
+    tags: ["JavaScript", "Node.js"],
   },
-]
+];
 ---
 
-<section class="relative z-50 mt-15 md:mt-10 flex flex-col gap-5">
-  <h1 class="text-xl md:text-3xl font-medium">Projects</h1>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    {projects.map(({src, alt, title, description, hrefProject, hrefGitHub}) => 
-      <Project 
-        src={src}
-        alt={alt}
-        title={title}
-        description={description}
-        hrefProject={hrefProject}
-        hrefGitHub={hrefGitHub}
-      />
-    )}
+<section id="projects" class="py-16 border-t border-zinc-200 dark:border-zinc-800">
+  <h2 class="text-xs font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-10">
+    Projects
+  </h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+    {
+      projects.map(({ src, alt, title, description, hrefProject, hrefGitHub, tags, thesis }) => (
+        <Project
+          src={src}
+          alt={alt}
+          title={title}
+          description={description}
+          hrefProject={hrefProject}
+          hrefGitHub={hrefGitHub}
+          tags={tags}
+          thesis={thesis}
+        />
+      ))
+    }
   </div>
 </section>
-

@@ -4,9 +4,14 @@ import NavBar from "../components/NavBar.astro";
 import ContactInfo from "../components/ContactInfo.astro";
 ---
 
-<Layout title="Nicolás Amoroso">
-  <main class="max-w-[983px] m-auto px-5 md:px-10 flex-grow">
+<Layout
+  title="Contact — Nicolás Amoroso"
+  description="Get in touch with Nicolás Amoroso — Fullstack Developer"
+>
+  <div class="max-w-3xl mx-auto px-6 flex-grow">
     <NavBar />
-    <ContactInfo />
-  </main>
+    <main id="main">
+      <ContactInfo />
+    </main>
+  </div>
 </Layout>

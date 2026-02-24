@@ -1,32 +1,58 @@
-<section class="relative z-50 mt-8 flex flex-col gap-5">
-  <article class="flex flex-col justify-center">
+---
+const skills = [
+  "TypeScript", "React", "Next.js", "Java",
+  "Node.js", "MySQL", "Tailwind CSS", "AWS", "Supabase",
+];
+---
+
+<section id="about" class="pt-4 pb-16 flex flex-col gap-8">
+  <div class="flex flex-col gap-3">
     <h1
-      class="text-red-900 dark:text-blue-900 font-bold text-3xl xs:text-5xl md:text-6xl lg:text-8xl"
+      class="text-3xl md:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
+      style="text-wrap: balance"
     >
-      Hi there! I'm Nico
+      Nicolás Amoroso
     </h1>
-    <h2
-      class="font-bold text-[18.5px] xs:text-[29.5px] md:text-[37px] lg:text-[59px]"
-    >
-      A web developer enthusiast
-    </h2>
-  </article>
-  <article class="flex flex-col gap-5 text-sm sm:text-md md:text-lg dark:text-[#cacaca]">
-    <p>
-      I'm a 23-year-old student from Uruguay, currently enrolled in <a
-        class="underline text-[#000] dark:text-[#ddd] italic"
-        href="/certificates/academic_transcript.pdf"
-        >Information Technology Analyst</a
-      > at ORT University.
-    </p>
-    <p class="flex flex-col">
-      I’m fascinated by the web as a platform to create amazing experiences that
-      can reach anyone, anywhere, anytime.
-      <span>
-        I love taking on new projects with careful planning, focusing on
-        achieving the goals in the shortest time possible. My motivation lies in
-        learning constantly new technologies to strengthen my skills.
+    <p class="text-lg text-zinc-500 dark:text-zinc-400">Fullstack Developer</p>
+  </div>
+
+  <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+    Fullstack developer with experience in TypeScript, React, Java and MySQL.
+    I focus on building and improving complete web applications, caring about both
+    the technical side and the user experience. I have a solid foundation in AWS
+    and adapt quickly to different environments and projects.
+  </p>
+
+  <div class="flex flex-wrap gap-2">
+    {skills.map((skill) => (
+      <span class="text-xs font-medium text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-md px-2.5 py-1">
+        {skill}
       </span>
-    </p>
-  </article>
+    ))}
+  </div>
+
+  <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+    <a
+      href="mailto:contact@nicolasamoroso.com"
+      class="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+    >
+      contact@nicolasamoroso.com
+    </a>
+    <a
+      href="https://github.com/nicolasamoroso"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+    >
+      GitHub ↗
+    </a>
+    <a
+      href="https://www.linkedin.com/in/nicolas-amoroso/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+    >
+      LinkedIn ↗
+    </a>
+  </div>
 </section>
