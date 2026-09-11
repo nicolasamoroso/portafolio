@@ -450,7 +450,6 @@ export const cases: CaseStudy[] = [
 
 export const casesCopy = {
   title: { es: "CASOS<br />TÉCNICOS", en: "CASE<br />STUDIES" } satisfies L,
-  summaryKicker: { es: "ICASH.ONE / 2025—2026", en: "ICASH.ONE / 2025—2026" } satisfies L,
   summaryTitle: {
     es: "Lo interesante<br /><em>no es el código.</em>",
     en: "The interesting part<br /><em>isn't the code.</em>",
