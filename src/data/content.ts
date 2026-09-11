@@ -178,7 +178,7 @@ export const projects: Project[] = [
 ];
 
 export const projectsCopy = {
-  title: { es: "Proyectos", en: "Projects" } satisfies L,
+  title: { es: "Proyectos.", en: "Projects." } satisfies L,
   subtitle: { es: "SITIOS EN PRODUCCIÓN", en: "LIVE IN PRODUCTION" } satisfies L,
   visit: { es: "Entrar", en: "Visit" } satisfies L,
   code: { es: "Código", en: "Code" } satisfies L,
@@ -450,8 +450,8 @@ export const cases: CaseStudy[] = [
 
 export const casesCopy = {
   title: {
-    es: "CASOS<br /><em>TÉCNICOS</em>",
-    en: "CASE<br /><em>STUDIES</em>",
+    es: "Casos<br /><em>Técnicos.</em>",
+    en: "Case<br /><em>Studies.</em>",
   } satisfies L,
   selectHint: { es: "ELEGÍ UN CASO ↓", en: "PICK A CASE ↓" } satisfies L,
   tabNote: { es: "DECISIONES + STACK", en: "DECISIONS + STACK" } satisfies L,
