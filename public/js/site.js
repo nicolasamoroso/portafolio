@@ -358,46 +358,67 @@
         if (audio.state === "suspended") audio.resume();
 
         const now = audio.currentTime;
-        // Measured off a real Cherry MX Black recording: nearly no energy below
-        // 900Hz (under 3% of the spectrum) and almost 90% of it sitting between
-        // 1.8kHz and 12kHz, decaying to nothing inside 65ms. It's a short,
-        // bright click, not a deep thock — there's no low body to speak of.
+        // Measured off a real Cherry MX Black recording: the whole click is
+        // over in about 6ms (attack to near-silence), not the 15-20ms a
+        // "decaying noise" burst usually gets synthesised with — that stretch
+        // is what reads as artificial, a hiss instead of a snap. The energy
+        // sits in a narrow resonance around 3kHz plus a brief flash of high
+        // sizzle, with almost nothing below 1kHz.
         const level = down ? 1 : 0.55;
 
         const out = audio.createGain();
         out.gain.value = 0.9;
         out.connect(audio.destination);
 
-        const length = Math.floor(audio.sampleRate * 0.02);
+        // The envelope is baked into the buffer itself rather than an
+        // exponential ramp: real ADSR here is a hard, near-instant attack
+        // (~1.2ms) then a decay that's much steeper for its first couple of
+        // milliseconds than a plain exponential curve gives.
+        const durationMs = down ? 7 : 6;
+        const length = Math.floor((audio.sampleRate * durationMs) / 1000);
         const buffer = audio.createBuffer(1, length, audio.sampleRate);
         const channel = buffer.getChannelData(0);
+        const attackMs = 1.1;
         for (let i = 0; i < length; i += 1) {
-          channel[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 2.2;
+          const t = (i / audio.sampleRate) * 1000;
+          const env =
+            t < attackMs
+              ? t / attackMs
+              : Math.pow(1 - (t - attackMs) / (durationMs - attackMs), 2.6);
+          channel[i] = (Math.random() * 2 - 1) * env;
         }
         const noise = audio.createBufferSource();
         noise.buffer = buffer;
 
-        // Two bands rather than one: the recording's energy splits into a
-        // broad hump around 2.5-3.5kHz and a second, quieter one past 6kHz —
-        // a single bandpass reads thinner and more like a hiss than a click.
+        // A tight resonance rather than a broad one — real switch clicks are
+        // closer to a struck, pitched rattle than an open hiss.
         const core = audio.createBiquadFilter();
         core.type = "bandpass";
-        core.frequency.value = down ? 2900 : 3400;
-        core.Q.value = 1.1;
+        core.frequency.value = down ? 3050 : 3500;
+        core.Q.value = 3.4;
+        const coreGain = audio.createGain();
+        coreGain.gain.value = 0.85 * level;
+        noise.connect(core).connect(coreGain).connect(out);
+
+        // A flash of top-end sizzle, shorter than the core click, is what
+        // separates a switch's plastic snap from a dampened knock.
+        const sizzleLen = Math.floor((audio.sampleRate * 2.5) / 1000);
+        const sizzleBuf = audio.createBuffer(1, sizzleLen, audio.sampleRate);
+        const sizzleChan = sizzleBuf.getChannelData(0);
+        for (let i = 0; i < sizzleLen; i += 1) {
+          sizzleChan[i] = (Math.random() * 2 - 1) * (1 - i / sizzleLen) ** 1.8;
+        }
+        const sizzle = audio.createBufferSource();
+        sizzle.buffer = sizzleBuf;
         const air = audio.createBiquadFilter();
         air.type = "highpass";
-        air.frequency.value = 5800;
-
-        const coreGain = audio.createGain();
-        coreGain.gain.setValueAtTime(0.5 * level, now);
-        coreGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.028);
+        air.frequency.value = 7000;
         const airGain = audio.createGain();
-        airGain.gain.setValueAtTime(0.22 * level, now);
-        airGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.014);
+        airGain.gain.value = 0.16 * level;
+        sizzle.connect(air).connect(airGain).connect(out);
 
-        noise.connect(core).connect(coreGain).connect(out);
-        noise.connect(air).connect(airGain).connect(out);
         noise.start(now);
+        sizzle.start(now);
       } catch {
         // Audio is a flourish; never let it break the navigation.
       }
