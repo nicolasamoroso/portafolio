@@ -1689,3 +1689,36 @@ h4 em,
   letter-spacing: 0;
   word-spacing: 0.07em;
 }
+
+/* ── Touch behaviour ─────────────────────────────────────────────────────────
+   Two things the reference's rules got wrong for a touch screen.
+   -------------------------------------------------------------------------- */
+
+/* The base pins the carousels to `touch-action: pan-y` below 760px, which tells
+   the browser it may only pan vertically — so a horizontal swipe is never
+   delivered to the scroller and the reel can't be moved with a finger at all.
+   Allowing both axes hands horizontal swipes to the carousel and vertical ones
+   to the page, which is the native behaviour for an overflow-x scroller. */
+@media (max-width: 760px) {
+  .project-carousel,
+  .catalog-track {
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+}
+
+/* Tapping anything interactive was painting the platform's blue highlight over
+   it, and a long press could start selecting the labels inside. */
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stack-key-hit,
+.pick,
+.reel-arrow,
+.theme-switch button,
+.lang-switch button,
+.campaign-selector button {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}

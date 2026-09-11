@@ -129,6 +129,9 @@
 
     track.addEventListener("pointerdown", (event) => {
       if (event.button !== undefined && event.button !== 0) return;
+      // Touch is left to the browser: it already scrolls an overflow-x element
+      // natively, with momentum, and driving scrollLeft ourselves fights it.
+      if (event.pointerType === "touch") return;
       isDragging = true;
       didDrag = false;
       startX = event.clientX;
