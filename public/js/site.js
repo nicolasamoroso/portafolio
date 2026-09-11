@@ -358,51 +358,46 @@
         if (audio.state === "suspended") audio.resume();
 
         const now = audio.currentTime;
-        // The upstroke is quieter and a touch higher than the downstroke, the
-        // way a stiffer linear spring sounds coming back up.
-        const level = down ? 1 : 0.5;
+        // Measured off a real Cherry MX Black recording: nearly no energy below
+        // 900Hz (under 3% of the spectrum) and almost 90% of it sitting between
+        // 1.8kHz and 12kHz, decaying to nothing inside 65ms. It's a short,
+        // bright click, not a deep thock — there's no low body to speak of.
+        const level = down ? 1 : 0.55;
 
         const out = audio.createGain();
         out.gain.value = 0.9;
         out.connect(audio.destination);
 
-        // Linear switches have no tactile leaf, so there's no click transient
-        // to speak of — just the stem sliding smoothly and then bottoming out.
-        // This layer is only the faint slide noise, kept well under the thock.
-        const length = Math.floor(audio.sampleRate * 0.012);
+        const length = Math.floor(audio.sampleRate * 0.02);
         const buffer = audio.createBuffer(1, length, audio.sampleRate);
         const channel = buffer.getChannelData(0);
         for (let i = 0; i < length; i += 1) {
-          channel[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 3;
+          channel[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 2.2;
         }
         const noise = audio.createBufferSource();
         noise.buffer = buffer;
-        const tone = audio.createBiquadFilter();
-        tone.type = "lowpass";
-        tone.frequency.value = down ? 2200 : 2800;
-        const clickGain = audio.createGain();
-        clickGain.gain.setValueAtTime(0.035 * level, now);
-        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
-        noise.connect(tone).connect(clickGain).connect(out);
-        noise.start(now);
 
-        // The bottom-out: a clean, present thock, not a sub-bass rumble.
-        // Two sines a fourth apart, both sliding down, so it reads as a struck
-        // object rather than a beep; kept short so it stays a thock and never
-        // drifts toward a boom.
-        const pitches = down ? [210, 156] : [270, 200];
-        pitches.forEach((hz, index) => {
-          const osc = audio.createOscillator();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(hz, now);
-          osc.frequency.exponentialRampToValueAtTime(hz * 0.72, now + 0.045);
-          const gain = audio.createGain();
-          gain.gain.setValueAtTime((index === 0 ? 0.2 : 0.1) * level, now);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + (down ? 0.065 : 0.045));
-          osc.connect(gain).connect(out);
-          osc.start(now);
-          osc.stop(now + 0.09);
-        });
+        // Two bands rather than one: the recording's energy splits into a
+        // broad hump around 2.5-3.5kHz and a second, quieter one past 6kHz —
+        // a single bandpass reads thinner and more like a hiss than a click.
+        const core = audio.createBiquadFilter();
+        core.type = "bandpass";
+        core.frequency.value = down ? 2900 : 3400;
+        core.Q.value = 1.1;
+        const air = audio.createBiquadFilter();
+        air.type = "highpass";
+        air.frequency.value = 5800;
+
+        const coreGain = audio.createGain();
+        coreGain.gain.setValueAtTime(0.5 * level, now);
+        coreGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.028);
+        const airGain = audio.createGain();
+        airGain.gain.setValueAtTime(0.22 * level, now);
+        airGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.014);
+
+        noise.connect(core).connect(coreGain).connect(out);
+        noise.connect(air).connect(airGain).connect(out);
+        noise.start(now);
       } catch {
         // Audio is a flourish; never let it break the navigation.
       }
