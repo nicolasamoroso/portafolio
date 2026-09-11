@@ -358,54 +358,59 @@
         if (audio.state === "suspended") audio.resume();
 
         const now = audio.currentTime;
-        // The upstroke is quieter and a little brighter than the downstroke,
-        // the way a real switch sounds when the spring lets go.
-        const level = down ? 1 : 0.5;
+        // The upstroke is quieter and a touch higher than the downstroke, the
+        // way a clicky switch's second click sounds when the spring lets go.
+        const level = down ? 1 : 0.55;
 
         const out = audio.createGain();
         out.gain.value = 0.9;
         out.connect(audio.destination);
 
-        // The transient: a very short burst of decaying noise, rolled off hard
-        // at the top. Keeping the highs down is the whole difference between a
-        // thock and the plasticky tick a wide-open bandpass gives you.
-        const length = Math.floor(audio.sampleRate * 0.028);
+        // The click itself: a very short noise burst with the top left open.
+        // Where it sits is the whole character — rolled off low it reads as a
+        // muted thock, bright and brief it reads as a clicky jacket snapping.
+        const length = Math.floor(audio.sampleRate * 0.016);
         const buffer = audio.createBuffer(1, length, audio.sampleRate);
         const channel = buffer.getChannelData(0);
         for (let i = 0; i < length; i += 1) {
-          channel[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 3;
+          channel[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 4;
         }
         const noise = audio.createBufferSource();
         noise.buffer = buffer;
-        const tone = audio.createBiquadFilter();
-        tone.type = "lowpass";
-        tone.frequency.value = down ? 1500 : 2200;
-        tone.Q.value = 0.7;
-        const body = audio.createBiquadFilter();
-        body.type = "highpass";
-        body.frequency.value = 320;
+        const shape = audio.createBiquadFilter();
+        shape.type = "bandpass";
+        shape.frequency.value = down ? 4200 : 5200;
+        shape.Q.value = 1.1;
         const clickGain = audio.createGain();
-        clickGain.gain.setValueAtTime(0.1 * level, now);
-        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
-        noise.connect(tone).connect(body).connect(clickGain).connect(out);
+        clickGain.gain.setValueAtTime(0.19 * level, now);
+        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.02);
+        noise.connect(shape).connect(clickGain).connect(out);
         noise.start(now);
 
-        // The thock: the cap meeting the plate. Two sines a fifth apart, both
-        // sliding down, read as a struck object rather than a beep — a single
-        // oscillator always sounds like a tone.
-        const pitches = down ? [128, 84] : [176, 116];
-        pitches.forEach((hz, index) => {
-          const osc = audio.createOscillator();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(hz, now);
-          osc.frequency.exponentialRampToValueAtTime(hz * 0.62, now + 0.08);
-          const gain = audio.createGain();
-          gain.gain.setValueAtTime((index === 0 ? 0.14 : 0.075) * level, now);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + (down ? 0.11 : 0.07));
-          osc.connect(gain).connect(out);
-          osc.start(now);
-          osc.stop(now + 0.14);
-        });
+        // The ping the leaf leaves behind. Tiny and very fast, but it's what
+        // separates a click from a puff of noise.
+        const ping = audio.createOscillator();
+        ping.type = "square";
+        ping.frequency.setValueAtTime(down ? 3100 : 3900, now);
+        const pingGain = audio.createGain();
+        pingGain.gain.setValueAtTime(0.035 * level, now);
+        pingGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.012);
+        ping.connect(pingGain).connect(out);
+        ping.start(now);
+        ping.stop(now + 0.02);
+
+        // A little body underneath so the click still lands on something solid
+        // instead of floating. Quieter than the click on purpose.
+        const thock = audio.createOscillator();
+        thock.type = "sine";
+        thock.frequency.setValueAtTime(down ? 150 : 200, now);
+        thock.frequency.exponentialRampToValueAtTime(down ? 96 : 130, now + 0.06);
+        const thockGain = audio.createGain();
+        thockGain.gain.setValueAtTime(0.075 * level, now);
+        thockGain.gain.exponentialRampToValueAtTime(0.0001, now + (down ? 0.075 : 0.05));
+        thock.connect(thockGain).connect(out);
+        thock.start(now);
+        thock.stop(now + 0.1);
       } catch {
         // Audio is a flourish; never let it break the navigation.
       }
