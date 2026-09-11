@@ -337,12 +337,15 @@
     { passive: true }
   );
 
-  /* ── Index keycaps: press, hold and release ──────────────────────────── */
+  /* ── Keycaps: press, hold and release ────────────────────────────────── */
 
-  const keycaps = [...document.querySelectorAll(".pick")];
+  const keycaps = [
+    ...document.querySelectorAll(".pick"),
+    ...document.querySelectorAll(".stack-key-hit"),
+  ];
   if (keycaps.length) {
-    // Synthesised rather than a sound file: a switch click is a sharp noise
-    // transient plus a low thock, which is a few nodes of Web Audio and saves
+    // Synthesised rather than a sound file: a switch is a short noise transient
+    // riding a low wooden thock, which is a handful of Web Audio nodes and saves
     // shipping an asset. The context is built on the first press, because
     // browsers refuse to start audio outside a user gesture.
     let audio = null;
@@ -355,43 +358,54 @@
         if (audio.state === "suspended") audio.resume();
 
         const now = audio.currentTime;
-        // The upstroke is quieter and brighter than the downstroke, the way a
-        // real switch sounds when the spring lets go.
-        const level = down ? 1 : 0.55;
+        // The upstroke is quieter and a little brighter than the downstroke,
+        // the way a real switch sounds when the spring lets go.
+        const level = down ? 1 : 0.5;
 
-        // The click: a short burst of decaying noise through a bandpass, landing
-        // in the range a keycap's edge actually rattles at.
-        const length = Math.floor(audio.sampleRate * 0.045);
+        const out = audio.createGain();
+        out.gain.value = 0.9;
+        out.connect(audio.destination);
+
+        // The transient: a very short burst of decaying noise, rolled off hard
+        // at the top. Keeping the highs down is the whole difference between a
+        // thock and the plasticky tick a wide-open bandpass gives you.
+        const length = Math.floor(audio.sampleRate * 0.028);
         const buffer = audio.createBuffer(1, length, audio.sampleRate);
         const channel = buffer.getChannelData(0);
         for (let i = 0; i < length; i += 1) {
-          channel[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 2;
+          channel[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 3;
         }
         const noise = audio.createBufferSource();
         noise.buffer = buffer;
-        const band = audio.createBiquadFilter();
-        band.type = "bandpass";
-        band.frequency.value = down ? 2600 : 3400;
-        band.Q.value = 0.8;
+        const tone = audio.createBiquadFilter();
+        tone.type = "lowpass";
+        tone.frequency.value = down ? 1500 : 2200;
+        tone.Q.value = 0.7;
+        const body = audio.createBiquadFilter();
+        body.type = "highpass";
+        body.frequency.value = 320;
         const clickGain = audio.createGain();
-        clickGain.gain.setValueAtTime(0.16 * level, now);
-        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
-        noise.connect(band).connect(clickGain).connect(audio.destination);
+        clickGain.gain.setValueAtTime(0.1 * level, now);
+        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
+        noise.connect(tone).connect(body).connect(clickGain).connect(out);
         noise.start(now);
 
-        // The thock: the body of the cap meeting the plate. Only on the way down.
-        if (down) {
-          const body = audio.createOscillator();
-          body.type = "triangle";
-          body.frequency.setValueAtTime(190, now);
-          body.frequency.exponentialRampToValueAtTime(85, now + 0.07);
-          const bodyGain = audio.createGain();
-          bodyGain.gain.setValueAtTime(0.09, now);
-          bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
-          body.connect(bodyGain).connect(audio.destination);
-          body.start(now);
-          body.stop(now + 0.1);
-        }
+        // The thock: the cap meeting the plate. Two sines a fifth apart, both
+        // sliding down, read as a struck object rather than a beep — a single
+        // oscillator always sounds like a tone.
+        const pitches = down ? [128, 84] : [176, 116];
+        pitches.forEach((hz, index) => {
+          const osc = audio.createOscillator();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(hz, now);
+          osc.frequency.exponentialRampToValueAtTime(hz * 0.62, now + 0.08);
+          const gain = audio.createGain();
+          gain.gain.setValueAtTime((index === 0 ? 0.14 : 0.075) * level, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + (down ? 0.11 : 0.07));
+          osc.connect(gain).connect(out);
+          osc.start(now);
+          osc.stop(now + 0.14);
+        });
       } catch {
         // Audio is a flourish; never let it break the navigation.
       }
@@ -405,50 +419,50 @@
     const pressedAt = new WeakMap();
     const pending = new WeakMap();
 
-    const lift = (pick) => {
-      if (!pick.classList.contains("is-held")) return;
-      pick.classList.remove("is-held");
+    const lift = (key) => {
+      if (!key.classList.contains("is-held")) return;
+      key.classList.remove("is-held");
       clack(false);
     };
 
     const releaseAll = () => {
-      keycaps.forEach((pick) => {
-        if (!pick.classList.contains("is-held")) return;
-        const elapsed = performance.now() - (pressedAt.get(pick) || 0);
+      keycaps.forEach((key) => {
+        if (!key.classList.contains("is-held")) return;
+        const elapsed = performance.now() - (pressedAt.get(key) || 0);
         if (elapsed >= HOLD_MIN) {
-          lift(pick);
+          lift(key);
           return;
         }
-        clearTimeout(pending.get(pick));
+        clearTimeout(pending.get(key));
         pending.set(
-          pick,
-          setTimeout(() => lift(pick), HOLD_MIN - elapsed)
+          key,
+          setTimeout(() => lift(key), HOLD_MIN - elapsed)
         );
       });
     };
 
-    keycaps.forEach((pick) => {
-      // These are anchors, so a press-and-drag starts a native link drag. That
-      // drag swallows pointer events — the page stops responding to the mouse
-      // and `pointerup` never arrives, leaving the cap stuck down.
-      pick.draggable = false;
-      pick.addEventListener("dragstart", (event) => event.preventDefault());
+    keycaps.forEach((key) => {
+      // The index caps are anchors, so a press-and-drag starts a native link
+      // drag. That drag swallows pointer events — the page stops responding to
+      // the mouse and `pointerup` never arrives, leaving the cap stuck down.
+      key.draggable = false;
+      key.addEventListener("dragstart", (event) => event.preventDefault());
 
       const push = () => {
-        clearTimeout(pending.get(pick));
-        pressedAt.set(pick, performance.now());
-        pick.classList.add("is-held");
+        clearTimeout(pending.get(key));
+        pressedAt.set(key, performance.now());
+        key.classList.add("is-held");
         clack();
       };
 
-      pick.addEventListener("pointerdown", (event) => {
+      key.addEventListener("pointerdown", (event) => {
         if (event.button !== undefined && event.button !== 0) return;
         // Captured on the cap itself, so the release is delivered here even if
         // the pointer has wandered off the key — or off the window. Capturing
         // on the element that was pressed leaves the click target unchanged.
-        if (pick.setPointerCapture) {
+        if (key.setPointerCapture) {
           try {
-            pick.setPointerCapture(event.pointerId);
+            key.setPointerCapture(event.pointerId);
           } catch {}
         }
         push();
@@ -456,14 +470,14 @@
 
       // Held with the keyboard too. `repeat` guards against the OS key-repeat
       // firing clack() dozens of times while the key is down.
-      pick.addEventListener("keydown", (event) => {
+      key.addEventListener("keydown", (event) => {
         if (event.repeat) return;
         if (event.key !== "Enter" && event.key !== " ") return;
         push();
       });
 
-      pick.addEventListener("keyup", releaseAll);
-      pick.addEventListener("blur", releaseAll);
+      key.addEventListener("keyup", releaseAll);
+      key.addEventListener("blur", releaseAll);
     });
 
     // Listened for on the window, not the cap: the pointer is very often
@@ -547,6 +561,28 @@
   }
 
   /* ── Cursor dot ──────────────────────────────────────────────────────── */
+
+  /* ---------------------------------------------------------------- portrait
+     Hover tilt on the cover illustration. Deliberately pointermove-only: there
+     is no press-and-drag, so the image never leaves its frame. */
+  const portrait = document.querySelector(".cover-portrait");
+  if (portrait && matchMedia("(hover:hover)").matches) {
+    const MAX = 7;
+    portrait.addEventListener("pointermove", (event) => {
+      const box = portrait.getBoundingClientRect();
+      // -0.5..0.5 from the centre of the card, in each axis.
+      const x = (event.clientX - box.left) / box.width - 0.5;
+      const y = (event.clientY - box.top) / box.height - 0.5;
+      // Moving the cursor right turns the card's right edge away, and moving it
+      // down tips the top toward you, which is why Y drives X and is negated.
+      portrait.style.setProperty("--portrait-ry", `${(x * MAX * 2).toFixed(2)}deg`);
+      portrait.style.setProperty("--portrait-rx", `${(-y * MAX * 2).toFixed(2)}deg`);
+    });
+    portrait.addEventListener("pointerleave", () => {
+      portrait.style.setProperty("--portrait-ry", "0deg");
+      portrait.style.setProperty("--portrait-rx", "0deg");
+    });
+  }
 
   if (matchMedia("(pointer:fine)").matches) {
     const cursor = document.querySelector(".cursor-dot");

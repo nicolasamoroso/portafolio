@@ -69,21 +69,21 @@ export const areas = {
       klass: "interest-frontend",
       icon: "layout-grid",
       markClass: "app-mark-ts",
-      label: { es: "PROYECTOS", en: "PROJECTS" } satisfies L,
+      label: { es: "Proyectos", en: "Projects" } satisfies L,
     },
     {
       href: "#casos",
       klass: "interest-backend",
       icon: "workflow",
       markClass: "app-mark-backend",
-      label: { es: "CASOS<br />TÉCNICOS", en: "CASE<br />STUDIES" } satisfies L,
+      label: { es: "Casos<br />Técnicos", en: "Case<br />Studies" } satisfies L,
     },
     {
       href: "#stack",
       klass: "interest-cloud",
       icon: "layers",
       markClass: "app-mark-cloud",
-      label: { es: "STACK", en: "STACK" } satisfies L,
+      label: { es: "Stack", en: "Stack" } satisfies L,
     },
   ],
 };
@@ -178,7 +178,7 @@ export const projects: Project[] = [
 ];
 
 export const projectsCopy = {
-  title: { es: "PROYECTOS", en: "PROJECTS" } satisfies L,
+  title: { es: "Proyectos", en: "Projects" } satisfies L,
   subtitle: { es: "SITIOS EN PRODUCCIÓN", en: "LIVE IN PRODUCTION" } satisfies L,
   visit: { es: "Entrar", en: "Visit" } satisfies L,
   code: { es: "Código", en: "Code" } satisfies L,
@@ -540,18 +540,6 @@ export const stack: Tech[] = [
     name: "Git",
     hex: "F05032",
     note: { es: "Commits chicos, siempre", en: "Small commits, always" },
-  },
-  {
-    slug: "mercadopago",
-    name: "Mercado Pago",
-    hex: "00B1EA",
-    note: { es: "Checkout Pro, integrado a mano", en: "Checkout Pro, wired by hand" },
-  },
-  {
-    slug: "shopify",
-    name: "Shopify",
-    hex: "7AB55C",
-    note: { es: "Storefront API con frontend propio", en: "Storefront API with a custom frontend" },
   },
 ];
 

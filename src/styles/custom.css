@@ -67,6 +67,18 @@
   width: 100%;
 }
 .cover-portrait {
+  /* Tilt follows the cursor on hover only: no pointerdown handler, so the
+     illustration can't be dragged out of its frame. The base declares these
+     custom properties on `.cv-board-profile .profile-sketch`, a selector this
+     layout doesn't match, so they're re-declared here. */
+  --portrait-rx: 0deg;
+  --portrait-ry: 0deg;
+  transform: perspective(850px) rotateX(var(--portrait-rx)) rotateY(var(--portrait-ry));
+  transform-style: preserve-3d;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+
   /* The base's .profile-sketch hard-codes grid-column:2 / grid-row:1-3 for the
      reference's own layout; the cover needs it back in the first column. */
   grid-column: 1;
@@ -92,7 +104,20 @@
   object-fit: contain;
   /* Transparent PNG, so it sits on the frame without a blend mode. */
   mix-blend-mode: normal;
-  transform: translateX(-50%) scale(1.02);
+  /* Lifted off the frame so the tilt reads as parallax rather than as the
+     whole card rotating flat. */
+  transform: translateX(-50%) scale(1.02) translateZ(20px);
+}
+@media (hover: hover) {
+  .cover-portrait:hover {
+    box-shadow: 16px 18px 0 rgba(10, 10, 10, 0.13);
+  }
+}
+/* A finger has no hover state, and the tilt would only fight the scroll. */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .cover-portrait {
+    transform: none;
+  }
 }
 .cover-portrait span {
   box-shadow: 0 0 0 5px #fffefa;
@@ -412,7 +437,8 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
    down for as long as the button is held — an animation would spring back on
    its own. The press and release durations differ on purpose: a switch bottoms
    out faster than the spring pushes it back up. */
-.pick.is-held .keycap {
+.pick.is-held .keycap,
+.stack-key-hit.is-held .keycap {
   transform: scaleY(0.86);
   transition-duration: 0.18s;
 }
@@ -431,8 +457,9 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
     fill 0.25s,
     filter 0.25s;
 }
-/* Lucide glyphs are outlines, not filled shapes: the same element carries
-   `.keycap-legend` for the glow transition, but the ink is a stroke. */
+/* Lucide glyphs are outlines, not filled shapes, so the ink is a stroke. The
+   element deliberately does NOT also carry `.keycap-legend`: that rule's `fill`
+   would win on hover and flood the outline into a solid blob. */
 .keycap-glyph-line {
   fill: none;
   stroke: #ececed;
@@ -446,12 +473,11 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
   stroke: var(--pick-accent);
 }
 /* Backlight: the only place each area's colour shows, and the only thing that
-   changes on hover — the cap itself never moves. Two shadows, one tight and one
-   wide, so the glyph glows rather than just changing colour. */
+   changes on hover. The legend swaps white for the accent and nothing else: a
+   blur here reads as the glyph losing its shape, not as light. */
 .pick:hover .keycap-legend,
 .pick:focus-visible .keycap-legend {
   fill: var(--pick-accent);
-  filter: drop-shadow(0 0 3px var(--pick-glow-tight)) drop-shadow(0 0 9px var(--pick-glow-wide));
 }
 .pick:hover .pick-object::before,
 .pick:focus-visible .pick-object::before {
@@ -846,7 +872,6 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
 .stack-key-hit:hover .keycap-legend,
 .stack-key-hit.is-active .keycap-legend {
   fill: var(--pick-accent);
-  filter: drop-shadow(0 0 4px var(--pick-accent));
 }
 .stack-readout {
   display: grid;
