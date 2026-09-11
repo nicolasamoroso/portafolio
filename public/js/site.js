@@ -358,59 +358,53 @@
         if (audio.state === "suspended") audio.resume();
 
         const now = audio.currentTime;
-        // The upstroke is quieter and a touch higher than the downstroke, the
-        // way a clicky switch's second click sounds when the spring lets go.
-        const level = down ? 1 : 0.55;
+        // The upstroke is quieter and sits a little higher than the downstroke,
+        // the way a switch sounds when the spring pushes the stem back up.
+        const level = down ? 1 : 0.5;
 
+        // The foam. Everything goes through one hard lowpass, which is what a
+        // well-dampened board does to the whole sound — kill the top and what's
+        // left is body. This node is the difference between a thock and a clack.
+        const damp = audio.createBiquadFilter();
+        damp.type = "lowpass";
+        damp.frequency.value = down ? 900 : 1200;
+        damp.Q.value = 0.5;
         const out = audio.createGain();
         out.gain.value = 0.9;
-        out.connect(audio.destination);
+        damp.connect(out).connect(audio.destination);
 
-        // The click itself: a very short noise burst with the top left open.
-        // Where it sits is the whole character — rolled off low it reads as a
-        // muted thock, bright and brief it reads as a clicky jacket snapping.
-        const length = Math.floor(audio.sampleRate * 0.016);
+        // The impact transient, kept short and quiet. It's only there to give
+        // the low end an edge to start on; on its own it should barely register.
+        const length = Math.floor(audio.sampleRate * 0.014);
         const buffer = audio.createBuffer(1, length, audio.sampleRate);
         const channel = buffer.getChannelData(0);
         for (let i = 0; i < length; i += 1) {
-          channel[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 4;
+          channel[i] = (Math.random() * 2 - 1) * (1 - i / length) ** 3;
         }
         const noise = audio.createBufferSource();
         noise.buffer = buffer;
-        const shape = audio.createBiquadFilter();
-        shape.type = "bandpass";
-        shape.frequency.value = down ? 4200 : 5200;
-        shape.Q.value = 1.1;
         const clickGain = audio.createGain();
-        clickGain.gain.setValueAtTime(0.19 * level, now);
-        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.02);
-        noise.connect(shape).connect(clickGain).connect(out);
+        clickGain.gain.setValueAtTime(0.075 * level, now);
+        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
+        noise.connect(clickGain).connect(damp);
         noise.start(now);
 
-        // The ping the leaf leaves behind. Tiny and very fast, but it's what
-        // separates a click from a puff of noise.
-        const ping = audio.createOscillator();
-        ping.type = "square";
-        ping.frequency.setValueAtTime(down ? 3100 : 3900, now);
-        const pingGain = audio.createGain();
-        pingGain.gain.setValueAtTime(0.035 * level, now);
-        pingGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.012);
-        ping.connect(pingGain).connect(out);
-        ping.start(now);
-        ping.stop(now + 0.02);
-
-        // A little body underneath so the click still lands on something solid
-        // instead of floating. Quieter than the click on purpose.
-        const thock = audio.createOscillator();
-        thock.type = "sine";
-        thock.frequency.setValueAtTime(down ? 150 : 200, now);
-        thock.frequency.exponentialRampToValueAtTime(down ? 96 : 130, now + 0.06);
-        const thockGain = audio.createGain();
-        thockGain.gain.setValueAtTime(0.075 * level, now);
-        thockGain.gain.exponentialRampToValueAtTime(0.0001, now + (down ? 0.075 : 0.05));
-        thock.connect(thockGain).connect(out);
-        thock.start(now);
-        thock.stop(now + 0.1);
+        // The thock itself, and the loudest part by far. Two low sines dropping
+        // in pitch together read as a struck, damped object; a single one always
+        // sounds like a beep. The decay is short because foam kills the ring.
+        const pitches = down ? [112, 70] : [150, 96];
+        pitches.forEach((hz, index) => {
+          const osc = audio.createOscillator();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(hz, now);
+          osc.frequency.exponentialRampToValueAtTime(hz * 0.58, now + 0.07);
+          const gain = audio.createGain();
+          gain.gain.setValueAtTime((index === 0 ? 0.26 : 0.13) * level, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + (down ? 0.1 : 0.065));
+          osc.connect(gain).connect(damp);
+          osc.start(now);
+          osc.stop(now + 0.13);
+        });
       } catch {
         // Audio is a flourish; never let it break the navigation.
       }
