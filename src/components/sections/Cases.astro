@@ -1,0 +1,102 @@
+---
+import ChapterMarker from "../ChapterMarker.astro";
+import Icon from "../Icon.astro";
+import T from "../T.astro";
+import { cases, casesCopy } from "../../data/content";
+---
+
+<section id="casos" class="chapter chapter-cases" aria-labelledby="cases-title">
+  <ChapterMarker index="02" title={casesCopy.title} id="cases-title" />
+
+  <div class="campaign-summary section-shell reveal">
+    <T t={casesCopy.summaryKicker} as="p" class="eyebrow" />
+    <T t={casesCopy.summaryTitle} as="h3" />
+  </div>
+
+  <div class="campaign-showcase section-shell">
+    <T t={casesCopy.selectHint} as="p" class="campaign-select-hint" />
+
+    <div id="case-selector" class="campaign-selector" role="group" aria-label="Elegir caso">
+      {cases.map((item, index) => (
+        <button
+          type="button"
+          aria-pressed={index === 0 ? "true" : "false"}
+          aria-controls={`case-${item.id}`}
+        >
+          <span class="campaign-choice-number">{String(index + 1).padStart(2, "0")}</span>
+          <span>
+            <T t={item.tab} />
+            <T t={casesCopy.tabNote} as="small" />
+          </span>
+          <Icon name="arrow-up-right" />
+        </button>
+      ))}
+    </div>
+
+    <div id="case-panels">
+      {cases.map((item, index) => (
+        <article
+          class="campaign-case"
+          id={`case-${item.id}`}
+          hidden={index !== 0}
+          aria-labelledby={`case-title-${item.id}`}
+        >
+          <header class="campaign-case-heading">
+            <T t={item.kicker} as="p" class="eyebrow" />
+            <T t={item.name} as="h3" id={`case-title-${item.id}`} />
+          </header>
+
+          <div class="campaign-case-layout">
+            <div class="case-side">
+              <T t={casesCopy.stackLabel} as="h4" class="campaign-results-label" />
+              <ul class="case-stack">
+                {item.stack.map((tech) => (
+                  <li>{tech}</li>
+                ))}
+              </ul>
+              <details class="campaign-details case-details" open>
+                <summary>
+                  {/* The base rotates every <span> in an open summary (it's the +/× toggle),
+                        so the label has to be anything but a span. */}
+                  <T t={casesCopy.detailSummary} as="b" />
+                  <Icon name="plus" class="details-toggle" size={20} />
+                </summary>
+                <div class="campaign-details-body">
+                  {item.detail.map((line) => (
+                    <T t={line} as="p" />
+                  ))}
+                </div>
+              </details>
+            </div>
+
+            <div class="campaign-case-content">
+              <T t={item.description} as="p" class="campaign-case-description" />
+
+              <T t={casesCopy.factsLabel} as="h4" class="campaign-results-label" />
+              <dl class="campaign-facts">
+                {item.facts.map((fact) => (
+                  <div>
+                    <T t={fact.label} as="dt" />
+                    <T t={fact.value} as="dd" />
+                  </div>
+                ))}
+              </dl>
+
+              <dl class="campaign-metrics">
+                {item.metrics.map((metric) => (
+                  <div>
+                    <T t={metric.label} as="dt" />
+                    <dd>{metric.value}</dd>
+                    <T t={metric.note} as="small" />
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <T t={casesCopy.note} as="p" class="campaign-source" />
+  </div>
+</section>

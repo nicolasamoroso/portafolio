@@ -1,0 +1,49 @@
+---
+import Icon from "../Icon.astro";
+import T from "../T.astro";
+import { contact, meta } from "../../data/content";
+---
+
+<section id="contacto" class="contact-section" aria-labelledby="contact-title">
+  <T t={contact.title} as="h2" id="contact-title" />
+  <T t={contact.body} as="p" class="contact-body" />
+
+  <div class="contact-actions">
+    <a class="contact-link" href={`mailto:${meta.email}`}>
+      {meta.email} <Icon name="arrow-up-right" size={"0.62em"} />
+    </a>
+
+    <div class="contact-grid">
+      <p>
+        <span class="eyebrow">GITHUB</span>
+        <a href={meta.github} target="_blank" rel="noopener noreferrer">
+          nicolasamoroso <Icon name="arrow-up-right" />
+        </a>
+      </p>
+      <p>
+        <span class="eyebrow">LINKEDIN</span>
+        <a href={meta.linkedin} target="_blank" rel="noopener noreferrer">
+          nicolas-amoroso <Icon name="arrow-up-right" />
+        </a>
+      </p>
+      <p>
+        <T t={contact.resume} as="span" class="eyebrow" />
+        <span class="contact-resume">
+          <a href="/resumes/cv.pdf" target="_blank" rel="noopener noreferrer">
+            <T t={contact.resumeEs} /> <Icon name="arrow-up-right" />
+          </a>
+          <i aria-hidden="true">·</i>
+          <a href="/resumes/resume-en.pdf" target="_blank" rel="noopener noreferrer">
+            <T t={contact.resumeEn} /> <Icon name="arrow-up-right" />
+          </a>
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <T t={meta.location} as="p" class="contact-location" />
+  <a class="back-top" href="#inicio">
+    <T t={contact.backTop} />
+    <Icon name="arrow-up" size={12} />
+  </a>
+</section>

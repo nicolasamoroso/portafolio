@@ -1,0 +1,22 @@
+---
+import T from "../T.astro";
+import Keycap from "../Keycap.astro";
+import { areas } from "../../data/content";
+---
+
+<section id="areas" class="interests-section" aria-labelledby="areas-title">
+  <div class="interests-head section-shell reveal">
+    <T t={areas.title} as="h2" id="areas-title" />
+  </div>
+
+  <div class="index-picks section-shell">
+    {areas.cards.map((card, index) => (
+      <a class:list={["pick", card.klass, "reveal"]} href={card.href} style={`--pick:${index}`}>
+        <T t={card.label} as="span" class="pick-label" />
+        <span class="pick-object">
+          <Keycap legend={card.mark} id={card.klass.replace("interest-", "")} />
+        </span>
+      </a>
+    ))}
+  </div>
+</section>

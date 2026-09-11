@@ -1,0 +1,24 @@
+---
+/**
+ * The numbered heading that opens each chapter. One component for all three, so
+ * 01, 02 and 03 can't drift apart the way they had — each section used to reach
+ * for the base's marker with slightly different overrides.
+ */
+import T from "./T.astro";
+import type { L } from "../data/content";
+
+interface Props {
+  index: string;
+  title: L;
+  id: string;
+}
+
+const { index, title, id } = Astro.props;
+---
+
+<div class="chapter-head section-shell reveal">
+  <span class="chapter-head-number" aria-hidden="true">
+    {index}
+  </span>
+  <T t={title} as="h2" id={id} />
+</div>

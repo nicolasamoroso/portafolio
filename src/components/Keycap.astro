@@ -1,0 +1,109 @@
+---
+/**
+ * Mechanical keycap in axonometric projection: 30° of yaw, 30° of elevation.
+ *
+ * Drawn rather than transformed on purpose. A CSS `rotateX` foreshortens the
+ * whole element, which is what made the earlier tiles look like they were
+ * leaning; projecting it by hand keeps the cap's axis upright while still
+ * showing it from the side.
+ *
+ * The projection: with yaw θ and elevation φ, a ground-plane unit vector along
+ * X lands at (cos θ, sin θ·sin φ) and one along Z at (−sin θ, cos θ·sin φ).
+ * At θ = φ = 30° that is u = (0.866, 0.25) and v = (−0.5, 0.433) — asymmetric,
+ * so you see more of the right-hand wall than the left. The cap is the solid
+ * between a wide bottom face and a narrower, raised top face; both faces use
+ * the same u/v basis, so every edge stays parallel to its opposite and the
+ * silhouette reads as standing straight rather than tipping.
+ */
+interface Props {
+  /** Text legend, e.g. "TS". Ignored when `path` is given. */
+  legend?: string;
+  /** A 24x24 icon path (simple-icons), drawn in place of a text legend. */
+  path?: string | null;
+  id: string;
+}
+
+const { legend, path, id } = Astro.props;
+
+/** center ± u ± v, with u and v the projected ground axes scaled by `s`. */
+function face(cx: number, cy: number, s: number) {
+  const u = { x: 0.866 * s, y: 0.25 * s };
+  const v = { x: -0.5 * s, y: 0.433 * s };
+  const p = (x: number, y: number) => `${x.toFixed(1)},${y.toFixed(1)}`;
+  return {
+    back: p(cx - u.x - v.x, cy - u.y - v.y),
+    right: p(cx + u.x - v.x, cy + u.y - v.y),
+    front: p(cx + u.x + v.x, cy + u.y + v.y),
+    left: p(cx - u.x + v.x, cy - u.y + v.y),
+  };
+}
+
+// Narrow raised top, wide flared bottom — the walls slope outward the way a
+// real keycap's do, symmetrically, so it reads as a taper and not a lean.
+// The gap between the two centres is the cap's height; keeping it well above
+// the flare is what stops the profile reading squat.
+const t = face(100, 52, 46);
+const b = face(100, 118, 56);
+---
+
+{/* Cropped to the drawing so the cap fills its box instead of floating in it. */}
+<svg class="keycap" viewBox="16 13 168 150" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id={`cap-top-${id}`} x1="0.2" y1="0" x2="0.6" y2="1">
+      <stop offset="0%" stop-color="#56565d" />
+      <stop offset="55%" stop-color="#3f3f46" />
+      <stop offset="100%" stop-color="#34343b" />
+    </linearGradient>
+    <linearGradient id={`cap-left-${id}`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#35353c" />
+      <stop offset="100%" stop-color="#1e1e22" />
+    </linearGradient>
+    <linearGradient id={`cap-right-${id}`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#242429" />
+      <stop offset="100%" stop-color="#111114" />
+    </linearGradient>
+    <!-- The dish: light gathers at the back rim, shadow pools toward the front. -->
+    <linearGradient id={`cap-dish-${id}`} x1="0.4" y1="0" x2="0.6" y2="1">
+      <stop offset="0%" stop-color="#000" stop-opacity="0.32" />
+      <stop offset="48%" stop-color="#000" stop-opacity="0" />
+      <stop offset="100%" stop-color="#000" stop-opacity="0.28" />
+    </linearGradient>
+  </defs>
+
+  {/* Paint order matters, and nothing is stroked.
+
+      The two walls share the cap's front edge, and a stroke is drawn astride
+      its path — so the wall painted second would cover half a stroke-width past
+      that shared edge and push the visible colour boundary off the cap's real
+      front vertex. With no strokes anywhere the divider lands exactly on it,
+      and the cap has no outline around it.
+
+      The corners are square as a result: rounding them was what the outline was
+      doing. Doing it without one means building each face's path with arc
+      corners rather than straight segments. */}
+  <polygon points={`${t.left} ${t.front} ${b.front} ${b.left}`} fill={`url(#cap-left-${id})`} />
+  <polygon points={`${t.front} ${t.right} ${b.right} ${b.front}`} fill={`url(#cap-right-${id})`} />
+
+  <!-- Top face, then the dish shading over it. -->
+  <polygon points={`${t.back} ${t.right} ${t.front} ${t.left}`} fill={`url(#cap-top-${id})`} />
+  <polygon points={`${t.back} ${t.right} ${t.front} ${t.left}`} fill={`url(#cap-dish-${id})`} />
+
+  {/* Legend, laid into the plane of the top face using the same u/v basis. The
+      icon variant additionally recentres its 24x24 box on the face origin. */}
+  {path ? (
+    <path
+      class="keycap-legend"
+      d={path}
+      transform="matrix(0.866 0.25 -0.5 0.433 100 52) scale(2.1) translate(-12 -12)"
+    />
+  ) : (
+    <text
+      class="keycap-legend"
+      transform="matrix(0.866 0.25 -0.5 0.433 100 52)"
+      text-anchor="middle"
+      dy="0.34em"
+    >
+      {legend}
+    </text>
+  )}
+</svg>

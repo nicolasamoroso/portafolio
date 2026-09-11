@@ -1,0 +1,61 @@
+---
+import Icon from "./Icon.astro";
+import T from "./T.astro";
+import { meta, nav } from "../data/content";
+---
+
+<header class="site-header">
+  <a class="wordmark" href="#inicio" aria-label="Ir al inicio">
+    {meta.initials}
+    <span>®</span>
+  </a>
+  <p class="header-meta">
+    NICOLÁS AMOROSO
+    <br />
+    <span data-i18n data-es="CV / PORTAFOLIO / 2026" data-en="CV / PORTFOLIO / 2026">
+      CV / PORTAFOLIO / 2026
+    </span>
+  </p>
+  <div class="header-actions">
+    <div class="theme-switch" role="group" aria-label="Tema / Theme">
+      <button type="button" data-theme-set="light" aria-pressed="false" title="Claro / Light">
+        <Icon name="sun" size={13} />
+        <span class="sr-only">Claro</span>
+      </button>
+      <button type="button" data-theme-set="mixed" aria-pressed="true" title="Mixto / Mixed">
+        <Icon name="contrast" size={13} />
+        <span class="sr-only">Mixto</span>
+      </button>
+      <button type="button" data-theme-set="dark" aria-pressed="false" title="Oscuro / Dark">
+        <Icon name="moon" size={13} />
+        <span class="sr-only">Oscuro</span>
+      </button>
+    </div>
+    <div class="lang-switch" role="group" aria-label="Idioma / Language">
+      <button type="button" data-lang-set="es" aria-pressed="true">
+        ES
+      </button>
+      <span aria-hidden="true">/</span>
+      <button type="button" data-lang-set="en" aria-pressed="false">
+        EN
+      </button>
+    </div>
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      aria-label="Índice"
+      data-i18n-label
+      data-label-es="Índice"
+      data-label-en="Index"
+    >
+      <i></i>
+    </button>
+  </div>
+  <nav id="site-nav" class="site-nav" aria-label="Navegación principal" inert>
+    {nav.map(({ href, label }) => (
+      <T t={label} as="a" href={href} />
+    ))}
+  </nav>
+</header>

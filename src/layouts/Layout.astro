@@ -1,64 +1,68 @@
 ---
-import Footer from '../components/Footer.astro';
-
-interface Props {
-  title: string;
-  description?: string;
-}
-
-const { title, description = "Nicolás Amoroso - Fullstack Developer based in Uruguay" } = Astro.props;
+import Icon from "../components/Icon.astro";
+import "../styles/base.css";
+import "../styles/custom.css";
+import { meta } from "../data/content";
 ---
 
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="es" data-lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/icons/code-solid.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)" />
-    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content={meta.description.es}
+      data-i18n-meta
+      data-es={meta.description.es}
+      data-en={meta.description.en}
+    />
+    <link rel="canonical" href="https://nicolasamoroso.com/" />
+    <title data-i18n-title data-es={meta.title.es} data-en={meta.title.en}>{meta.title.es}</title>
+    <link rel="icon" type="image/svg+xml" href="/icons/na.svg" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={meta.title.es} />
+    <meta property="og:description" content={meta.description.es} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      // Applied before first paint so a returning reader never sees a flash of
+      // the wrong language or theme. site.js takes over once the DOM is parsed.
+      (() => {
+        const root = document.documentElement;
+        let lang = null;
+        let theme = null;
+        try {
+          lang = localStorage.getItem("lang");
+          theme = localStorage.getItem("theme");
+        } catch {}
+
+        if (lang === "en" || lang === "es") {
+          root.lang = lang;
+          root.dataset.lang = lang;
+        }
+
+        root.dataset.theme =
+          theme === "light" || theme === "dark" || theme === "mixed" ? theme : "mixed";
+      })();
+    </script>
   </head>
-  <body class="bg-white dark:bg-[#0f0f0f] text-zinc-900 dark:text-zinc-100 antialiased min-h-screen flex flex-col">
-    <a
-      href="#main"
-      class="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:px-4 focus-visible:py-2 focus-visible:bg-zinc-900 focus-visible:text-white focus-visible:rounded-md focus-visible:text-sm focus-visible:outline-none"
-    >
-      Skip to main content
-    </a>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
     <slot />
-    <Footer />
+    <dialog id="lightbox" class="lightbox" aria-label="Vista ampliada de proyecto">
+      <button id="lightbox-close" class="lightbox-close" type="button" aria-label="Cerrar imagen">
+        <Icon name="x" size={22} />
+      </button>
+      <img id="lightbox-image" src="" alt="" />
+    </dialog>
+    <script src="/js/site.js" is:inline></script>
+    <script src="/js/device-tilt.js" is:inline></script>
   </body>
 </html>
-
-<style is:global>
-  body {
-    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  html {
-    color-scheme: light dark;
-    scroll-behavior: smooth;
-  }
-
-  ::selection {
-    background: #000;
-    color: #fff;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    ::selection {
-      background: #fff;
-      color: #000;
-    }
-  }
-</style>
