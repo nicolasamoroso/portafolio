@@ -50,7 +50,6 @@ export const hero = {
 };
 
 export const cover = {
-  portraitHint: { es: "MOVEME", en: "DRAG ME" } satisfies L,
   role: {
     es: "Desarrollador fullstack. Armo la pantalla y la infra que la sostiene, y lo dejo funcionando de verdad — no hasta la demo.",
     en: "Fullstack developer. I build the screen and the infrastructure behind it, and leave it actually working — not working until the demo.",

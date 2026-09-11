@@ -19,12 +19,7 @@ let letterIndex = 0;
   />
 
   <div class="cover-grid">
-    <figure
-      class="profile-sketch cover-portrait"
-      tabindex="0"
-      role="button"
-      aria-label="Ilustración de Nicolás Amoroso. Arrastrala para moverla dentro de su marco."
-    >
+    <figure class="profile-sketch cover-portrait">
       <img
         src="/img/nico.png"
         alt="Ilustración de Nicolás Amoroso"
@@ -32,13 +27,8 @@ let letterIndex = 0;
         height="1242"
         fetchpriority="high"
       />
+      {/* The pencil that sweeps across during the reveal. */}
       <span aria-hidden="true"></span>
-      {/* Not a <span>: the base styles `.profile-sketch span` as the 2px pencil
-          that sweeps across during the reveal, so a span here vanishes. */}
-      <small class="portrait-hint" aria-hidden="true">
-        <T t={cover.portraitHint} as="b" />
-        <Icon name="arrow-up-right" size={10} />
-      </small>
     </figure>
 
     <div class="cover-copy">

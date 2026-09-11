@@ -81,24 +81,6 @@
 }
 
 .cover-portrait {
-  /* The base declares these on `.cv-board-profile .profile-sketch`, a selector
-     this layout doesn't match. Without them the image's
-     `calc(-50% + var(--portrait-x))` is invalid and it jumps half its width to
-     the left until the first pointermove defines them. */
-  --portrait-rx: 0deg;
-  --portrait-ry: 0deg;
-  --portrait-x: 0px;
-  --portrait-y: 0px;
-  --portrait-drag-x: 0px;
-  --portrait-drag-y: 0px;
-  cursor: grab;
-  touch-action: none;
-  transform: perspective(850px) rotateX(var(--portrait-rx)) rotateY(var(--portrait-ry));
-  transform-style: preserve-3d;
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.2s ease;
-
   /* The base's .profile-sketch hard-codes grid-column:2 / grid-row:1-3 for the
      reference's own layout; the cover needs it back in the first column. */
   grid-column: 1;
@@ -125,22 +107,7 @@
   object-fit: contain;
   /* Transparent PNG, so it sits on the frame without a blend mode. */
   mix-blend-mode: normal;
-  transform: translate3d(
-      calc(-50% + var(--portrait-x) + var(--portrait-drag-x)),
-      calc(var(--portrait-y) + var(--portrait-drag-y)),
-      20px
-    )
-    scale(1.02);
-}
-
-.cover-portrait.is-dragging {
-  cursor: grabbing;
-}
-
-@media (hover: none) {
-  .cover-portrait {
-    cursor: pointer;
-  }
+  transform: translateX(-50%) scale(1.02);
 }
 
 .cover-portrait span {
@@ -1154,17 +1121,23 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
 
 /* The reference's pencil sweep animates translateX(calc(100% + 12px)), but the
    element is the 2px pencil itself — so it travels 14px and parks across the
-   card instead of sweeping off it. Sweep the frame's width and then retire it. */
+   card instead of sweeping off it.
+
+   Animating `left` rather than a transform: percentages on `left` resolve
+   against the frame, so the sweep always crosses it whatever width it ends up
+   at, with no measurement handed in from JS. */
 @keyframes portrait-scan {
   0% {
-    transform: translateX(-12px) rotate(-6deg);
+    left: -12px;
+    transform: rotate(-6deg);
     opacity: 1;
   }
   92% {
     opacity: 1;
   }
   100% {
-    transform: translateX(calc(var(--portrait-width, 330px) + 12px)) rotate(6deg);
+    left: calc(100% + 12px);
+    transform: rotate(6deg);
     opacity: 0;
   }
 }
@@ -1526,16 +1499,6 @@ a .icon,
 .scroll-prompt .icon,
 .back-top .icon {
   vertical-align: -0.2em;
-}
-
-.portrait-hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.portrait-hint b {
-  font-weight: inherit;
 }
 
 /* The reference rotated the `+` glyph 45° to make an ×; with a real icon the
