@@ -1672,3 +1672,20 @@ a .icon,
     gap: calc(var(--section-y) * 0.8);
   }
 }
+
+/* ── Serif accents ───────────────────────────────────────────────────────────
+   The italic <em> inside a display heading inherits that heading's tracking,
+   which is cut to −0.075em for Archivo Black. On Instrument Serif italic that
+   is enough to close the word spaces entirely ("in one product" reads as one
+   word), so the accent gets its own metrics. Inheritance always loses to a
+   direct declaration, which is why one rule covers every heading.
+   -------------------------------------------------------------------------- */
+
+h1 em,
+h2 em,
+h3 em,
+h4 em,
+.contact-section em {
+  letter-spacing: 0;
+  word-spacing: 0.07em;
+}
