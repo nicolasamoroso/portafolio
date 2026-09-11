@@ -424,6 +424,138 @@
       }
     };
 
+    // Same evaluation a browser does internally for `cubic-bezier()`: solve for
+    // the parametric t whose x matches the input, then read y at that t. Used
+    // because the keycap's press animation needs the timing function to move
+    // from CSS to script (see the comment on `animateCap`) without changing
+    // how it looks.
+    function cubicBezier(x1, y1, x2, y2) {
+      const sampleX = (t) => {
+        const c = 3 * x1;
+        const b = 3 * (x2 - x1) - c;
+        const a = 1 - c - b;
+        return ((a * t + b) * t + c) * t;
+      };
+      const sampleY = (t) => {
+        const c = 3 * y1;
+        const b = 3 * (y2 - y1) - c;
+        const a = 1 - c - b;
+        return ((a * t + b) * t + c) * t;
+      };
+      const sampleDerivativeX = (t) => {
+        const c = 3 * x1;
+        const b = 3 * (x2 - x1) - c;
+        const a = 1 - c - b;
+        return (3 * a * t + 2 * b) * t + c;
+      };
+      const solveX = (x) => {
+        let t = x;
+        for (let i = 0; i < 8; i += 1) {
+          const dx = sampleX(t) - x;
+          if (Math.abs(dx) < 1e-6) return t;
+          const d = sampleDerivativeX(t);
+          if (Math.abs(d) < 1e-6) break;
+          t -= dx / d;
+        }
+        let lo = 0;
+        let hi = 1;
+        t = x;
+        while (lo < hi) {
+          const dx = sampleX(t) - x;
+          if (Math.abs(dx) < 1e-6) return t;
+          if (dx > 0) hi = t;
+          else lo = t;
+          t = (hi + lo) / 2;
+        }
+        return t;
+      };
+      return (t) => (t <= 0 ? 0 : t >= 1 ? 1 : sampleY(solveX(t)));
+    }
+
+    // ── Press geometry ─────────────────────────────────────────────────────
+    // Redraws the cap's top face at a lower `cy` instead of squashing the
+    // whole drawing with a CSS `scaleY` — see the comment on `.keycap` in
+    // custom.css for why a uniform vertical scale reads as the cap tipping
+    // sideways instead of sinking straight down. The projection math mirrors
+    // `face()` in Keycap.astro exactly; `b` never moves; only `cy` does.
+    const CY_UP = 52;
+    const CY_DOWN = 52 + 13;
+    const TOP_S = 46;
+
+    function projectFace(cx, cy, s) {
+      const ux = 0.866 * s;
+      const uy = 0.25 * s;
+      const vx = -0.5 * s;
+      const vy = 0.433 * s;
+      const p = (x, y) => `${x.toFixed(1)},${y.toFixed(1)}`;
+      return {
+        back: p(cx - ux - vx, cy - uy - vy),
+        right: p(cx + ux - vx, cy + uy - vy),
+        front: p(cx + ux + vx, cy + uy + vy),
+        left: p(cx - ux + vx, cy - uy + vy),
+      };
+    }
+
+    const BASE_FACE = projectFace(100, 118, 56);
+    const capGeometry = new WeakMap();
+
+    keycaps.forEach((key) => {
+      const svg = key.querySelector(".keycap");
+      if (!svg) return;
+      const wallLeft = svg.querySelector(".keycap-wall-left");
+      const wallRight = svg.querySelector(".keycap-wall-right");
+      const top = svg.querySelector(".keycap-top");
+      const dish = svg.querySelector(".keycap-dish");
+      const legends = [...svg.querySelectorAll(".keycap-legend, .keycap-glyph-line")];
+      if (!wallLeft || !wallRight || !top || !dish) return;
+      capGeometry.set(key, { wallLeft, wallRight, top, dish, legends, value: 0, raf: 0 });
+    });
+
+    const redrawCap = (geo, cy) => {
+      const t = projectFace(100, cy, TOP_S);
+      const topPoints = `${t.back} ${t.right} ${t.front} ${t.left}`;
+      geo.top.setAttribute("points", topPoints);
+      geo.dish.setAttribute("points", topPoints);
+      geo.wallLeft.setAttribute(
+        "points",
+        `${t.left} ${t.front} ${BASE_FACE.front} ${BASE_FACE.left}`
+      );
+      geo.wallRight.setAttribute(
+        "points",
+        `${t.front} ${t.right} ${BASE_FACE.right} ${BASE_FACE.front}`
+      );
+      geo.legends.forEach((el) => {
+        const suffix = el.tagName.toLowerCase() === "text" ? "" : " scale(2.1) translate(-12 -12)";
+        el.setAttribute("transform", `matrix(0.866 0.25 -0.5 0.433 100 ${cy.toFixed(2)})${suffix}`);
+      });
+    };
+
+    // A registered custom property (`@property`) would normally let a plain
+    // CSS transition own this easing while script just reads the
+    // interpolated value back each frame — that's cleaner than a hand-rolled
+    // tween. It doesn't work here: Chromium computes registered custom
+    // properties to their initial value on SVG elements regardless of what
+    // the cascade sets, so `--press` never actually moved. This reimplements
+    // the same cubic-bezier the CSS used to carry, entirely in script.
+    const pressEase = cubicBezier(0.18, 1.3, 0.4, 1);
+
+    const animateCap = (key, down) => {
+      const geo = capGeometry.get(key);
+      if (!geo) return;
+      cancelAnimationFrame(geo.raf);
+      const from = geo.value;
+      const to = down ? 1 : 0;
+      const duration = down ? 180 : 320;
+      const start = performance.now();
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        geo.value = from + (to - from) * pressEase(t);
+        redrawCap(geo, CY_UP + (CY_DOWN - CY_UP) * geo.value);
+        if (t < 1) geo.raf = requestAnimationFrame(tick);
+      };
+      geo.raf = requestAnimationFrame(tick);
+    };
+
     // A real click lasts ~60ms but the cap takes 180ms to bottom out, so a plain
     // press would reverse before it ever got down and read as no animation at
     // all. Holding it for a minimum lets the travel finish; holding the button
@@ -436,6 +568,7 @@
       if (!key.classList.contains("is-held")) return;
       key.classList.remove("is-held");
       clack(false);
+      animateCap(key, false);
     };
 
     const releaseAll = () => {
@@ -466,6 +599,7 @@
         pressedAt.set(key, performance.now());
         key.classList.add("is-held");
         clack();
+        animateCap(key, true);
       };
 
       key.addEventListener("pointerdown", (event) => {

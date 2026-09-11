@@ -14,6 +14,15 @@
  * between a wide bottom face and a narrower, raised top face; both faces use
  * the same u/v basis, so every edge stays parallel to its opposite and the
  * silhouette reads as standing straight rather than tipping.
+ *
+ * That same asymmetry is why the pressed state isn't a CSS `scaleY` on the
+ * whole drawing: the top face's left and right corners sit at different
+ * heights (the asymmetric basis again), so a uniform vertical squash shrinks
+ * each by a different number of pixels and the cap reads as tipping sideways
+ * instead of sinking straight down. `site.js` re-projects the top face at a
+ * lower `cy` instead — a translation, which moves all four corners by the
+ * same amount and can't introduce that lean — via the `keycap-*` classes
+ * below, which is why they exist even though nothing here reads them back.
  */
 import fs from "node:fs";
 import nodePath from "node:path";
@@ -111,12 +120,28 @@ const b = face(100, 118, 56);
       The corners are square as a result: rounding them was what the outline was
       doing. Doing it without one means building each face's path with arc
       corners rather than straight segments. */}
-  <polygon points={`${t.left} ${t.front} ${b.front} ${b.left}`} fill={`url(#cap-left-${id})`} />
-  <polygon points={`${t.front} ${t.right} ${b.right} ${b.front}`} fill={`url(#cap-right-${id})`} />
+  <polygon
+    class="keycap-wall-left"
+    points={`${t.left} ${t.front} ${b.front} ${b.left}`}
+    fill={`url(#cap-left-${id})`}
+  />
+  <polygon
+    class="keycap-wall-right"
+    points={`${t.front} ${t.right} ${b.right} ${b.front}`}
+    fill={`url(#cap-right-${id})`}
+  />
 
   <!-- Top face, then the dish shading over it. -->
-  <polygon points={`${t.back} ${t.right} ${t.front} ${t.left}`} fill={`url(#cap-top-${id})`} />
-  <polygon points={`${t.back} ${t.right} ${t.front} ${t.left}`} fill={`url(#cap-dish-${id})`} />
+  <polygon
+    class="keycap-top"
+    points={`${t.back} ${t.right} ${t.front} ${t.left}`}
+    fill={`url(#cap-top-${id})`}
+  />
+  <polygon
+    class="keycap-dish"
+    points={`${t.back} ${t.right} ${t.front} ${t.left}`}
+    fill={`url(#cap-dish-${id})`}
+  />
 
   {/* Legend, laid into the plane of the top face using the same u/v basis. The
       icon variant additionally recentres its 24x24 box on the face origin. */}

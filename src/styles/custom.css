@@ -422,26 +422,20 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
   width: 100%;
   height: 100%;
   overflow: visible;
-  transform-origin: center 95.5%;
-  /* The release: slower than the press, with a little overshoot so the cap
-     rebounds instead of easing flatly back. */
-  transition:
-    transform 0.32s cubic-bezier(0.18, 1.3, 0.4, 1),
-    filter 0.3s ease;
+  transition: filter 0.3s ease;
 }
-/* Pressed: the body compresses instead of the whole drawing sliding down — the
-   base stays planted on the board and the top face comes to meet it, which is
-   what a switch actually does. The origin sits on the cap's front base vertex
-   (y = 156 of the 13–163 viewBox, so 95.5% down the box), not on the box edge.
-   A transition rather than a keyframe animation, because the cap has to *stay*
-   down for as long as the button is held — an animation would spring back on
-   its own. The press and release durations differ on purpose: a switch bottoms
-   out faster than the spring pushes it back up. */
-.pick.is-held .keycap,
-.stack-key-hit.is-held .keycap {
-  transform: scaleY(0.86);
-  transition-duration: 0.18s;
-}
+/* Pressed: the top face is redrawn lower instead of the whole drawing being
+   squashed with `scaleY` — a uniform vertical scale shrinks the top face's
+   two corners by different amounts (they sit at different heights, a result
+   of the same asymmetric projection described above), which reads as the cap
+   tipping sideways rather than sinking straight down.
+   That redraw is driven entirely from `site.js`, not from a CSS transition:
+   registered custom properties (`@property`) are the usual way to let CSS own
+   the easing while script reads the interpolated value back each frame, but
+   Chromium computes them to their initial value on SVG elements regardless of
+   the cascade, so `--press` never actually changed here. The script runs its
+   own eased tween instead, using the same curve and durations this rule used
+   to carry — a switch bottoms out faster than the spring pushes it back up. */
 .pick.is-held .pick-object::before {
   transform: scale(0.88);
   filter: blur(9px);
