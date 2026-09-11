@@ -15,15 +15,45 @@
  * the same u/v basis, so every edge stays parallel to its opposite and the
  * silhouette reads as standing straight rather than tipping.
  */
+import fs from "node:fs";
+import nodePath from "node:path";
+
 interface Props {
-  /** Text legend, e.g. "TS". Ignored when `path` is given. */
+  /** Text legend, e.g. "TS". Ignored when `path` or `icon` is given. */
   legend?: string;
   /** A 24x24 icon path (simple-icons), drawn in place of a text legend. */
   path?: string | null;
+  /** A lucide-static icon name, inlined at build time. Outranks `legend`. */
+  icon?: string;
   id: string;
 }
 
-const { legend, path, id } = Astro.props;
+const { legend, path, icon, id } = Astro.props;
+
+/**
+ * Lucide glyphs are stroked outlines rather than a single filled path, so they
+ * can't go through the `path` branch below — the whole drawing is inlined and
+ * the stroke is styled in CSS (`.keycap-glyph-line`).
+ */
+let iconBody: string | null = null;
+if (icon) {
+  const file = nodePath.join(
+    process.cwd(),
+    "node_modules",
+    "lucide-static",
+    "icons",
+    `${icon}.svg`
+  );
+  if (!fs.existsSync(file)) {
+    throw new Error(`Icon "${icon}" not found in lucide-static.`);
+  }
+  iconBody = fs
+    .readFileSync(file, "utf8")
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/^[\s\S]*?<svg[^>]*>/, "")
+    .replace(/<\/svg>\s*$/, "")
+    .trim();
+}
 
 /** center ± u ± v, with u and v the projected ground axes scaled by `s`. */
 function face(cx: number, cy: number, s: number) {
@@ -90,7 +120,13 @@ const b = face(100, 118, 56);
 
   {/* Legend, laid into the plane of the top face using the same u/v basis. The
       icon variant additionally recentres its 24x24 box on the face origin. */}
-  {path ? (
+  {iconBody ? (
+    <g
+      class="keycap-legend keycap-glyph-line"
+      transform="matrix(0.866 0.25 -0.5 0.433 100 52) scale(2.1) translate(-12 -12)"
+      set:html={iconBody}
+    />
+  ) : path ? (
     <path
       class="keycap-legend"
       d={path}

@@ -67,21 +67,21 @@ export const areas = {
     {
       href: "#proyectos",
       klass: "interest-frontend",
-      mark: "TS",
+      icon: "layout-grid",
       markClass: "app-mark-ts",
       label: { es: "PROYECTOS", en: "PROJECTS" } satisfies L,
     },
     {
       href: "#casos",
       klass: "interest-backend",
-      mark: "{ }",
+      icon: "workflow",
       markClass: "app-mark-backend",
       label: { es: "CASOS<br />TÉCNICOS", en: "CASE<br />STUDIES" } satisfies L,
     },
     {
       href: "#stack",
       klass: "interest-cloud",
-      mark: "☁",
+      icon: "layers",
       markClass: "app-mark-cloud",
       label: { es: "STACK", en: "STACK" } satisfies L,
     },
@@ -449,10 +449,9 @@ export const cases: CaseStudy[] = [
 ];
 
 export const casesCopy = {
-  title: { es: "CASOS<br />TÉCNICOS", en: "CASE<br />STUDIES" } satisfies L,
-  summaryTitle: {
-    es: "Lo interesante<br /><em>no es el código.</em>",
-    en: "The interesting part<br /><em>isn't the code.</em>",
+  title: {
+    es: "CASOS<br /><em>TÉCNICOS</em>",
+    en: "CASE<br /><em>STUDIES</em>",
   } satisfies L,
   selectHint: { es: "ELEGÍ UN CASO ↓", en: "PICK A CASE ↓" } satisfies L,
   tabNote: { es: "DECISIONES + STACK", en: "DECISIONS + STACK" } satisfies L,

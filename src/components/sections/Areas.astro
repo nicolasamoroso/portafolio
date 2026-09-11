@@ -14,7 +14,7 @@ import { areas } from "../../data/content";
       <a class:list={["pick", card.klass, "reveal"]} href={card.href} style={`--pick:${index}`}>
         <T t={card.label} as="span" class="pick-label" />
         <span class="pick-object">
-          <Keycap legend={card.mark} id={card.klass.replace("interest-", "")} />
+          <Keycap icon={card.icon} id={card.klass.replace("interest-", "")} />
         </span>
       </a>
     ))}

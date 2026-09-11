@@ -10,10 +10,13 @@ import type { L } from "../data/content";
 interface Props {
   index: string;
   title: L;
+  /** Optional standfirst. Lives inside the heading block rather than in its own
+      section so it can't end up competing with the title for attention. */
+  subtitle?: L;
   id: string;
 }
 
-const { index, title, id } = Astro.props;
+const { index, title, subtitle, id } = Astro.props;
 ---
 
 <div class="chapter-head section-shell reveal">
@@ -21,4 +24,5 @@ const { index, title, id } = Astro.props;
     {index}
   </span>
   <T t={title} as="h2" id={id} />
+  {subtitle && <T t={subtitle} as="p" class="chapter-head-sub" />}
 </div>
