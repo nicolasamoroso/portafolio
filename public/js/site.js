@@ -358,24 +358,18 @@
         if (audio.state === "suspended") audio.resume();
 
         const now = audio.currentTime;
-        // The upstroke is quieter and sits a little higher than the downstroke,
-        // the way a switch sounds when the spring pushes the stem back up.
+        // The upstroke is quieter and a touch higher than the downstroke, the
+        // way a stiffer linear spring sounds coming back up.
         const level = down ? 1 : 0.5;
 
-        // The foam. Everything goes through one hard lowpass, which is what a
-        // well-dampened board does to the whole sound — kill the top and what's
-        // left is body. This node is the difference between a thock and a clack.
-        const damp = audio.createBiquadFilter();
-        damp.type = "lowpass";
-        damp.frequency.value = down ? 900 : 1200;
-        damp.Q.value = 0.5;
         const out = audio.createGain();
         out.gain.value = 0.9;
-        damp.connect(out).connect(audio.destination);
+        out.connect(audio.destination);
 
-        // The impact transient, kept short and quiet. It's only there to give
-        // the low end an edge to start on; on its own it should barely register.
-        const length = Math.floor(audio.sampleRate * 0.014);
+        // Linear switches have no tactile leaf, so there's no click transient
+        // to speak of — just the stem sliding smoothly and then bottoming out.
+        // This layer is only the faint slide noise, kept well under the thock.
+        const length = Math.floor(audio.sampleRate * 0.012);
         const buffer = audio.createBuffer(1, length, audio.sampleRate);
         const channel = buffer.getChannelData(0);
         for (let i = 0; i < length; i += 1) {
@@ -383,27 +377,32 @@
         }
         const noise = audio.createBufferSource();
         noise.buffer = buffer;
+        const tone = audio.createBiquadFilter();
+        tone.type = "lowpass";
+        tone.frequency.value = down ? 2200 : 2800;
         const clickGain = audio.createGain();
-        clickGain.gain.setValueAtTime(0.075 * level, now);
-        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
-        noise.connect(clickGain).connect(damp);
+        clickGain.gain.setValueAtTime(0.035 * level, now);
+        clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
+        noise.connect(tone).connect(clickGain).connect(out);
         noise.start(now);
 
-        // The thock itself, and the loudest part by far. Two low sines dropping
-        // in pitch together read as a struck, damped object; a single one always
-        // sounds like a beep. The decay is short because foam kills the ring.
-        const pitches = down ? [112, 70] : [150, 96];
+        // The bottom-out: deep, clean and a little stiffer-sounding than a
+        // lighter switch — the heavier spring means more mass hits the plate.
+        // Two sines a fifth apart, both sliding down, so it reads as a struck
+        // object rather than a beep; a short, defined decay keeps it a thock
+        // instead of a boom.
+        const pitches = down ? [118, 76] : [158, 104];
         pitches.forEach((hz, index) => {
           const osc = audio.createOscillator();
           osc.type = "sine";
           osc.frequency.setValueAtTime(hz, now);
-          osc.frequency.exponentialRampToValueAtTime(hz * 0.58, now + 0.07);
+          osc.frequency.exponentialRampToValueAtTime(hz * 0.6, now + 0.06);
           const gain = audio.createGain();
-          gain.gain.setValueAtTime((index === 0 ? 0.26 : 0.13) * level, now);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + (down ? 0.1 : 0.065));
-          osc.connect(gain).connect(damp);
+          gain.gain.setValueAtTime((index === 0 ? 0.22 : 0.11) * level, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + (down ? 0.085 : 0.06));
+          osc.connect(gain).connect(out);
           osc.start(now);
-          osc.stop(now + 0.13);
+          osc.stop(now + 0.11);
         });
       } catch {
         // Audio is a flourish; never let it break the navigation.
