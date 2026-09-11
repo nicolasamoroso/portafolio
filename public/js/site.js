@@ -386,23 +386,22 @@
         noise.connect(tone).connect(clickGain).connect(out);
         noise.start(now);
 
-        // The bottom-out: deep, clean and a little stiffer-sounding than a
-        // lighter switch — the heavier spring means more mass hits the plate.
-        // Two sines a fifth apart, both sliding down, so it reads as a struck
-        // object rather than a beep; a short, defined decay keeps it a thock
-        // instead of a boom.
-        const pitches = down ? [118, 76] : [158, 104];
+        // The bottom-out: a clean, present thock, not a sub-bass rumble.
+        // Two sines a fourth apart, both sliding down, so it reads as a struck
+        // object rather than a beep; kept short so it stays a thock and never
+        // drifts toward a boom.
+        const pitches = down ? [210, 156] : [270, 200];
         pitches.forEach((hz, index) => {
           const osc = audio.createOscillator();
           osc.type = "sine";
           osc.frequency.setValueAtTime(hz, now);
-          osc.frequency.exponentialRampToValueAtTime(hz * 0.6, now + 0.06);
+          osc.frequency.exponentialRampToValueAtTime(hz * 0.72, now + 0.045);
           const gain = audio.createGain();
-          gain.gain.setValueAtTime((index === 0 ? 0.22 : 0.11) * level, now);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + (down ? 0.085 : 0.06));
+          gain.gain.setValueAtTime((index === 0 ? 0.2 : 0.1) * level, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + (down ? 0.065 : 0.045));
           osc.connect(gain).connect(out);
           osc.start(now);
-          osc.stop(now + 0.11);
+          osc.stop(now + 0.09);
         });
       } catch {
         // Audio is a flourish; never let it break the navigation.
