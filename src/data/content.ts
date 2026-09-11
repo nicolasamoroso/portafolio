@@ -15,8 +15,8 @@ export const meta = {
     en: "Fullstack Developer",
   } satisfies L,
   title: {
-    es: "Nicolás Amoroso — CV & Portafolio 2026",
-    en: "Nicolás Amoroso — CV & Portfolio 2026",
+    es: "Nicolás Amoroso · CV & Portafolio 2026",
+    en: "Nicolás Amoroso · CV & Portfolio 2026",
   } satisfies L,
   description: {
     es: "Portafolio de Nicolás Amoroso: desarrollo fullstack, TypeScript, React, Java, AWS e IA aplicada. Montevideo, Uruguay.",
@@ -51,8 +51,8 @@ export const hero = {
 
 export const cover = {
   role: {
-    es: "Desarrollador fullstack. Armo la pantalla y la infra que la sostiene, y lo dejo funcionando de verdad — no hasta la demo.",
-    en: "Fullstack developer. I build the screen and the infrastructure behind it, and leave it actually working — not working until the demo.",
+    es: "Desarrollador fullstack. Me muevo entre el front y la infra sin drama, y me quedo hasta que funciona en producción.",
+    en: "Fullstack developer. I move between the frontend and the infra without much fuss, and I stick around until it works in production.",
   } satisfies L,
 };
 
@@ -256,7 +256,7 @@ export const cases: CaseStudy[] = [
       },
       {
         es: "El historial vive en DynamoDB por usuario. Así se pueden hacer preguntas de seguimiento sin reenviar todo el contexto en cada turno, que es donde se te va el presupuesto de tokens.",
-        en: "History lives in DynamoDB per user, so follow-up questions work without resending the whole context every turn — which is exactly where your token budget goes.",
+        en: "History lives in DynamoDB per user, so follow-up questions work without resending the whole context every turn, which is exactly where your token budget goes.",
       },
       {
         es: "Redshift entra de solo lectura y con permisos acotados. El asistente lee lo que necesita y nada más: si algo sale mal, el peor caso es una respuesta equivocada, no un dato modificado.",
@@ -584,10 +584,10 @@ export const cv = {
   resumeEs: { es: "Español", en: "Spanish" } satisfies L,
   resumeEn: { es: "Inglés", en: "English" } satisfies L,
 
-  /** One entry per job, achievements in the open — no drawer. */
+  /** One entry per job, achievements in the open, no drawer. */
   experience: [
     {
-      period: { es: "2025 — HOY", en: "2025 — NOW" } satisfies L,
+      period: { es: "2025 - HOY", en: "2025 - NOW" } satisfies L,
       company: "iCash.One",
       role: { es: "Desarrollador Fullstack", en: "Fullstack Developer" } satisfies L,
       place: { es: "Montevideo, UY", en: "Montevideo, UY" } satisfies L,
@@ -616,22 +616,22 @@ export const cv = {
       stack: ["Java", "MySQL", "AWS ECS", "Lambda", "React", "TypeScript", "Python"],
     },
     {
-      period: { es: "2024 — 2025", en: "2024 — 2025" } satisfies L,
+      period: { es: "2024 - 2025", en: "2024 - 2025" } satisfies L,
       company: "Freelance",
       role: { es: "Desarrollador Web", en: "Web Developer" } satisfies L,
       place: { es: "Uruguay", en: "Uruguay" } satisfies L,
       items: [
         {
-          es: "Casa Grande — e-commerce con Next.js, TypeScript, shadcn y Shopify Storefront API, con Supabase y Mercado Pago Checkout Pro.",
-          en: "Casa Grande — e-commerce with Next.js, TypeScript, shadcn and the Shopify Storefront API, plus Supabase and Mercado Pago Checkout Pro.",
+          es: "Casa Grande: e-commerce con Next.js, TypeScript, shadcn y Shopify Storefront API, con Supabase y Mercado Pago Checkout Pro.",
+          en: "Casa Grande: e-commerce with Next.js, TypeScript, shadcn and the Shopify Storefront API, plus Supabase and Mercado Pago Checkout Pro.",
         },
         {
-          es: "Familia Dardanelli — catálogo de vinos y reservas de degustaciones en Next.js, TypeScript y Tailwind CSS.",
-          en: "Familia Dardanelli — wine catalog and tasting bookings in Next.js, TypeScript and Tailwind CSS.",
+          es: "Familia Dardanelli: catálogo de vinos y reservas de degustaciones en Next.js, TypeScript y Tailwind CSS.",
+          en: "Familia Dardanelli: wine catalog and tasting bookings in Next.js, TypeScript and Tailwind CSS.",
         },
         {
-          es: "AnnSweets — e-commerce de tortas personalizadas con CMS completo. También fue mi proyecto de tesis.",
-          en: "AnnSweets — custom cake e-commerce with a full CMS. It was also my thesis project.",
+          es: "AnnSweets: e-commerce de tortas personalizadas con CMS completo. También fue mi proyecto de tesis.",
+          en: "AnnSweets: custom cake e-commerce with a full CMS. It was also my thesis project.",
         },
       ] satisfies L[],
       stack: ["Next.js", "TypeScript", "Supabase", "Shopify", "Mercado Pago"],
@@ -649,7 +649,7 @@ export const cv = {
         es: "Universidad ORT Uruguay · Montevideo",
         en: "Universidad ORT Uruguay · Montevideo",
       } satisfies L,
-      period: { es: "2023 — 2026 · En curso", en: "2023 — 2026 · In progress" } satisfies L,
+      period: { es: "2023 - 2026 · En curso", en: "2023 - 2026 · In progress" } satisfies L,
       doc: { es: "Escolaridad (PDF)", en: "Transcript (PDF)" } satisfies L,
       href: "/certificates/academic_transcript.pdf",
     },
