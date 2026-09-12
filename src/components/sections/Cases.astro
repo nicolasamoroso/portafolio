@@ -49,19 +49,14 @@ import { cases, casesCopy } from "../../data/content";
                   <li>{tech}</li>
                 ))}
               </ul>
-              <details class="campaign-details case-details" open>
-                <summary>
-                  {/* The base rotates every <span> in an open summary (it's the +/× toggle),
-                        so the label has to be anything but a span. */}
-                  <T t={casesCopy.detailSummary} as="b" />
-                  <Icon name="plus" class="details-toggle" size={20} />
-                </summary>
+              <div class="campaign-details case-details">
+                <T t={casesCopy.detailSummary} as="h4" class="campaign-results-label" />
                 <div class="campaign-details-body">
                   {item.detail.map((line) => (
                     <T t={line} as="p" />
                   ))}
                 </div>
-              </details>
+              </div>
             </div>
 
             <div class="campaign-case-content">
