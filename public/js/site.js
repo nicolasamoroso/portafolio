@@ -350,6 +350,35 @@
     // browsers refuse to start audio outside a user gesture.
     let audio = null;
 
+    /* ── Switch sound: tuning knobs ─────────────────────────────────────────
+       Edit these and reload the page — this file is served as-is, no build
+       step. Each one only touches the thing its name says.
+
+       CLICK_*  — the sharp transient on top. This is what was making it read
+                  as a mouse click: short + narrow-band + no body underneath
+                  is exactly what a mouse micro-switch sounds like.
+       BODY_*   — a low thump mixed under the click. This is the "mechanical
+                  switch" cue a mouse click doesn't have. Raise BODY_LEVEL
+                  first if it still sounds click-y; lower BODY_FREQ_HZ for
+                  more weight, but past ~150Hz it starts reading as bassy
+                  again (that was the complaint two iterations ago).
+       AIR_*    — the brief high sizzle that reads as "plastic". Cut AIR_LEVEL
+                  toward 0 if it sounds hissy rather than crisp.
+    */
+    const CLICK_FREQ_HZ = 3050;
+    const CLICK_Q = 3.4;
+    const CLICK_DURATION_MS = 7;
+    const CLICK_LEVEL = 0.85;
+
+    const BODY_FREQ_HZ = 240;
+    const BODY_DECAY_TO_HZ = 150;
+    const BODY_DURATION_MS = 22;
+    const BODY_LEVEL = 0.5;
+
+    const AIR_FREQ_HZ = 7000;
+    const AIR_DURATION_MS = 2.5;
+    const AIR_LEVEL = 0.16;
+
     const clack = (down = true) => {
       try {
         const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -358,67 +387,75 @@
         if (audio.state === "suspended") audio.resume();
 
         const now = audio.currentTime;
-        // Measured off a real Cherry MX Black recording: the whole click is
-        // over in about 6ms (attack to near-silence), not the 15-20ms a
-        // "decaying noise" burst usually gets synthesised with — that stretch
-        // is what reads as artificial, a hiss instead of a snap. The energy
-        // sits in a narrow resonance around 3kHz plus a brief flash of high
-        // sizzle, with almost nothing below 1kHz.
         const level = down ? 1 : 0.55;
 
         const out = audio.createGain();
         out.gain.value = 0.9;
         out.connect(audio.destination);
 
-        // The envelope is baked into the buffer itself rather than an
-        // exponential ramp: real ADSR here is a hard, near-instant attack
-        // (~1.2ms) then a decay that's much steeper for its first couple of
-        // milliseconds than a plain exponential curve gives.
-        const durationMs = down ? 7 : 6;
-        const length = Math.floor((audio.sampleRate * durationMs) / 1000);
-        const buffer = audio.createBuffer(1, length, audio.sampleRate);
-        const channel = buffer.getChannelData(0);
+        // The click: a hard, near-instant attack then a steep decay, baked
+        // into the buffer rather than an exponential ramp so the first couple
+        // of milliseconds fall off faster than a plain exponential gives.
+        const clickDurationMs = down ? CLICK_DURATION_MS : CLICK_DURATION_MS - 1;
+        const clickLength = Math.floor((audio.sampleRate * clickDurationMs) / 1000);
+        const clickBuffer = audio.createBuffer(1, clickLength, audio.sampleRate);
+        const clickChannel = clickBuffer.getChannelData(0);
         const attackMs = 1.1;
-        for (let i = 0; i < length; i += 1) {
+        for (let i = 0; i < clickLength; i += 1) {
           const t = (i / audio.sampleRate) * 1000;
           const env =
             t < attackMs
               ? t / attackMs
-              : Math.pow(1 - (t - attackMs) / (durationMs - attackMs), 2.6);
-          channel[i] = (Math.random() * 2 - 1) * env;
+              : Math.pow(1 - (t - attackMs) / (clickDurationMs - attackMs), 2.6);
+          clickChannel[i] = (Math.random() * 2 - 1) * env;
         }
-        const noise = audio.createBufferSource();
-        noise.buffer = buffer;
-
-        // A tight resonance rather than a broad one — real switch clicks are
-        // closer to a struck, pitched rattle than an open hiss.
+        const click = audio.createBufferSource();
+        click.buffer = clickBuffer;
         const core = audio.createBiquadFilter();
         core.type = "bandpass";
-        core.frequency.value = down ? 3050 : 3500;
-        core.Q.value = 3.4;
+        core.frequency.value = down ? CLICK_FREQ_HZ : CLICK_FREQ_HZ + 450;
+        core.Q.value = CLICK_Q;
         const coreGain = audio.createGain();
-        coreGain.gain.value = 0.85 * level;
-        noise.connect(core).connect(coreGain).connect(out);
+        coreGain.gain.value = CLICK_LEVEL * level;
+        click.connect(core).connect(coreGain).connect(out);
 
-        // A flash of top-end sizzle, shorter than the core click, is what
-        // separates a switch's plastic snap from a dampened knock.
-        const sizzleLen = Math.floor((audio.sampleRate * 2.5) / 1000);
-        const sizzleBuf = audio.createBuffer(1, sizzleLen, audio.sampleRate);
-        const sizzleChan = sizzleBuf.getChannelData(0);
-        for (let i = 0; i < sizzleLen; i += 1) {
-          sizzleChan[i] = (Math.random() * 2 - 1) * (1 - i / sizzleLen) ** 1.8;
+        // The body: what's missing from a mouse click. A single low sine,
+        // sliding down in pitch, mixed well under the click transient — that
+        // "under", not "beside", is what keeps it from reading as bass rather
+        // than weight.
+        const body = audio.createOscillator();
+        body.type = "sine";
+        body.frequency.setValueAtTime(down ? BODY_FREQ_HZ : BODY_FREQ_HZ + 60, now);
+        body.frequency.exponentialRampToValueAtTime(
+          down ? BODY_DECAY_TO_HZ : BODY_DECAY_TO_HZ + 60,
+          now + BODY_DURATION_MS / 1000
+        );
+        const bodyGain = audio.createGain();
+        bodyGain.gain.setValueAtTime(BODY_LEVEL * level, now);
+        bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + BODY_DURATION_MS / 1000);
+        body.connect(bodyGain).connect(out);
+        body.start(now);
+        body.stop(now + BODY_DURATION_MS / 1000 + 0.02);
+
+        // The air: a flash of top-end sizzle, shorter than the click, that
+        // reads as plastic rather than a dampened knock.
+        const airLength = Math.floor((audio.sampleRate * AIR_DURATION_MS) / 1000);
+        const airBuffer = audio.createBuffer(1, airLength, audio.sampleRate);
+        const airChannel = airBuffer.getChannelData(0);
+        for (let i = 0; i < airLength; i += 1) {
+          airChannel[i] = (Math.random() * 2 - 1) * (1 - i / airLength) ** 1.8;
         }
-        const sizzle = audio.createBufferSource();
-        sizzle.buffer = sizzleBuf;
-        const air = audio.createBiquadFilter();
-        air.type = "highpass";
-        air.frequency.value = 7000;
+        const air = audio.createBufferSource();
+        air.buffer = airBuffer;
+        const airFilter = audio.createBiquadFilter();
+        airFilter.type = "highpass";
+        airFilter.frequency.value = AIR_FREQ_HZ;
         const airGain = audio.createGain();
-        airGain.gain.value = 0.16 * level;
-        sizzle.connect(air).connect(airGain).connect(out);
+        airGain.gain.value = AIR_LEVEL * level;
+        air.connect(airFilter).connect(airGain).connect(out);
 
-        noise.start(now);
-        sizzle.start(now);
+        click.start(now);
+        air.start(now);
       } catch {
         // Audio is a flourish; never let it break the navigation.
       }
