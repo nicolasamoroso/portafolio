@@ -134,7 +134,7 @@ export const projects: Project[] = [
       en: "Book a tasting<br /><em>without calling anyone.</em>",
     },
     description: {
-      es: "Catálogo de vinos y sistema de reservas de degustaciones. La parte interesante fue la reserva: hay que manejar cupos por horario, cobrar la seña por adelantado con Mercado Pago Checkout Pro para bajar los no-shows, y que la bodega pueda abrir y cerrar fechas sola, sin depender de mí para cada cambio.",
+      es: "Catálogo de vinos y sistema de reservas de degustaciones. La parte interesante fue la reserva, hay que manejar cupos por horario, cobrar la seña por adelantado con Mercado Pago Checkout Pro para bajar los no-shows, y que la bodega pueda abrir y cerrar fechas sola, sin depender de mí para cada cambio.",
       en: "Wine catalog and tasting reservation system. The interesting part was the booking: handling slots per time, charging a deposit upfront through Mercado Pago Checkout Pro to cut down no-shows, and letting the winery open and close dates on its own without depending on me for every change.",
     },
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Mercado Pago"],
@@ -328,14 +328,14 @@ export const cases: CaseStudy[] = [
   {
     id: "checkouts",
     tab: { es: "Checkouts & pagos", en: "Checkouts & payments" },
-    kicker: { es: "CASO 03 / ICASH.ONE + FREELANCE", en: "CASE 03 / ICASH.ONE + FREELANCE" },
+    kicker: { es: "CASO 03 / FREELANCE", en: "CASE 03 / FREELANCE" },
     name: {
       es: "Donde un bug es plata",
       en: "Where a bug is money",
     },
     description: {
-      es: "El checkout es el único lugar donde un bug se traduce directo en plata perdida. Trabajé de punta a punta en checkouts, pasarelas y códigos promocionales, tanto en producto propio como en los e-commerce que armé freelance. Después de unos cuantos, terminás con reglas bastante innegociables.",
-      en: "Checkout is the one place where a bug translates straight into lost money. I worked end-to-end on checkouts, gateways and promo codes, both in-house and across the e-commerce sites I built freelance. After a few of them you end up with some fairly non-negotiable rules.",
+      es: "El checkout es el único lugar donde un bug se traduce directo en plata perdida. Trabajé de punta a punta en checkouts, pasarelas y códigos promocionales en los e-commerce que armé freelance. Después de unos cuantos, terminás con reglas bastante innegociables.",
+      en: "Checkout is the one place where a bug translates straight into lost money. I worked end-to-end on checkouts, gateways and promo codes across the e-commerce sites I built freelance. After a few of them you end up with some fairly non-negotiable rules.",
     },
     facts: [
       { label: { es: "Mi rol", en: "My role" }, value: { es: "Fullstack", en: "Fullstack" } },
@@ -345,11 +345,11 @@ export const cases: CaseStudy[] = [
       },
       {
         label: { es: "Backend", en: "Backend" },
-        value: { es: "Java · Node.js", en: "Java · Node.js" },
+        value: { es: "Next.js · Supabase", en: "Next.js · Supabase" },
       },
       {
         label: { es: "Dónde", en: "Where" },
-        value: { es: "Producto + freelance", en: "In-house + freelance" },
+        value: { es: "Freelance", en: "Freelance" },
       },
     ],
     metrics: [
@@ -371,10 +371,10 @@ export const cases: CaseStudy[] = [
       {
         value: "Promos",
         label: { es: "Códigos y referidos", en: "Codes & referrals" },
-        note: { es: "Lógica en Java + MySQL", en: "Logic in Java + MySQL" },
+        note: { es: "Lógica server-side en Supabase", en: "Server-side logic in Supabase" },
       },
     ],
-    stack: ["Java", "MySQL", "Node.js", "Mercado Pago", "Shopify", "Next.js"],
+    stack: ["Next.js", "TypeScript", "Supabase", "Mercado Pago", "Shopify"],
     detail: [
       {
         es: "Regla uno: el estado del pago vive en el backend, nunca en el cliente. La pantalla muestra lo que confirmó el webhook, no lo que el usuario cree que pasó. Suena obvio hasta que ves cuántas tiendas lo hacen al revés.",
@@ -459,8 +459,8 @@ export const casesCopy = {
   stackLabel: { es: "STACK DEL CASO", en: "CASE STACK" } satisfies L,
   detailSummary: { es: "Cómo lo resolví", en: "How I solved it" } satisfies L,
   note: {
-    es: "Todo esto es trabajo hecho en iCash.One y en proyectos freelance. No pongo métricas internas de negocio ni código propietario, por razones obvias.",
-    en: "All of this is work done at iCash.One and on freelance projects. No internal business metrics and no proprietary code here, for obvious reasons.",
+    es: "Todo esto es trabajo hecho en iCash.One y en proyectos freelance.",
+    en: "All of this is work done at iCash.One and on freelance projects.",
   } satisfies L,
 };
 
