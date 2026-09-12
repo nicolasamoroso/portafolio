@@ -656,28 +656,20 @@ export const cv = {
   /** Working habits, not a list of claims about myself. */
   method: [
     {
-      es: "Entender el problema antes de elegir el stack. La herramienta se decide después, no antes.",
-      en: "Understand the problem before picking the stack. The tool comes after, not before.",
+      es: "El stack se elige después de entender el problema, no antes.",
+      en: "The stack gets picked after understanding the problem, not before.",
     },
     {
-      es: "El estado que importa vive en el backend. El frontend muestra lo que el servidor confirmó.",
-      en: "State that matters lives in the backend. The frontend shows what the server confirmed.",
+      es: "El backend es la fuente de verdad. El frontend muestra lo que el servidor confirmó.",
+      en: "The backend is the source of truth. The frontend shows what the server confirmed.",
     },
     {
-      es: "Migraciones incrementales. Nunca el big bang que después nadie se anima a mergear.",
-      en: "Incremental migrations. Never the big bang nobody dares to merge afterwards.",
+      es: "Migro de a partes, no todo junto en un solo cambio.",
+      en: "I migrate in parts, not all at once in a single change.",
     },
     {
-      es: "Si no carga rápido en un celular con mala señal, no está terminado.",
-      en: "If it doesn't load fast on a phone with bad signal, it isn't finished.",
-    },
-    {
-      es: "Preguntar temprano sale más barato que asumir y rehacer.",
-      en: "Asking early is cheaper than assuming and redoing.",
-    },
-    {
-      es: "Commits chicos y PRs que se puedan leer de arriba a abajo.",
-      en: "Small commits and PRs you can read top to bottom.",
+      es: "Commits chicos, PRs que se puedan leer de arriba a abajo.",
+      en: "Small commits, PRs you can read top to bottom.",
     },
   ] satisfies L[],
 };
