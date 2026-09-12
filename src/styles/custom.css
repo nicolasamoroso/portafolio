@@ -769,6 +769,10 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
 }
 .case-details {
   margin-top: 26px;
+  /* The label used to sit inside a <summary> with its own padding; now that
+     it's a plain heading it needs that breathing room back, or it reads as
+     jammed against the divider above it. */
+  padding-top: 22px;
 }
 .case-details .campaign-details-body p {
   margin: 0 0 14px;
