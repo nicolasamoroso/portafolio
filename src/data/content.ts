@@ -51,8 +51,8 @@ export const hero = {
 
 export const cover = {
   role: {
-    es: "Desarrollador fullstack. Hago el front y la infra que lo sostiene, y reviso que ande en producción antes de darlo por terminado.",
-    en: "Fullstack developer. I build the frontend and the infra behind it, and check it actually works in production before calling it done.",
+    es: "Desarrollador fullstack. React y TypeScript en el frontend, Java y AWS del otro lado, con IA aplicada en algunos proyectos.",
+    en: "Fullstack developer. React and TypeScript on the frontend, Java and AWS on the other side, with applied AI on some projects.",
   } satisfies L,
 };
 
