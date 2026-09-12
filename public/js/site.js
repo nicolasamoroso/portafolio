@@ -344,40 +344,35 @@
     ...document.querySelectorAll(".stack-key-hit"),
   ];
   if (keycaps.length) {
-    // Synthesised rather than a sound file: a switch is a short noise transient
-    // riding a low wooden thock, which is a handful of Web Audio nodes and saves
-    // shipping an asset. The context is built on the first press, because
-    // browsers refuse to start audio outside a user gesture.
+    // Two audio files, not synthesis: swap them for anything at
+    // /public/audio/key-down.mp3 and /public/audio/key-up.mp3 (same
+    // filenames) and the new sound is live, no code changes needed. The
+    // placeholder pair here is a generic click-and-thock, nothing licensed
+    // from anywhere — replace it with whatever actually sounds right.
+    // The context is built on the first press, because browsers refuse to
+    // start audio outside a user gesture; the files themselves start
+    // downloading immediately, so the first press has nothing to wait on.
     let audio = null;
+    const clickUrls = { down: "/audio/key-down.mp3", up: "/audio/key-up.mp3" };
+    const clickBuffers = { down: null, up: null };
+    let clickBuffersReady = null;
 
-    /* ── Switch sound: tuning knobs ─────────────────────────────────────────
-       Edit these and reload the page — this file is served as-is, no build
-       step. Each one only touches the thing its name says.
-
-       CLICK_*  — the sharp transient on top. This is what was making it read
-                  as a mouse click: short + narrow-band + no body underneath
-                  is exactly what a mouse micro-switch sounds like.
-       BODY_*   — a low thump mixed under the click. This is the "mechanical
-                  switch" cue a mouse click doesn't have. Raise BODY_LEVEL
-                  first if it still sounds click-y; lower BODY_FREQ_HZ for
-                  more weight, but past ~150Hz it starts reading as bassy
-                  again (that was the complaint two iterations ago).
-       AIR_*    — the brief high sizzle that reads as "plastic". Cut AIR_LEVEL
-                  toward 0 if it sounds hissy rather than crisp.
-    */
-    const CLICK_FREQ_HZ = 3050;
-    const CLICK_Q = 3.4;
-    const CLICK_DURATION_MS = 7;
-    const CLICK_LEVEL = 0.85;
-
-    const BODY_FREQ_HZ = 340;
-    const BODY_DECAY_TO_HZ = 230;
-    const BODY_DURATION_MS = 14;
-    const BODY_LEVEL = 0.3;
-
-    const AIR_FREQ_HZ = 7000;
-    const AIR_DURATION_MS = 2.5;
-    const AIR_LEVEL = 0.16;
+    const loadClickBuffers = (ctx) => {
+      if (clickBuffersReady) return clickBuffersReady;
+      clickBuffersReady = Promise.all(
+        Object.entries(clickUrls).map(([key, url]) =>
+          fetch(url)
+            .then((response) => response.arrayBuffer())
+            .then((data) => ctx.decodeAudioData(data))
+            .then((buffer) => {
+              clickBuffers[key] = buffer;
+            })
+        )
+      ).catch(() => {
+        // A missing or unreadable file shouldn't break the keycap itself.
+      });
+      return clickBuffersReady;
+    };
 
     const clack = (down = true) => {
       try {
@@ -386,76 +381,19 @@
         audio = audio || new Ctx();
         if (audio.state === "suspended") audio.resume();
 
-        const now = audio.currentTime;
-        const level = down ? 1 : 0.55;
-
-        const out = audio.createGain();
-        out.gain.value = 0.9;
-        out.connect(audio.destination);
-
-        // The click: a hard, near-instant attack then a steep decay, baked
-        // into the buffer rather than an exponential ramp so the first couple
-        // of milliseconds fall off faster than a plain exponential gives.
-        const clickDurationMs = down ? CLICK_DURATION_MS : CLICK_DURATION_MS - 1;
-        const clickLength = Math.floor((audio.sampleRate * clickDurationMs) / 1000);
-        const clickBuffer = audio.createBuffer(1, clickLength, audio.sampleRate);
-        const clickChannel = clickBuffer.getChannelData(0);
-        const attackMs = 1.1;
-        for (let i = 0; i < clickLength; i += 1) {
-          const t = (i / audio.sampleRate) * 1000;
-          const env =
-            t < attackMs
-              ? t / attackMs
-              : Math.pow(1 - (t - attackMs) / (clickDurationMs - attackMs), 2.6);
-          clickChannel[i] = (Math.random() * 2 - 1) * env;
-        }
-        const click = audio.createBufferSource();
-        click.buffer = clickBuffer;
-        const core = audio.createBiquadFilter();
-        core.type = "bandpass";
-        core.frequency.value = down ? CLICK_FREQ_HZ : CLICK_FREQ_HZ + 450;
-        core.Q.value = CLICK_Q;
-        const coreGain = audio.createGain();
-        coreGain.gain.value = CLICK_LEVEL * level;
-        click.connect(core).connect(coreGain).connect(out);
-
-        // The body: what's missing from a mouse click. A single low sine,
-        // sliding down in pitch, mixed well under the click transient — that
-        // "under", not "beside", is what keeps it from reading as bass rather
-        // than weight.
-        const body = audio.createOscillator();
-        body.type = "sine";
-        body.frequency.setValueAtTime(down ? BODY_FREQ_HZ : BODY_FREQ_HZ + 60, now);
-        body.frequency.exponentialRampToValueAtTime(
-          down ? BODY_DECAY_TO_HZ : BODY_DECAY_TO_HZ + 60,
-          now + BODY_DURATION_MS / 1000
-        );
-        const bodyGain = audio.createGain();
-        bodyGain.gain.setValueAtTime(BODY_LEVEL * level, now);
-        bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + BODY_DURATION_MS / 1000);
-        body.connect(bodyGain).connect(out);
-        body.start(now);
-        body.stop(now + BODY_DURATION_MS / 1000 + 0.02);
-
-        // The air: a flash of top-end sizzle, shorter than the click, that
-        // reads as plastic rather than a dampened knock.
-        const airLength = Math.floor((audio.sampleRate * AIR_DURATION_MS) / 1000);
-        const airBuffer = audio.createBuffer(1, airLength, audio.sampleRate);
-        const airChannel = airBuffer.getChannelData(0);
-        for (let i = 0; i < airLength; i += 1) {
-          airChannel[i] = (Math.random() * 2 - 1) * (1 - i / airLength) ** 1.8;
-        }
-        const air = audio.createBufferSource();
-        air.buffer = airBuffer;
-        const airFilter = audio.createBiquadFilter();
-        airFilter.type = "highpass";
-        airFilter.frequency.value = AIR_FREQ_HZ;
-        const airGain = audio.createGain();
-        airGain.gain.value = AIR_LEVEL * level;
-        air.connect(airFilter).connect(airGain).connect(out);
-
-        click.start(now);
-        air.start(now);
+        loadClickBuffers(audio).then(() => {
+          const buffer = clickBuffers[down ? "down" : "up"];
+          if (!buffer) return;
+          const source = audio.createBufferSource();
+          source.buffer = buffer;
+          // A touch of pitch variance so ten presses in a row don't sound
+          // like the exact same sample looped.
+          source.playbackRate.value = 0.97 + Math.random() * 0.06;
+          const gain = audio.createGain();
+          gain.gain.value = down ? 1 : 0.7;
+          source.connect(gain).connect(audio.destination);
+          source.start(0);
+        });
       } catch {
         // Audio is a flourish; never let it break the navigation.
       }
