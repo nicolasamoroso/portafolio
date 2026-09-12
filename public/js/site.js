@@ -370,10 +370,10 @@
     const CLICK_DURATION_MS = 7;
     const CLICK_LEVEL = 0.85;
 
-    const BODY_FREQ_HZ = 240;
-    const BODY_DECAY_TO_HZ = 150;
-    const BODY_DURATION_MS = 22;
-    const BODY_LEVEL = 0.5;
+    const BODY_FREQ_HZ = 340;
+    const BODY_DECAY_TO_HZ = 230;
+    const BODY_DURATION_MS = 14;
+    const BODY_LEVEL = 0.3;
 
     const AIR_FREQ_HZ = 7000;
     const AIR_DURATION_MS = 2.5;
