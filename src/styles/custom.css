@@ -374,7 +374,12 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(24px, 4vw, 70px);
-  align-items: start;
+  /* Stretch, not start: every pick fills the row's full height (set by
+     "Casos Técnicos", the one label that wraps to two lines), which is what
+     lets `align-content: space-between` below push each keycap down to a
+     shared baseline instead of the one after a two-line label sitting lower
+     than its one-line neighbours. */
+  align-items: stretch;
   padding-top: clamp(30px, 4vw, 60px);
 }
 .pick {
@@ -384,6 +389,9 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
   user-select: none;
   display: grid;
   justify-items: center;
+  /* Label pinned to the top, keycap to the bottom, `gap` as the minimum
+     between them — see the comment on `.index-picks`. */
+  align-content: space-between;
   gap: clamp(16px, 1.8vw, 26px);
   padding: clamp(16px, 2vw, 30px) 0;
 }
@@ -512,12 +520,16 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
   --pick-glow-wide: rgba(255, 171, 69, 0.36);
 }
 @media (max-width: 760px) {
+  /* All three stay in one row — smaller caps rather than a long vertical
+     scroll of three stacked keys. The row-gap (irrelevant with one row, but
+     harmless) is set separately further down, next to the other
+     `--section-y`-scaled spacing; this only owns the columns. */
   .index-picks {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 8vh;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 3vw;
   }
   .pick-object {
-    width: min(52vw, 220px);
+    width: min(24vw, 110px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1450,7 +1462,9 @@ a .icon,
     padding-inline: var(--gutter);
   }
   .index-picks {
-    gap: calc(var(--section-y) * 0.8);
+    /* row-gap only: the `gap` shorthand would reset the column-gap set
+       above back to this value too, collapsing the two-column layout. */
+    row-gap: calc(var(--section-y) * 0.8);
   }
 }
 /* ── Serif accents ───────────────────────────────────────────────────────────
