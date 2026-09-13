@@ -344,54 +344,48 @@
     ...document.querySelectorAll(".stack-key-hit"),
   ];
   if (keycaps.length) {
-    // Two audio files, not synthesis: swap them for anything at
-    // /public/audio/key-down.mp3 and /public/audio/key-up.mp3 (same
-    // filenames) and the new sound is live, no code changes needed. The
-    // placeholder pair here is a generic click-and-thock, nothing licensed
-    // from anywhere — replace it with whatever actually sounds right.
+    // One audio file, not synthesis: swap /public/audio/key-down.mp3 for
+    // anything else under the same filename and the new sound is live, no
+    // code changes needed. The placeholder here is a generic click, nothing
+    // licensed from anywhere — replace it with whatever actually sounds
+    // right. Only the press gets a sound; the release is silent.
     // The context is built on the first press, because browsers refuse to
-    // start audio outside a user gesture; the files themselves start
+    // start audio outside a user gesture; the file itself starts
     // downloading immediately, so the first press has nothing to wait on.
     let audio = null;
-    const clickUrls = { down: "/audio/key-down.mp3", up: "/audio/key-up.mp3" };
-    const clickBuffers = { down: null, up: null };
-    let clickBuffersReady = null;
+    let clickBuffer = null;
+    let clickBufferReady = null;
 
-    const loadClickBuffers = (ctx) => {
-      if (clickBuffersReady) return clickBuffersReady;
-      clickBuffersReady = Promise.all(
-        Object.entries(clickUrls).map(([key, url]) =>
-          fetch(url)
-            .then((response) => response.arrayBuffer())
-            .then((data) => ctx.decodeAudioData(data))
-            .then((buffer) => {
-              clickBuffers[key] = buffer;
-            })
-        )
-      ).catch(() => {
-        // A missing or unreadable file shouldn't break the keycap itself.
-      });
-      return clickBuffersReady;
+    const loadClickBuffer = (ctx) => {
+      if (clickBufferReady) return clickBufferReady;
+      clickBufferReady = fetch("/audio/key-down.mp3")
+        .then((response) => response.arrayBuffer())
+        .then((data) => ctx.decodeAudioData(data))
+        .then((buffer) => {
+          clickBuffer = buffer;
+        })
+        .catch(() => {
+          // A missing or unreadable file shouldn't break the keycap itself.
+        });
+      return clickBufferReady;
     };
 
     const clack = (down = true) => {
+      if (!down) return;
       try {
         const Ctx = window.AudioContext || window.webkitAudioContext;
         if (!Ctx) return;
         audio = audio || new Ctx();
         if (audio.state === "suspended") audio.resume();
 
-        loadClickBuffers(audio).then(() => {
-          const buffer = clickBuffers[down ? "down" : "up"];
-          if (!buffer) return;
+        loadClickBuffer(audio).then(() => {
+          if (!clickBuffer) return;
           const source = audio.createBufferSource();
-          source.buffer = buffer;
+          source.buffer = clickBuffer;
           // A touch of pitch variance so ten presses in a row don't sound
           // like the exact same sample looped.
           source.playbackRate.value = 0.97 + Math.random() * 0.06;
-          const gain = audio.createGain();
-          gain.gain.value = down ? 1 : 0.7;
-          source.connect(gain).connect(audio.destination);
+          source.connect(audio.destination);
           source.start(0);
         });
       } catch {
