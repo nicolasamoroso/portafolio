@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-16 -14 352 412" width="352" height="412" role="img" aria-label="Terminal con los datos de Nicolás Amoroso">
+  <style>
+    .m { font-family: "JetBrains Mono", ui-monospace, monospace; fill: #0a0a0a; }
+    .lbl { font-size: 13px; opacity: .5; }
+    .val { font-size: 17px; font-weight: 500; }
+    .sm { font-size: 11px; opacity: .45; }
+    .stroke { fill: none; stroke: #0a0a0a; stroke-width: 2; }
+  </style>
+
+  <!-- window chrome -->
+  <rect x="10" y="34" width="300" height="336" class="stroke" />
+  <rect x="10" y="34" width="300" height="30" fill="#0a0a0a" />
+  <circle cx="28" cy="49" r="5" fill="#f2f1ed" />
+  <circle cx="46" cy="49" r="5" fill="#f2f1ed" opacity=".55" />
+  <circle cx="64" cy="49" r="5" fill="#f2f1ed" opacity=".3" />
+  <text x="300" y="54" class="m" fill="#f2f1ed" font-size="11" text-anchor="end" opacity=".8">~/na</text>
+
+  <!-- prompt lines -->
+  <text x="26" y="100" class="m lbl">$ whoami</text>
+  <text x="26" y="124" class="m val">nicolas_amoroso</text>
+
+  <text x="26" y="164" class="m lbl">$ cat role.txt</text>
+  <text x="26" y="188" class="m val">fullstack.dev</text>
+
+  <text x="26" y="228" class="m lbl">$ echo $LOCATION</text>
+  <text x="26" y="252" class="m val">montevideo, uy</text>
+
+  <text x="26" y="292" class="m lbl">$ uptime</text>
+  <text x="26" y="316" class="m val">since 2022</text>
+
+  <!-- cursor -->
+  <text x="26" y="352" class="m lbl">$</text>
+  <rect x="42" y="338" width="11" height="18" fill="#0a0a0a">
+    <animate attributeName="opacity" values="1;1;0;0" dur="1.1s" repeatCount="indefinite" />
+  </rect>
+
+  <!-- editorial marks -->
+  <text x="10" y="22" class="m sm">FIG. 01 — PERFIL</text>
+  <path d="M232 10 h78 M310 10 v14" class="stroke" stroke-width="1" />
+</svg>

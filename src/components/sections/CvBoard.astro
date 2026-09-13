@@ -1,0 +1,70 @@
+---
+import Icon from "../Icon.astro";
+import T from "../T.astro";
+import { cv, meta } from "../../data/content";
+---
+
+<section
+  id="trayectoria"
+  class="cv-section"
+  aria-label="Currículum"
+  data-i18n-label
+  data-label-es="Currículum"
+  data-label-en="Résumé"
+>
+  <div class="section-shell">
+    <div class="cv-row reveal">
+      <T t={cv.labels.experience} as="h3" />
+      <div class="cv-row-body cv-jobs">
+        {cv.experience.map((job) => (
+          <article>
+            <p class="cv-job-head">
+              <b>{job.company}</b>
+              <T t={job.period} as="em" />
+            </p>
+            <p class="cv-job-role">
+              <T t={job.role} />
+              <span aria-hidden="true"> · </span>
+              <T t={job.place} />
+            </p>
+            <ul class="cv-job-items">
+              {job.items.map((item) => (
+                <T t={item} as="li" />
+              ))}
+            </ul>
+            <p class="cv-job-stack">
+              {job.stack.map((tech) => (
+                <span>{tech}</span>
+              ))}
+            </p>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <div class="cv-row reveal">
+      <T t={cv.labels.education} as="h3" />
+      <div class="cv-row-body cv-records">
+        {cv.education.map((item) => (
+          <article class="cv-record">
+            <T t={item.title} as="b" />
+            <T t={item.where} as="span" />
+            <T t={item.period} as="span" />
+            <a href={item.href} target="_blank" rel="noopener noreferrer">
+              <T t={item.doc} /> <Icon name="arrow-up-right" />
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <div class="cv-row reveal">
+      <T t={cv.labels.method} as="h3" />
+      <ul class="cv-row-body cv-method">
+        {cv.method.map((line) => (
+          <T t={line} as="li" />
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

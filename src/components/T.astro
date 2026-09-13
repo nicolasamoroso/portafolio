@@ -1,0 +1,19 @@
+---
+/**
+ * Bilingual text node. Renders the Spanish copy and carries both languages as
+ * data attributes so the header toggle can swap them in place with no reload.
+ * `t.es` / `t.en` may contain inline markup (<br />, <em>, <strong>, <b>).
+ */
+import type { L } from "../data/content";
+
+interface Props {
+  t: L;
+  as?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { t, as: Tag = "span", ...rest } = Astro.props;
+---
+
+<Tag data-i18n data-es={t.es} data-en={t.en} {...rest} set:html={t.es} />

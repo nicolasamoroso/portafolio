@@ -1,0 +1,86 @@
+---
+import Icon from "../Icon.astro";
+import T from "../T.astro";
+import { cover, cv, hero, meta } from "../../data/content";
+
+// Both lines keep the per-letter assemble animation from the base, so the name
+// draws itself in the same way the reference's wordmark did.
+const lines = ["NICOLÁS", "AMOROSO"];
+let letterIndex = 0;
+---
+
+<section id="inicio" class="hero cover" aria-labelledby="cover-title">
+  <div
+    class="hero-top meta-copy"
+    data-i18n
+    data-es={hero.top.es}
+    data-en={hero.top.en}
+    set:html={hero.top.es}
+  />
+
+  <div class="cover-grid">
+    <figure class="profile-sketch cover-portrait">
+      <img
+        src="/img/nico.png"
+        alt="Ilustración de Nicolás Amoroso"
+        width="1242"
+        height="1242"
+        fetchpriority="high"
+      />
+      {/* The pencil that sweeps across during the reveal. */}
+      <span aria-hidden="true"></span>
+    </figure>
+
+    <div class="cover-copy">
+      <h1 id="cover-title" class="cover-title" aria-label={meta.name}>
+        {lines.map((line) => (
+          <span class="cover-line" aria-hidden="true">
+            {[...line].map((letter, i) => (
+              <span
+                class:list={[
+                  "hero-letter",
+                  i === 0 && "hero-letter-first",
+                  letter === "I" && "hero-letter-i",
+                ]}
+                style={`--letter:${letterIndex++}`}
+              >
+                {letter}
+              </span>
+            ))}
+          </span>
+        ))}
+      </h1>
+
+      <T t={cover.role} as="p" class="cover-role" />
+
+      <div class="cover-contact">
+        <a href={`mailto:${meta.email}`}>{meta.email}</a>
+        <a href={meta.github} target="_blank" rel="noopener noreferrer">
+          GitHub <Icon name="arrow-up-right" />
+        </a>
+        <a href={meta.linkedin} target="_blank" rel="noopener noreferrer">
+          LinkedIn <Icon name="arrow-up-right" />
+        </a>
+        <span class="cover-contact-resume">
+          <T t={cv.resumeLabel} />
+          <a href="/resumes/cv.pdf" target="_blank" rel="noopener noreferrer">
+            <T t={cv.resumeEs} /> <Icon name="arrow-up-right" />
+          </a>
+          <a href="/resumes/resume-en.pdf" target="_blank" rel="noopener noreferrer">
+            <T t={cv.resumeEn} /> <Icon name="arrow-up-right" />
+          </a>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-bottom">
+    <T t={meta.location} as="p" />
+    <a class="scroll-prompt" href="#trayectoria">
+      <span data-i18n data-es={hero.scroll.es} data-en={hero.scroll.en}>
+        {hero.scroll.es}
+      </span>
+      <Icon name="arrow-down-right" class="scroll-icon" size={17} />
+    </a>
+  </div>
+</section>
