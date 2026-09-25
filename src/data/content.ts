@@ -173,7 +173,7 @@ export const projects: Project[] = [
 export const projectsCopy = {
   title: { es: "Proyectos.", en: "Projects." } satisfies L,
   subtitle: { es: "SITIOS EN PRODUCCIÓN", en: "LIVE IN PRODUCTION" } satisfies L,
-  visit: { es: "Entrar", en: "Visit" } satisfies L,
+  visit: { es: "Ver", en: "Visit" } satisfies L,
   code: { es: "Código", en: "Code" } satisfies L,
 };
 
