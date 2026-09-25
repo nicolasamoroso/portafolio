@@ -92,6 +92,8 @@ export type Project = {
   kicker: L;
   headline: L;
   description: L;
+  /** Short bullet points: what the site does, at a glance. */
+  features?: L[];
   tags: string[];
   href: string;
   github?: string;
@@ -113,6 +115,24 @@ export const projects: Project[] = [
       es: "Mi proyecto de tesis. Es un e-commerce de tortas personalizadas: el cliente elige tamaño, sabores, rellenos y colores, y el precio se recalcula mientras arma el pedido. La parte difícil no fue la tienda, fue el CMS: la administradora tiene que poder cambiar ingredientes, opciones y combinaciones válidas de cada producto sin tocar una línea de código. Lo armé como monorepo con Turborepo para que la tienda y el panel compartan los mismos tipos y nunca se desincronicen.",
       en: "My thesis project. It's a custom cake e-commerce: the customer picks size, flavors, fillings and colors, and the price recalculates as they build the order. The hard part wasn't the storefront, it was the CMS: the owner has to be able to change ingredients, options and valid combinations for every product without touching a line of code. I built it as a Turborepo monorepo so the store and the admin panel share the same types and never drift apart.",
     },
+    features: [
+      {
+        es: "Tortas a medida: tamaño, sabores, rellenos y colores, con el precio en vivo",
+        en: "Custom cakes: size, flavors, fillings and colors, with live pricing",
+      },
+      {
+        es: "Reserva de turnos sin dobles reservas, probada con conexiones simultáneas",
+        en: "Slot booking with no double bookings, tested with concurrent connections",
+      },
+      {
+        es: "CMS con pedidos, agenda, productos, promociones, reseñas y textos editables",
+        en: "CMS with orders, calendar, products, promotions, reviews and editable copy",
+      },
+      {
+        es: "Pagos con Mercado Pago y base de datos con migraciones versionadas",
+        en: "Mercado Pago payments and a database with versioned migrations",
+      },
+    ],
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Mercado Pago", "Turborepo"],
     href: "https://www.annsweets.com/",
   },
@@ -130,7 +150,25 @@ export const projects: Project[] = [
       es: "Catálogo de vinos y sistema de reservas de degustaciones. La parte interesante fue la reserva, hay que manejar cupos por horario, cobrar la seña por adelantado con Mercado Pago Checkout Pro para bajar los no-shows, y que la bodega pueda abrir y cerrar fechas sola, sin depender de mí para cada cambio.",
       en: "Wine catalog and tasting reservation system. The interesting part was the booking: handling slots per time, charging a deposit upfront through Mercado Pago Checkout Pro to cut down no-shows, and letting the winery open and close dates on its own without depending on me for every change.",
     },
-    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Mercado Pago"],
+    features: [
+      {
+        es: "Cupos por horario, con el turno bloqueado 5 minutos mientras se paga",
+        en: "Per-slot capacity, with the slot held for 5 minutes while paying",
+      },
+      {
+        es: "Pagos con Mercado Pago (webhook con firma verificada) y PayPal",
+        en: "Mercado Pago payments (signature-verified webhook) and PayPal",
+      },
+      {
+        es: "Panel con reservas, blog con editor y publicación programada, y registro de errores y pagos",
+        en: "Admin with bookings, a blog with an editor and scheduled publishing, and error and payment logs",
+      },
+      {
+        es: "Español, inglés y portugués, con mails de confirmación",
+        en: "Spanish, English and Portuguese, with confirmation emails",
+      },
+    ],
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Mercado Pago", "PayPal"],
     href: "https://www.familiadardanelli.com.uy/",
   },
   {
@@ -147,7 +185,25 @@ export const projects: Project[] = [
       es: "Catálogo de vinos y reservas de degustaciones. Casi todo el tráfico entra desde el celular, así que la regla fue simple: si no carga instantáneo en un teléfono en el medio del campo, no sirve. Cada etiqueta se lee como una ficha editorial, sin carruseles pesados ni imágenes de 3 MB.",
       en: "Wine catalog and tasting bookings. Almost all the traffic comes from phones, so the rule was simple: if it doesn't load instantly on a phone in the middle of the countryside, it's useless. Every label reads like an editorial spread, with no heavy carousels and no 3 MB images.",
     },
-    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase"],
+    features: [
+      {
+        es: "Tienda sobre Shopify, con pagos por Mercado Pago y códigos promocionales",
+        en: "Shopify-powered store, with Mercado Pago payments and promo codes",
+      },
+      {
+        es: "Eventos con venta de entradas, preventas y avisos por mail",
+        en: "Events with ticket sales, presales and email reminders",
+      },
+      {
+        es: "Panel para editar textos, eventos y códigos sin tocar código",
+        en: "Admin to edit copy, events and codes without touching code",
+      },
+      {
+        es: "Español, inglés y portugués, con analítica de Google y Meta",
+        en: "Spanish, English and Portuguese, with Google and Meta analytics",
+      },
+    ],
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Shopify", "Mercado Pago"],
     href: "https://www.vinoscasagrande.com/",
   },
   {
@@ -514,7 +570,7 @@ export const stack: Tech[] = [
     slug: "supabase",
     name: "Supabase",
     hex: "3FCF8E",
-    note: { es: "Auth y datos en lo mío", en: "Auth and data on my own stuff" },
+    note: { es: "Auth, base de datos y storage", en: "Auth, database and storage" },
   },
   {
     slug: "tailwindcss",
@@ -651,8 +707,8 @@ export const cv = {
 export const contact = {
   title: { es: "Gracias.", en: "Thanks." } satisfies L,
   body: {
-    es: "Si tenés una idea, una propuesta o ganas de charlar, escribime. Contesto todo, incluso los mensajes raros.",
-    en: "If you have an idea, a proposal or just feel like talking, write to me. I answer everything, weird messages included.",
+    es: "Para proyectos, propuestas de trabajo o cualquier consulta, escribime por mail.",
+    en: "For projects, job opportunities or any question, send me an email.",
   } satisfies L,
   resume: { es: "CV / Resume", en: "CV / Resume" } satisfies L,
   resumeEs: { es: "Español", en: "Spanish" } satisfies L,

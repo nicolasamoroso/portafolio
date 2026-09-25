@@ -711,6 +711,32 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
   line-height: 1.62;
   color: rgba(242, 241, 237, 0.82);
 }
+.project-features {
+  display: grid;
+  gap: 8px;
+  max-width: 62ch;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.project-features li {
+  position: relative;
+  padding-left: 21px;
+  font: 13px/1.55 var(--mono);
+  color: rgba(242, 241, 237, 0.72);
+}
+.project-features li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  color: rgba(242, 241, 237, 0.4);
+}
+html[data-theme="light"] .project-features li {
+  color: var(--surface-muted);
+}
+html[data-theme="light"] .project-features li::before {
+  color: rgba(10, 10, 10, 0.4);
+}
 .project-tags {
   display: flex;
   flex-wrap: wrap;

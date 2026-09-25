@@ -93,6 +93,13 @@ import { projects, projectsCopy } from "../../data/content";
           </span>
         </a>
         <T t={project.description} as="p" class="project-file-copy" />
+        {project.features && (
+          <ul class="project-features">
+            {project.features.map((feature) => (
+              <T t={feature} as="li" />
+            ))}
+          </ul>
+        )}
         <ul class="project-tags">
           {project.tags.map((tag) => (
             <li>{tag}</li>
