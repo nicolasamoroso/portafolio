@@ -295,13 +295,18 @@
 
   const menuButton = document.querySelector(".menu-toggle");
   const nav = document.querySelector(".site-nav");
+  let menuClosing = 0;
   const setMenuOpen = (open) => {
     menuButton.setAttribute("aria-expanded", String(open));
     nav.inert = !open;
     nav.classList.toggle("open", open);
     // Locks the page scroll behind the full-screen menu and lets the header
     // drop its own background while it's open.
-    root.classList.toggle("menu-open", open);
+    // Held back on close until the links have finished animating out, so the
+    // header doesn't change colour over an overlay that's still on screen.
+    clearTimeout(menuClosing);
+    if (open) root.classList.add("menu-open");
+    else menuClosing = setTimeout(() => root.classList.remove("menu-open"), 600);
   };
   setMenuOpen(false);
   menuButton.addEventListener("click", () =>

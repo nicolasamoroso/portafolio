@@ -1552,15 +1552,19 @@ body {
   transform: none;
   opacity: 0;
   visibility: hidden;
+  /* Closing: the links leave first (see `.site-nav a`), then the overlay
+     fades once they're gone. */
   transition:
-    opacity 0.3s ease,
-    visibility 0s linear 0.3s;
+    opacity 0.3s ease 0.25s,
+    visibility 0s linear 0.55s;
 }
 .site-nav.open {
   transform: none;
   opacity: 1;
   visibility: visible;
-  transition-delay: 0s;
+  transition:
+    opacity 0.25s ease,
+    visibility 0s;
 }
 .site-nav a {
   display: block;
@@ -1570,15 +1574,19 @@ body {
   letter-spacing: -0.045em;
   opacity: 0;
   transform: translateY(14px);
+  /* Closing runs the stagger in reverse: last link out first. */
   transition:
-    opacity 0.4s ease,
-    transform 0.4s ease,
+    opacity 0.28s ease calc((var(--n, 6) - 1 - var(--i, 0)) * 30ms),
+    transform 0.28s ease calc((var(--n, 6) - 1 - var(--i, 0)) * 30ms),
     color 0.2s;
 }
 .site-nav.open a {
   opacity: 1;
   transform: none;
-  transition-delay: calc(var(--i, 0) * 45ms + 60ms), calc(var(--i, 0) * 45ms + 60ms), 0s;
+  transition:
+    opacity 0.4s ease calc(var(--i, 0) * 45ms + 60ms),
+    transform 0.4s ease calc(var(--i, 0) * 45ms + 60ms),
+    color 0.2s;
 }
 .site-nav a:hover {
   padding: 0;

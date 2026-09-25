@@ -58,7 +58,13 @@ import { meta, nav } from "../data/content";
 {/* Outside the header on purpose: `.site-header.scrolled` has a backdrop-filter,
     which makes it the containing block for any fixed descendant, so a
     full-screen overlay nested in it would be clipped to the header's height. */}
-<nav id="site-nav" class="site-nav" aria-label="Navegación principal" inert>
+<nav
+  id="site-nav"
+  class="site-nav"
+  aria-label="Navegación principal"
+  style={`--n:${nav.length}`}
+  inert
+>
   {nav.map(({ href, label }, index) => (
     <T t={label} as="a" href={href} style={`--i:${index}`} />
   ))}
