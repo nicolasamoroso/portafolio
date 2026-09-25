@@ -291,6 +291,19 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
   left: 0;
   color: rgba(10, 10, 10, 0.38);
 }
+/* Project names inside a job's bullet points link out to the live site. */
+.cv-job-items a {
+  color: inherit;
+  border-bottom: 1px solid rgba(10, 10, 10, 0.4);
+  padding-bottom: 1px;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.cv-job-items a:hover {
+  color: #9a471f;
+  border-color: #9a471f;
+}
 .cv-job-stack {
   display: flex;
   flex-wrap: wrap;
@@ -333,27 +346,6 @@ html[data-lang="es"] .hero-letter[data-only="en"] {
 .cv-record a:hover {
   color: #9a471f;
   border-color: #9a471f;
-}
-/* How I work -------------------------------------------------------------- */
-.cv-method {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 10px;
-  max-width: 78ch;
-}
-.cv-method li {
-  position: relative;
-  padding-left: 21px;
-  font: 14px/1.6 var(--mono);
-  color: #34322c;
-}
-.cv-method li::before {
-  content: "—";
-  position: absolute;
-  left: 0;
-  color: rgba(10, 10, 10, 0.38);
 }
 @media (max-width: 760px) {
   .cv-row {
@@ -1155,12 +1147,10 @@ html[data-theme="dark"] .interests-head > p:last-child,
 html[data-theme="dark"] .device-tilt-control p {
   color: var(--dark-muted);
 }
-html[data-theme="dark"] .cv-job-items li,
-html[data-theme="dark"] .cv-method li {
+html[data-theme="dark"] .cv-job-items li {
   color: rgba(242, 241, 237, 0.84);
 }
-html[data-theme="dark"] .cv-job-items li::before,
-html[data-theme="dark"] .cv-method li::before {
+html[data-theme="dark"] .cv-job-items li::before {
   color: rgba(242, 241, 237, 0.4);
 }
 html[data-theme="dark"] .cv-row,
@@ -1169,10 +1159,12 @@ html[data-theme="dark"] .cv-job-stack span {
   border-color: var(--dark-line);
 }
 html[data-theme="dark"] .cover-contact a,
-html[data-theme="dark"] .cv-record a {
+html[data-theme="dark"] .cv-record a,
+html[data-theme="dark"] .cv-job-items a {
   border-color: rgba(242, 241, 237, 0.45);
 }
 html[data-theme="dark"] .cover-contact a:hover,
+html[data-theme="dark"] .cv-job-items a:hover,
 html[data-theme="dark"] .cv-record a:hover {
   color: #f08b2e;
   border-color: #f08b2e;

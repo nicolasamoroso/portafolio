@@ -558,7 +558,6 @@ export const cv = {
   labels: {
     experience: { es: "// EXPERIENCIA", en: "// EXPERIENCE" } satisfies L,
     education: { es: "// FORMACIÓN", en: "// EDUCATION" } satisfies L,
-    method: { es: "// CÓMO TRABAJO", en: "// HOW I WORK" } satisfies L,
   },
 
   resumeLabel: { es: "CV / Resume", en: "CV / Resume" } satisfies L,
@@ -603,16 +602,16 @@ export const cv = {
       place: { es: "Uruguay", en: "Uruguay" } satisfies L,
       items: [
         {
-          es: "Casa Grande: e-commerce con Next.js, TypeScript, shadcn y Shopify Storefront API, con Supabase y Mercado Pago Checkout Pro.",
-          en: "Casa Grande: e-commerce with Next.js, TypeScript, shadcn and the Shopify Storefront API, plus Supabase and Mercado Pago Checkout Pro.",
+          es: '<a href="https://www.vinoscasagrande.com/" target="_blank" rel="noopener noreferrer">Casa Grande</a>: e-commerce con Next.js, TypeScript, shadcn y Shopify Storefront API, con Supabase y Mercado Pago Checkout Pro.',
+          en: '<a href="https://www.vinoscasagrande.com/" target="_blank" rel="noopener noreferrer">Casa Grande</a>: e-commerce with Next.js, TypeScript, shadcn and the Shopify Storefront API, plus Supabase and Mercado Pago Checkout Pro.',
         },
         {
-          es: "Familia Dardanelli: catálogo de vinos y reservas de degustaciones en Next.js, TypeScript y Tailwind CSS.",
-          en: "Familia Dardanelli: wine catalog and tasting bookings in Next.js, TypeScript and Tailwind CSS.",
+          es: '<a href="https://www.familiadardanelli.com.uy/" target="_blank" rel="noopener noreferrer">Familia Dardanelli</a>: catálogo de vinos y reservas de degustaciones en Next.js, TypeScript y Tailwind CSS.',
+          en: '<a href="https://www.familiadardanelli.com.uy/" target="_blank" rel="noopener noreferrer">Familia Dardanelli</a>: wine catalog and tasting bookings in Next.js, TypeScript and Tailwind CSS.',
         },
         {
-          es: "AnnSweets: e-commerce de tortas personalizadas con CMS completo. También fue mi proyecto de tesis.",
-          en: "AnnSweets: custom cake e-commerce with a full CMS. It was also my thesis project.",
+          es: '<a href="https://www.annsweets.com/" target="_blank" rel="noopener noreferrer">AnnSweets</a>: e-commerce de tortas personalizadas con CMS completo. También fue mi proyecto de tesis.',
+          en: '<a href="https://www.annsweets.com/" target="_blank" rel="noopener noreferrer">AnnSweets</a>: custom cake e-commerce with a full CMS. It was also my thesis project.',
         },
       ] satisfies L[],
       stack: ["Next.js", "TypeScript", "Supabase", "Shopify", "Mercado Pago"],
@@ -645,26 +644,6 @@ export const cv = {
       href: "/certificates/certificadoJaP.pdf",
     },
   ],
-
-  /** Working habits, not a list of claims about myself. */
-  method: [
-    {
-      es: "El stack se elige después de entender el problema, no antes.",
-      en: "The stack gets picked after understanding the problem, not before.",
-    },
-    {
-      es: "El backend es la fuente de verdad. El frontend muestra lo que el servidor confirmó.",
-      en: "The backend is the source of truth. The frontend shows what the server confirmed.",
-    },
-    {
-      es: "Migro de a partes, no todo junto en un solo cambio.",
-      en: "I migrate in parts, not all at once in a single change.",
-    },
-    {
-      es: "Commits chicos, PRs que se puedan leer de arriba a abajo.",
-      en: "Small commits, PRs you can read top to bottom.",
-    },
-  ] satisfies L[],
 };
 
 /* ── Contact ────────────────────────────────────────────────────────────── */
