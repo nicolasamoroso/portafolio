@@ -151,18 +151,12 @@
   display: flex;
   align-items: baseline;
 }
-.cover-role {
-  max-width: 42ch;
-  margin: clamp(20px, 2.4vw, 34px) 0 0;
-  font: 15px/1.6 var(--mono);
-  color: #3a3833;
-}
 .cover-contact {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 10px clamp(16px, 2vw, 30px);
-  margin-top: clamp(20px, 2.2vw, 30px);
+  margin-top: clamp(28px, 3.4vw, 48px);
   font: 14px var(--mono);
 }
 .cover-contact a {
@@ -205,9 +199,6 @@
   }
   .hero h1.cover-title {
     font-size: clamp(40px, 13vw, 96px);
-  }
-  .cover-role {
-    font-size: 13px;
   }
 }
 /* ── Language: one word per language, both in the DOM ────────────────────── */
@@ -1157,7 +1148,6 @@ html[data-theme="dark"] .interests-head h2 {
   color: var(--dark-text);
 }
 html[data-theme="dark"] .cover-label,
-html[data-theme="dark"] .cover-role,
 html[data-theme="dark"] .cover-contact-resume,
 html[data-theme="dark"] .cv-job-role,
 html[data-theme="dark"] .cv-record span,
