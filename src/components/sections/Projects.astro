@@ -73,25 +73,47 @@ import { projects, projectsCopy } from "../../data/content";
       </div>
 
       <div class="project-file-body">
-        <a
-          class="project-file-shot"
-          href={project.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Visitar ${project.title}`}
-        >
-          <img
-            src={project.src}
-            alt={`Captura del sitio ${project.title}`}
-            width="1080"
-            height="542"
-            loading="lazy"
-            decoding="async"
-          />
-          <span aria-hidden="true">
-            {project.title} <Icon name="arrow-up-right" />
-          </span>
-        </a>
+        {project.detail ? (
+          <button
+            type="button"
+            class="project-file-shot"
+            data-project-open={project.id}
+            aria-haspopup="dialog"
+            aria-label={`Ver detalle de ${project.title}`}
+          >
+            <img
+              src={project.src}
+              alt={`Captura del sitio ${project.title}`}
+              width="1080"
+              height="542"
+              loading="lazy"
+              decoding="async"
+            />
+            <span aria-hidden="true">
+              <T t={projectsCopy.openDetail} as="b" /> <Icon name="maximize-2" />
+            </span>
+          </button>
+        ) : (
+          <a
+            class="project-file-shot"
+            href={project.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Visitar ${project.title}`}
+          >
+            <img
+              src={project.src}
+              alt={`Captura del sitio ${project.title}`}
+              width="1080"
+              height="542"
+              loading="lazy"
+              decoding="async"
+            />
+            <span aria-hidden="true">
+              {project.title} <Icon name="arrow-up-right" />
+            </span>
+          </a>
+        )}
         <T t={project.description} as="p" class="project-file-copy" />
         {project.features && (
           <ul class="project-features">
@@ -118,4 +140,100 @@ import { projects, projectsCopy } from "../../data/content";
       </div>
     </article>
   ))}
+
+  {/* One dialog per project with a write-up, opened from the project's image.
+      They live in the DOM (hidden) so every string is bilingual like the rest of
+      the page and the language toggle swaps them in place. */}
+  {projects.map(
+    (project) =>
+      project.detail && (
+        <dialog
+          class="project-dialog"
+          id={`project-${project.id}`}
+          aria-labelledby={`project-${project.id}-title`}
+        >
+          <button type="button" class="project-dialog-close" data-project-close aria-label="Cerrar">
+            <Icon name="x" size={20} />
+          </button>
+          <div class="project-dialog-inner">
+            <header class="project-dialog-head">
+              <T t={project.kicker} as="p" class="eyebrow" />
+              <h3 id={`project-${project.id}-title`}>{project.title}</h3>
+              <p class="project-file-meta">
+                <span>{project.year}</span>
+                {project.badge && <T t={project.badge} as="em" class="project-badge" />}
+              </p>
+            </header>
+
+            <div class="project-dialog-body">
+              <section class="project-dialog-block project-dialog-summary">
+                <T t={projectsCopy.summaryLabel} as="h4" />
+                <T t={project.detail.summary} as="p" />
+              </section>
+
+              <section class="project-dialog-block">
+                <T t={projectsCopy.useCasesLabel} as="h4" />
+                <ul>
+                  {project.detail.useCases.map((item) => (
+                    <T t={item} as="li" />
+                  ))}
+                </ul>
+              </section>
+
+              <section class="project-dialog-block project-dialog-built">
+                <T t={projectsCopy.builtLabel} as="h4" />
+                <ul>
+                  {project.detail.built.map((item) => (
+                    <T t={item} as="li" />
+                  ))}
+                </ul>
+              </section>
+            </div>
+
+            <ul class="project-tags">
+              {project.tags.map((tag) => (
+                <li>{tag}</li>
+              ))}
+            </ul>
+
+            <section class="project-dialog-gallery">
+              <T t={projectsCopy.galleryLabel} as="h4" />
+              <div class="project-dialog-shots">
+                {project.detail.gallery.map((shot) => (
+                  <figure>
+                    <button type="button" data-lightbox={shot.src} aria-label="Ampliar captura">
+                      <img
+                        src={shot.src}
+                        alt={`${project.title}`}
+                        width="1080"
+                        height="600"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </button>
+                    <T t={shot.caption} as="figcaption" />
+                  </figure>
+                ))}
+              </div>
+            </section>
+
+            <p class="project-file-links">
+              <a class="project-link" href={project.href} target="_blank" rel="noopener noreferrer">
+                <T t={projectsCopy.visit} /> <Icon name="arrow-up-right" />
+              </a>
+              {project.github && (
+                <a
+                  class="project-link"
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <T t={projectsCopy.code} /> <Icon name="arrow-up-right" />
+                </a>
+              )}
+            </p>
+          </div>
+        </dialog>
+      )
+  )}
 </section>

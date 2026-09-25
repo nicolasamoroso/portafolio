@@ -94,6 +94,13 @@ export type Project = {
   description: L;
   /** Short bullet points: what the site does, at a glance. */
   features?: L[];
+  /** The full write-up, shown in the project's detail panel. */
+  detail?: {
+    summary: L;
+    useCases: L[];
+    built: L[];
+    gallery: { src: string; caption: L }[];
+  };
   tags: string[];
   href: string;
   github?: string;
@@ -121,8 +128,8 @@ export const projects: Project[] = [
         en: "Custom cakes: size, flavors, fillings and colors, with live pricing",
       },
       {
-        es: "Reserva de turnos sin dobles reservas, probada con conexiones simultáneas",
-        en: "Slot booking with no double bookings, tested with concurrent connections",
+        es: "Entrega o retiro con horarios por día, fechas bloqueadas y cupo diario",
+        en: "Delivery or pickup with per-day hours, blocked dates and a daily cap",
       },
       {
         es: "CMS con pedidos, agenda, productos, promociones, reseñas y textos editables",
@@ -133,6 +140,74 @@ export const projects: Project[] = [
         en: "Mercado Pago payments and a database with versioned migrations",
       },
     ],
+    detail: {
+      summary: {
+        es: "Tienda online y CMS para una pastelería que vende tortas, postres y tortas personalizadas. La tienda y el panel comparten código en un monorepo.",
+        en: "Online store and CMS for a bakery that sells cakes, desserts and made-to-order cakes. The store and the admin panel share code in one monorepo.",
+      },
+      useCases: [
+        {
+          es: "Un cliente arma su torta eligiendo tamaño, sabores y rellenos, y ve el precio antes de pagar.",
+          en: "A customer builds a cake by picking size, flavors and fillings, and sees the price before paying.",
+        },
+        {
+          es: "Pide una torta personalizada con referencias y sigue su pedido desde un link.",
+          en: "Requests a made-to-order cake with references and follows the order from a link.",
+        },
+        {
+          es: "La dueña carga productos, opciones, promociones y fotos desde el CMS, sin depender de nadie.",
+          en: "The owner adds products, options, promotions and photos from the CMS, without depending on anyone.",
+        },
+      ],
+      built: [
+        {
+          es: "Tienda: catálogo por categorías, carrito, checkout, cuenta de usuario, favoritos y seguimiento del pedido.",
+          en: "Store: category catalog, cart, checkout, user accounts, favorites and order tracking.",
+        },
+        {
+          es: "Tortas personalizadas: formulario de pedido con referencias y galería de trabajos.",
+          en: "Made-to-order cakes: request form with references and a gallery of past work.",
+        },
+        {
+          es: "Pagos con Mercado Pago y códigos promocionales.",
+          en: "Mercado Pago payments and promo codes.",
+        },
+        {
+          es: "Entrega o retiro con horarios por día, fechas bloqueadas y cupo de unidades por día.",
+          en: "Delivery or pickup with per-day hours, blocked dates and a daily unit cap.",
+        },
+        {
+          es: "CMS: pedidos, agenda, productos, categorías, sabores y opciones, promociones, reseñas, preguntas frecuentes, newsletter, usuarios y registro de cambios.",
+          en: "CMS: orders, calendar, products, categories, flavors and options, promotions, reviews, FAQs, newsletter, users and an audit log.",
+        },
+        {
+          es: "Textos y marca editables desde el panel, con una base pensada para reutilizarse en otros rubros.",
+          en: "Copy and branding editable from the panel, on a base designed to be reused for other businesses.",
+        },
+        {
+          es: "Base de datos en Supabase con migraciones versionadas y políticas de acceso por fila.",
+          en: "Supabase database with versioned migrations and row-level access policies.",
+        },
+        {
+          es: "Monorepo con Turborepo: tienda y CMS comparten tipos y componentes.",
+          en: "Turborepo monorepo: store and CMS share types and components.",
+        },
+      ],
+      gallery: [
+        { src: "/img/annsweets.png", caption: { es: "Inicio de la tienda", en: "Store home" } },
+        {
+          src: "/img/projects/annsweets-gallery.webp",
+          caption: { es: "Galería de tortas personalizadas", en: "Made-to-order cake gallery" },
+        },
+        {
+          src: "/img/projects/annsweets-product.webp",
+          caption: {
+            es: "Producto con opciones y precio que se actualiza",
+            en: "Product with options and a live price",
+          },
+        },
+      ],
+    },
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Mercado Pago", "Turborepo"],
     href: "https://www.annsweets.com/",
   },
@@ -168,6 +243,75 @@ export const projects: Project[] = [
         en: "Spanish, English and Portuguese, with confirmation emails",
       },
     ],
+    detail: {
+      summary: {
+        es: "Sitio de la bodega Familia Dardanelli: catálogo de vinos, reserva de visitas y degustaciones con pago online, blog y un panel para administrar todo.",
+        en: "Website for the Familia Dardanelli winery: wine catalog, tour and tasting bookings with online payment, a blog and an admin panel to manage it all.",
+      },
+      useCases: [
+        {
+          es: "Un visitante elige una degustación, un horario y paga online para asegurar su lugar.",
+          en: "A visitor picks a tasting and a time slot and pays online to secure a spot.",
+        },
+        {
+          es: "Un turista lo lee en español, inglés o portugués.",
+          en: "A tourist reads it in Spanish, English or Portuguese.",
+        },
+        {
+          es: "La bodega bloquea fechas por eventos privados y carga reservas a mano desde el panel.",
+          en: "The winery blocks dates for private events and enters bookings by hand from the panel.",
+        },
+        {
+          es: "La bodega publica notas en el blog, incluso programadas.",
+          en: "The winery publishes blog posts, including scheduled ones.",
+        },
+      ],
+      built: [
+        {
+          es: "Reservas por horario con cupos y bloqueo de 5 minutos mientras se paga; cada reserva pasa por estados (disponible, bloqueada, paga, cancelada, vencida).",
+          en: "Time-slot bookings with capacity and a 5-minute hold while paying; each booking moves through states (available, held, paid, cancelled, expired).",
+        },
+        {
+          es: "Pagos con Mercado Pago (webhook con firma HMAC verificada) y PayPal.",
+          en: "Payments with Mercado Pago (webhook with a verified HMAC signature) and PayPal.",
+        },
+        {
+          es: "Mails de confirmación con Resend y respaldo con Nodemailer.",
+          en: "Confirmation emails through Resend, with Nodemailer as a fallback.",
+        },
+        {
+          es: "Catálogo de vinos con filtros por categoría y tipo, y buscador.",
+          en: "Wine catalog with category and type filters, and search.",
+        },
+        {
+          es: "Blog con editor TipTap, categorías, SEO por nota y publicación programada.",
+          en: "Blog with a TipTap editor, categories, per-post SEO and scheduled publishing.",
+        },
+        {
+          es: "Panel: reservas, reservas manuales, eventos, blog y visor de logs.",
+          en: "Admin: bookings, manual bookings, events, blog and a log viewer.",
+        },
+        {
+          es: "Sitio en tres idiomas (ES, EN, PT-BR) con rutas por idioma y sitemap.",
+          en: "Three-language site (ES, EN, PT-BR) with per-language routes and a sitemap.",
+        },
+        {
+          es: "Registro centralizado de errores y eventos de pago.",
+          en: "Centralized logging of errors and payment events.",
+        },
+      ],
+      gallery: [
+        { src: "/img/familiadardanelli.png", caption: { es: "Inicio del sitio", en: "Site home" } },
+        {
+          src: "/img/projects/dardanelli-experiences.webp",
+          caption: { es: "Experiencias con reserva online", en: "Experiences with online booking" },
+        },
+        {
+          src: "/img/projects/dardanelli-wines.webp",
+          caption: { es: "Catálogo de vinos con filtros", en: "Wine catalog with filters" },
+        },
+      ],
+    },
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Mercado Pago", "PayPal"],
     href: "https://www.familiadardanelli.com.uy/",
   },
@@ -203,6 +347,75 @@ export const projects: Project[] = [
         en: "Spanish, English and Portuguese, with Google and Meta analytics",
       },
     ],
+    detail: {
+      summary: {
+        es: "Sitio y tienda de la bodega Casa Grande: vinos a la venta online, enoturismo con degustaciones, eventos con entradas y un panel para administrar el contenido.",
+        en: "Website and store for the Casa Grande winery: wines for sale online, wine tourism with tastings, ticketed events and an admin panel to manage the content.",
+      },
+      useCases: [
+        {
+          es: "Un cliente compra vinos y packs online, con Mercado Pago y un código promocional si tiene.",
+          en: "A customer buys wines and packs online, paying with Mercado Pago and a promo code if they have one.",
+        },
+        {
+          es: "Un visitante reserva una degustación o compra entradas para un evento, con preventa.",
+          en: "A visitor books a tasting or buys tickets for an event, with presale.",
+        },
+        {
+          es: "Desde el exterior se lee en inglés o portugués.",
+          en: "From abroad it reads in English or Portuguese.",
+        },
+        {
+          es: "La bodega cambia textos, eventos y códigos desde el panel.",
+          en: "The winery edits copy, events and codes from the panel.",
+        },
+      ],
+      built: [
+        {
+          es: "Tienda con Shopify Storefront API: colecciones, filtros, favoritos, carrito y checkout con Mercado Pago; los pedidos se sincronizan con Shopify por API y webhook.",
+          en: "Store on the Shopify Storefront API: collections, filters, favorites, cart and a Mercado Pago checkout; orders sync back to Shopify through the API and a webhook.",
+        },
+        {
+          es: "Códigos promocionales con ámbitos: todo el sitio, un evento o productos puntuales.",
+          en: "Promo codes with scopes: the whole site, one event or specific products.",
+        },
+        {
+          es: "Eventos: venta de entradas, preventas, pago por transferencia o Mercado Pago, mails al cliente, recordatorios de pago y traslado opcional.",
+          en: "Events: ticket sales, presales, payment by transfer or Mercado Pago, customer emails, payment reminders and optional transport.",
+        },
+        {
+          es: "Enoturismo: una página por experiencia, con integración a Google Calendar.",
+          en: "Wine tourism: a page per experience, with a Google Calendar integration.",
+        },
+        {
+          es: "Panel: eventos, experiencias, códigos promocionales, newsletter y textos editables.",
+          en: "Admin: events, experiences, promo codes, newsletter and editable copy.",
+        },
+        {
+          es: "Sitio en español, inglés y portugués, con detección del idioma del navegador.",
+          en: "Site in Spanish, English and Portuguese, detecting the browser language.",
+        },
+        {
+          es: "Analítica con Google Tag Manager, Google Ads y Meta Pixel; límite de pedidos por IP en la API.",
+          en: "Analytics with Google Tag Manager, Google Ads and Meta Pixel; per-IP rate limiting on the API.",
+        },
+        { es: "Página para personalizar botellas.", en: "A page to personalize bottles." },
+      ],
+      gallery: [
+        { src: "/img/vinoscasagrande.png", caption: { es: "Inicio del sitio", en: "Site home" } },
+        {
+          src: "/img/projects/casagrande-tourism.webp",
+          caption: { es: "Enoturismo: experiencias", en: "Wine tourism: experiences" },
+        },
+        {
+          src: "/img/projects/casagrande-shop.webp",
+          caption: {
+            es: "Colección con filtros, precios y favoritos",
+            en: "Collection with filters, prices and favorites",
+          },
+        },
+      ],
+    },
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Shopify", "Mercado Pago"],
     href: "https://www.vinoscasagrande.com/",
   },
@@ -231,6 +444,13 @@ export const projectsCopy = {
   subtitle: { es: "SITIOS EN PRODUCCIÓN", en: "LIVE IN PRODUCTION" } satisfies L,
   visit: { es: "Ver", en: "Visit" } satisfies L,
   code: { es: "Código", en: "Code" } satisfies L,
+  openDetail: { es: "Ver detalle", en: "View details" } satisfies L,
+  closeDetail: { es: "Cerrar", en: "Close" } satisfies L,
+  summaryLabel: { es: "RESUMEN", en: "SUMMARY" } satisfies L,
+  useCasesLabel: { es: "CASOS DE USO", en: "USE CASES" } satisfies L,
+  builtLabel: { es: "QUÉ SE HIZO", en: "WHAT WAS BUILT" } satisfies L,
+  stackLabel: { es: "STACK", en: "STACK" } satisfies L,
+  galleryLabel: { es: "CAPTURAS", en: "SCREENSHOTS" } satisfies L,
 };
 
 /* ── 02 · Engineering case studies ──────────────────────────────────────── */
@@ -616,7 +836,7 @@ export const cv = {
     education: { es: "// FORMACIÓN", en: "// EDUCATION" } satisfies L,
   },
 
-  resumeLabel: { es: "CV / Resume", en: "CV / Resume" } satisfies L,
+  resumeLabel: { es: "CV", en: "Resume" } satisfies L,
   resumeEs: { es: "Español", en: "Spanish" } satisfies L,
   resumeEn: { es: "Inglés", en: "English" } satisfies L,
 
@@ -710,7 +930,7 @@ export const contact = {
     es: "Para proyectos, propuestas de trabajo o cualquier consulta, escribime por mail.",
     en: "For projects, job opportunities or any question, send me an email.",
   } satisfies L,
-  resume: { es: "CV / Resume", en: "CV / Resume" } satisfies L,
+  resume: { es: "CV", en: "Resume" } satisfies L,
   resumeEs: { es: "Español", en: "Spanish" } satisfies L,
   resumeEn: { es: "Inglés", en: "English" } satisfies L,
   backTop: { es: "VOLVER ARRIBA", en: "BACK TO TOP" } satisfies L,

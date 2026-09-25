@@ -1612,3 +1612,203 @@ html[data-theme="light"].menu-open .site-header.site-header {
     transition: none;
   }
 }
+
+/* ── Project detail panel ────────────────────────────────────────────────────
+   Opens from a project's image: summary, use cases, everything that was built,
+   and more screenshots. A native <dialog>, so Escape, focus trapping and the
+   backdrop are the browser's. The scroller is the inner box, not the dialog,
+   which keeps the close button pinned in the corner while the text scrolls. */
+.project-file-shot {
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.project-file-shot span b {
+  font-weight: inherit;
+}
+.project-file-shot span .icon {
+  vertical-align: -0.15em;
+  margin-left: 4px;
+}
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+.project-dialog {
+  width: min(1120px, calc(100% - 2 * var(--gutter)));
+  max-width: none;
+  max-height: calc(100dvh - 2 * clamp(12px, 3vh, 32px));
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #111110;
+  color: var(--paper);
+}
+.project-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+.project-dialog[open] {
+  animation: project-dialog-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes project-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.project-dialog-inner {
+  display: grid;
+  gap: clamp(26px, 3.4vw, 44px);
+  max-height: calc(100dvh - 2 * clamp(12px, 3vh, 32px));
+  padding: clamp(24px, 4vw, 56px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.project-dialog-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #111110;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.project-dialog-close:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+.project-dialog-head h3 {
+  margin: 12px 0 14px;
+  font: 800 clamp(34px, 5vw, 64px) / 1 var(--sans);
+  letter-spacing: -0.05em;
+}
+.project-dialog-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: clamp(24px, 3vw, 40px) clamp(28px, 4vw, 56px);
+  align-items: start;
+}
+.project-dialog-summary {
+  grid-column: 1 / -1;
+}
+.project-dialog-block h4,
+.project-dialog-gallery h4 {
+  margin: 0 0 14px;
+  font: 11px var(--mono);
+  letter-spacing: 0.08em;
+  color: rgba(242, 241, 237, 0.55);
+}
+.project-dialog-summary p {
+  max-width: 60ch;
+  margin: 0;
+  font-size: clamp(17px, 1.5vw, 22px);
+  line-height: 1.5;
+}
+.project-dialog-block ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.project-dialog-block li {
+  position: relative;
+  padding-left: 21px;
+  font: 13px/1.6 var(--mono);
+  color: rgba(242, 241, 237, 0.82);
+}
+.project-dialog-block li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  color: rgba(242, 241, 237, 0.4);
+}
+.project-dialog .project-tags,
+.project-dialog .project-file-links {
+  margin: 0;
+}
+.project-dialog-shots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.project-dialog-shots figure {
+  margin: 0;
+}
+.project-dialog-shots button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #1b1b1b;
+  cursor: zoom-in;
+}
+.project-dialog-shots img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  height: auto;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.project-dialog-shots button:hover img {
+  transform: scale(1.03);
+}
+.project-dialog-shots figcaption {
+  margin-top: 8px;
+  font: 11px/1.5 var(--mono);
+  color: rgba(242, 241, 237, 0.6);
+}
+@media (max-width: 760px) {
+  .project-dialog-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .project-dialog-shots {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-dialog[open] {
+    animation: none;
+  }
+}
+html[data-theme="light"] .project-dialog {
+  background: var(--surface);
+  color: var(--surface-text);
+}
+html[data-theme="light"] .project-dialog-close {
+  background: var(--surface);
+}
+html[data-theme="light"] .project-dialog-close:hover {
+  background: var(--surface-text);
+  color: var(--surface);
+}
+html[data-theme="light"] .project-dialog-block h4,
+html[data-theme="light"] .project-dialog-gallery h4,
+html[data-theme="light"] .project-dialog-shots figcaption {
+  color: var(--surface-muted);
+}
+html[data-theme="light"] .project-dialog-block li {
+  color: var(--surface-text);
+}
+html[data-theme="light"] .project-dialog-block li::before {
+  color: rgba(20, 19, 15, 0.4);
+}

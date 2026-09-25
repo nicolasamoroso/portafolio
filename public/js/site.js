@@ -95,6 +95,36 @@
     if (event.target === lightbox) lightbox.close();
   });
 
+  /* ── Project detail dialogs ──────────────────────────────────────────── */
+
+  // Delegated for the same reason as the lightbox above. The dialogs are
+  // native <dialog>s, so Escape and focus handling come for free; the two
+  // extras are closing on a click outside the panel, and returning focus to
+  // the image that opened it.
+  let projectOpener = null;
+  document.addEventListener("click", (event) => {
+    const opener = event.target.closest("[data-project-open]");
+    if (opener) {
+      const dialog = document.getElementById(`project-${opener.dataset.projectOpen}`);
+      if (!dialog) return;
+      projectOpener = opener;
+      dialog.showModal();
+      dialog.scrollTop = 0;
+      return;
+    }
+    if (event.target.closest("[data-project-close]")) {
+      event.target.closest("dialog").close();
+    }
+  });
+  document.querySelectorAll(".project-dialog").forEach((dialog) => {
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", () => {
+      if (projectOpener) projectOpener.focus({ preventScroll: true });
+    });
+  });
+
   document.querySelectorAll("img").forEach((media) => {
     media.draggable = false;
   });
