@@ -1526,3 +1526,81 @@ body {
   user-select: none;
   -webkit-touch-callout: none;
 }
+
+/* ── Menu: full-screen overlay ───────────────────────────────────────────────
+   Replaces the small floating panel. The links are set large, one per line,
+   and fade in one after another; the header stays on top so the theme and
+   language switches and the close button keep working. */
+.site-header {
+  z-index: 11;
+}
+.site-nav {
+  z-index: 10;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  max-height: none;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(2px, 1.2vh, 12px);
+  padding: 96px var(--gutter) 48px;
+  border: 0;
+  transform: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+.site-nav.open {
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+.site-nav a {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  font: 800 clamp(30px, 8.4vw, 68px) / 1.12 var(--sans);
+  letter-spacing: -0.045em;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease,
+    color 0.2s;
+}
+.site-nav.open a {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i, 0) * 45ms + 60ms), calc(var(--i, 0) * 45ms + 60ms), 0s;
+}
+.site-nav a:hover {
+  padding: 0;
+  color: #f08b2e;
+}
+html.menu-open {
+  overflow: hidden;
+}
+/* While it's open the header sits on the overlay, so it drops its own
+   background and takes the overlay's foreground colour. */
+html.menu-open .site-header.site-header {
+  background: transparent;
+  border-color: transparent;
+  backdrop-filter: none;
+  color: var(--paper);
+}
+html[data-theme="light"].menu-open .site-header.site-header {
+  color: var(--surface-text);
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-nav,
+  .site-nav a {
+    transition: none;
+  }
+}

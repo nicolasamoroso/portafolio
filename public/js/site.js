@@ -299,6 +299,9 @@
     menuButton.setAttribute("aria-expanded", String(open));
     nav.inert = !open;
     nav.classList.toggle("open", open);
+    // Locks the page scroll behind the full-screen menu and lets the header
+    // drop its own background while it's open.
+    root.classList.toggle("menu-open", open);
   };
   setMenuOpen(false);
   menuButton.addEventListener("click", () =>
