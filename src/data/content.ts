@@ -574,24 +574,24 @@ export const cv = {
       place: { es: "Montevideo, UY", en: "Montevideo, UY" } satisfies L,
       items: [
         {
-          es: "Rediseñé y modernicé la interfaz de varios productos, implementando los diseños nuevos y actualizando librerías obsoletas. De paso bajó el tiempo de arranque local y de despliegue.",
-          en: "Redesigned and modernized the interface of several products, implementing the new designs and updating outdated libraries. Local startup and deployment times dropped along the way.",
+          es: "Rediseño y modernización de la interfaz de varios productos: implementación de los diseños nuevos y actualización de librerías obsoletas, con menores tiempos de arranque local y de despliegue.",
+          en: "Interface redesign and modernization across several products: implementation of the new designs and updates to outdated libraries, with shorter local startup and deployment times.",
         },
         {
-          es: "Desarrollé módulos de negocio nuevos de punta a punta, incluyendo la infra en AWS ECS y el backend completo.",
-          en: "Developed new business modules end to end, including the AWS ECS infrastructure and the whole backend.",
+          es: "Módulos de negocio nuevos de punta a punta, con la infraestructura en AWS ECS y el backend completo.",
+          en: "New business modules built end to end, with the AWS ECS infrastructure and the full backend.",
         },
         {
-          es: "Implementé la lógica core en Java con MySQL: links de referidos, códigos promocionales, pasarelas de pago e integración de servicios entre módulos.",
-          en: "Implemented core logic in Java with MySQL: referral links, promo codes, payment gateways and service integration across modules.",
+          es: "Lógica core en Java y MySQL: links de referidos, códigos promocionales, pasarelas de pago e integración de servicios entre módulos.",
+          en: "Core logic in Java and MySQL: referral links, promo codes, payment gateways and service integration across modules.",
         },
         {
-          es: "Co-desarrollé un asistente conversacional con IA que responde consultas y ejecuta acciones sobre el negocio, integrado con Redshift. Frontend en React, backend serverless en Python sobre Lambda, DynamoDB y Bedrock.",
-          en: "Co-developed an AI conversational assistant that answers queries and executes actions on the business, integrated with Redshift. React frontend, serverless Python backend on Lambda, DynamoDB and Bedrock.",
+          es: "Desarrollo en equipo de un asistente conversacional con IA que responde consultas y ejecuta acciones sobre el negocio, integrado con Redshift. Frontend en React, backend serverless en Python sobre Lambda, DynamoDB y Bedrock.",
+          en: "Team development of an AI conversational assistant that answers queries and executes actions on the business, integrated with Redshift. React frontend, serverless Python backend on Lambda, DynamoDB and Bedrock.",
         },
         {
-          es: "Trabajé en los flujos críticos de punta a punta: checkouts, búsqueda, integraciones nuevas y paneles de administración.",
-          en: "Worked the critical flows end to end: checkouts, search, new integrations and admin panels.",
+          es: "Flujos críticos del producto: checkouts, búsqueda, integraciones nuevas y paneles de administración.",
+          en: "Critical product flows: checkouts, search, new integrations and admin panels.",
         },
       ] satisfies L[],
       stack: ["Java", "MySQL", "AWS ECS", "Lambda", "React", "TypeScript", "Python"],
