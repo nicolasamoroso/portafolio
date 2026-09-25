@@ -51,8 +51,8 @@ export const hero = {
 
 export const cover = {
   role: {
-    es: "Desarrollador fullstack. React y TypeScript en el frontend, Java y AWS del otro lado, con IA aplicada en algunos proyectos.",
-    en: "Fullstack developer. React and TypeScript on the frontend, Java and AWS on the other side, with applied AI on some projects.",
+    es: "Desarrollador fullstack. Frontend con React y TypeScript, backend con Java y AWS. También integré IA en algunos proyectos.",
+    en: "Fullstack developer. Frontend with React and TypeScript, backend with Java and AWS. I've also integrated AI into some projects.",
   } satisfies L,
 };
 
