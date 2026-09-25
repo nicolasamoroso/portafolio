@@ -1613,16 +1613,14 @@ html[data-theme="light"].menu-open .site-header.site-header {
   }
 }
 
-/* ── Project detail panel ────────────────────────────────────────────────────
-   Opens from a project's image: summary, use cases, everything that was built,
-   and more screenshots. A native <dialog>, so Escape, focus trapping and the
-   backdrop are the browser's. The scroller is the inner box, not the dialog,
-   which keeps the close button pinned in the corner while the text scrolls. */
+/* ── Project page ────────────────────────────────────────────────────────────
+   /proyectos/<id>/ — a project's write-up on its own page. The surface follows
+   the theme through the --pp-* tokens: paper in "mixed" (like the hero it sits
+   under the fixed header of), the theme's own surface in light and dark. */
+.project-page-cover,
 .project-file-shot {
-  padding: 0;
   font: inherit;
   color: inherit;
-  text-align: left;
   cursor: pointer;
 }
 .project-file-shot span b {
@@ -1632,183 +1630,209 @@ html[data-theme="light"].menu-open .site-header.site-header {
   vertical-align: -0.15em;
   margin-left: 4px;
 }
-html:has(dialog[open]) {
-  overflow: hidden;
+.project-page {
+  --pp-bg: var(--paper);
+  --pp-fg: var(--ink);
+  --pp-muted: rgba(10, 10, 10, 0.62);
+  --pp-line: rgba(10, 10, 10, 0.22);
+  min-height: 100svh;
+  padding-block: clamp(110px, 13vw, 170px) var(--section-y);
+  background: var(--pp-bg);
+  color: var(--pp-fg);
 }
-.project-dialog {
-  width: min(1120px, calc(100% - 2 * var(--gutter)));
-  max-width: none;
-  max-height: calc(100dvh - 2 * clamp(12px, 3vh, 32px));
-  margin: auto;
-  padding: 0;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  background: #111110;
-  color: var(--paper);
+html[data-theme="light"] .project-page {
+  --pp-bg: var(--surface);
+  --pp-fg: var(--surface-text);
+  --pp-muted: var(--surface-muted);
+  --pp-line: var(--line);
 }
-.project-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.72);
+html[data-theme="dark"] .project-page {
+  --pp-bg: var(--dark-surface);
+  --pp-fg: var(--dark-text);
+  --pp-muted: var(--dark-muted);
+  --pp-line: var(--dark-line);
 }
-.project-dialog[open] {
-  animation: project-dialog-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-@keyframes project-dialog-in {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.project-dialog-inner {
+.project-page-wrap {
   display: grid;
-  gap: clamp(26px, 3.4vw, 44px);
-  max-height: calc(100dvh - 2 * clamp(12px, 3vh, 32px));
-  padding: clamp(24px, 4vw, 56px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  gap: clamp(40px, 5.5vw, 80px);
 }
-.project-dialog-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: #111110;
-  color: inherit;
-  cursor: pointer;
+.project-page-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--pp-line);
+  font: 12px var(--mono);
+  letter-spacing: 0.04em;
   transition:
-    background 0.2s,
-    color 0.2s;
+    color 0.2s,
+    border-color 0.2s;
 }
-.project-dialog-close:hover {
-  background: var(--paper);
-  color: var(--ink);
+.project-page-back:hover,
+.project-page-links a:hover {
+  color: #9a471f;
+  border-color: #9a471f;
 }
-.project-dialog-head h3 {
-  margin: 12px 0 14px;
-  font: 800 clamp(34px, 5vw, 64px) / 1 var(--sans);
-  letter-spacing: -0.05em;
+html[data-theme="dark"] .project-page-back:hover,
+html[data-theme="dark"] .project-page-links a:hover {
+  color: #f08b2e;
+  border-color: #f08b2e;
 }
-.project-dialog-body {
+.project-page-head h1 {
+  margin: 14px 0 18px;
+  font: 800 clamp(52px, 11vw, 160px) / 0.9 var(--sans);
+  letter-spacing: -0.06em;
+}
+.project-page-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font: 11px var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--pp-muted);
+}
+.project-page-badge {
+  padding: 3px 7px;
+  border: 1px solid var(--pp-line);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+.project-page-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  margin: clamp(22px, 2.6vw, 34px) 0 0;
+}
+.project-page-links a {
+  padding-bottom: 3px;
+  border-bottom: 1px solid currentColor;
+  font: 600 15px var(--mono);
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.project-page-cover {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--pp-line);
+  background: #1b1b1b;
+  cursor: zoom-in;
+}
+.project-page-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.project-page-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
-  gap: clamp(24px, 3vw, 40px) clamp(28px, 4vw, 56px);
+  gap: clamp(28px, 3.4vw, 48px) clamp(32px, 5vw, 72px);
   align-items: start;
 }
-.project-dialog-summary {
+.project-page-summary {
   grid-column: 1 / -1;
 }
-.project-dialog-block h4,
-.project-dialog-gallery h4 {
-  margin: 0 0 14px;
-  font: 11px var(--mono);
+.project-page-block h2 {
+  margin: 0 0 16px;
+  font: 400 11px var(--mono);
   letter-spacing: 0.08em;
-  color: rgba(242, 241, 237, 0.55);
+  color: var(--pp-muted);
 }
-.project-dialog-summary p {
-  max-width: 60ch;
+.project-page-summary p {
+  max-width: 44ch;
   margin: 0;
-  font-size: clamp(17px, 1.5vw, 22px);
-  line-height: 1.5;
+  font: 600 clamp(24px, 3vw, 44px) / 1.18 var(--sans);
+  letter-spacing: -0.03em;
 }
-.project-dialog-block ul {
+.project-page-block ul {
   display: grid;
-  gap: 10px;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.project-dialog-block li {
+.project-page-block li {
   position: relative;
   padding-left: 21px;
-  font: 13px/1.6 var(--mono);
-  color: rgba(242, 241, 237, 0.82);
+  font: 14px/1.62 var(--mono);
 }
-.project-dialog-block li::before {
+.project-page-block li::before {
   content: "+";
   position: absolute;
   left: 0;
-  color: rgba(242, 241, 237, 0.4);
+  color: var(--pp-muted);
 }
-.project-dialog .project-tags,
-.project-dialog .project-file-links {
-  margin: 0;
+.project-page-block .project-page-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
-.project-dialog-shots {
+.project-page-block .project-page-tags li {
+  padding: 7px 10px;
+  border: 1px solid var(--pp-line);
+  font: 10px var(--mono);
+  letter-spacing: 0.04em;
+}
+.project-page-block .project-page-tags li::before {
+  content: none;
+}
+.project-page-shots {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 20px;
 }
-.project-dialog-shots figure {
+.project-page-shots figure {
   margin: 0;
 }
-.project-dialog-shots button {
+.project-page-shots button {
   display: block;
   width: 100%;
   padding: 0;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid var(--pp-line);
   background: #1b1b1b;
   cursor: zoom-in;
 }
-.project-dialog-shots img {
+.project-page-shots img {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
   height: auto;
-  object-fit: cover;
-  object-position: top;
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.project-dialog-shots button:hover img {
+.project-page-shots button:hover img {
   transform: scale(1.03);
 }
-.project-dialog-shots figcaption {
-  margin-top: 8px;
+.project-page-shots figcaption {
+  margin-top: 10px;
   font: 11px/1.5 var(--mono);
-  color: rgba(242, 241, 237, 0.6);
+  color: var(--pp-muted);
+}
+.project-page-next {
+  display: grid;
+  gap: 10px;
+  padding-top: 28px;
+  border-top: 1px solid var(--pp-line);
+}
+.project-page-next .eyebrow {
+  color: var(--pp-muted);
+}
+.project-page-next strong {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font: 800 clamp(34px, 6vw, 84px) / 1 var(--sans);
+  letter-spacing: -0.05em;
+  transition: gap 0.3s;
+}
+.project-page-next:hover strong {
+  gap: 26px;
 }
 @media (max-width: 760px) {
-  .project-dialog-body {
+  .project-page-body {
     grid-template-columns: minmax(0, 1fr);
   }
-  .project-dialog-shots {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .project-dialog[open] {
-    animation: none;
-  }
-}
-html[data-theme="light"] .project-dialog {
-  background: var(--surface);
-  color: var(--surface-text);
-}
-html[data-theme="light"] .project-dialog-close {
-  background: var(--surface);
-}
-html[data-theme="light"] .project-dialog-close:hover {
-  background: var(--surface-text);
-  color: var(--surface);
-}
-html[data-theme="light"] .project-dialog-block h4,
-html[data-theme="light"] .project-dialog-gallery h4,
-html[data-theme="light"] .project-dialog-shots figcaption {
-  color: var(--surface-muted);
-}
-html[data-theme="light"] .project-dialog-block li {
-  color: var(--surface-text);
-}
-html[data-theme="light"] .project-dialog-block li::before {
-  color: rgba(20, 19, 15, 0.4);
 }

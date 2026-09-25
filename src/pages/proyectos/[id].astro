@@ -1,0 +1,141 @@
+---
+/**
+ * One page per project that has a write-up. Static: getStaticPaths emits
+ * /proyectos/<id>/ for each, so a project can be linked to directly.
+ */
+import Header from "../../components/Header.astro";
+import Icon from "../../components/Icon.astro";
+import T from "../../components/T.astro";
+import Layout from "../../layouts/Layout.astro";
+import { projects, projectsCopy } from "../../data/content";
+import type { L, Project } from "../../data/content";
+
+export function getStaticPaths() {
+  const withDetail = projects.filter((project) => project.detail);
+  return withDetail.map((project, index) => ({
+    params: { id: project.id },
+    props: { project, next: withDetail[(index + 1) % withDetail.length] },
+  }));
+}
+
+const { project, next } = Astro.props as { project: Project; next: Project };
+const detail = project.detail!;
+
+const title: L = {
+  es: `${project.title} · Nicolás Amoroso`,
+  en: `${project.title} · Nicolás Amoroso`,
+};
+// The first gallery entry is the home screenshot, already shown as the cover.
+const shots = detail.gallery.slice(1);
+---
+
+<Layout title={title} description={detail.summary} path={`/proyectos/${project.id}/`}>
+  <Header home="/" />
+  <main class="project-page">
+    <div class="project-page-wrap section-shell">
+      <a class="project-page-back" href="/#proyectos">
+        <Icon name="arrow-left" size={14} />
+        <T t={projectsCopy.back} />
+      </a>
+
+      <header class="project-page-head">
+        <T t={project.kicker} as="p" class="eyebrow" />
+        <h1>{project.title}</h1>
+        <p class="project-page-meta">
+          <span>{project.year}</span>
+          {project.badge && <T t={project.badge} as="em" class="project-page-badge" />}
+        </p>
+        <p class="project-page-links">
+          <a href={project.href} target="_blank" rel="noopener noreferrer">
+            <T t={projectsCopy.visit} /> <Icon name="arrow-up-right" />
+          </a>
+          {project.github && (
+            <a href={project.github} target="_blank" rel="noopener noreferrer">
+              <T t={projectsCopy.code} /> <Icon name="arrow-up-right" />
+            </a>
+          )}
+        </p>
+      </header>
+
+      <button
+        type="button"
+        class="project-page-cover"
+        data-lightbox={project.src}
+        aria-label="Ampliar captura"
+      >
+        <img
+          src={project.src}
+          alt={`Captura del sitio ${project.title}`}
+          width="1080"
+          height="542"
+          decoding="async"
+        />
+      </button>
+
+      <div class="project-page-body">
+        <section class="project-page-block project-page-summary">
+          <T t={projectsCopy.summaryLabel} as="h2" />
+          <T t={detail.summary} as="p" />
+        </section>
+
+        <section class="project-page-block">
+          <T t={projectsCopy.useCasesLabel} as="h2" />
+          <ul>
+            {detail.useCases.map((item) => (
+              <T t={item} as="li" />
+            ))}
+          </ul>
+        </section>
+
+        <section class="project-page-block">
+          <T t={projectsCopy.builtLabel} as="h2" />
+          <ul>
+            {detail.built.map((item) => (
+              <T t={item} as="li" />
+            ))}
+          </ul>
+        </section>
+      </div>
+
+      <section class="project-page-block">
+        <T t={projectsCopy.stackLabel} as="h2" />
+        <ul class="project-page-tags">
+          {project.tags.map((tag) => (
+            <li>{tag}</li>
+          ))}
+        </ul>
+      </section>
+
+      {shots.length > 0 && (
+        <section class="project-page-block">
+          <T t={projectsCopy.galleryLabel} as="h2" />
+          <div class="project-page-shots">
+            {shots.map((shot) => (
+              <figure>
+                <button type="button" data-lightbox={shot.src} aria-label="Ampliar captura">
+                  <img
+                    src={shot.src}
+                    alt={project.title}
+                    width="1552"
+                    height="652"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+                <T t={shot.caption} as="figcaption" />
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <a class="project-page-next" href={`/proyectos/${next.id}/`}>
+        <T t={projectsCopy.next} as="span" class="eyebrow" />
+        <strong>
+          {next.title}
+          <Icon name="arrow-right" size={28} />
+        </strong>
+      </a>
+    </div>
+  </main>
+</Layout>

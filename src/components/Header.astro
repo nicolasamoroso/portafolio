@@ -2,10 +2,17 @@
 import Icon from "./Icon.astro";
 import T from "./T.astro";
 import { meta, nav } from "../data/content";
+
+interface Props {
+  /** "/" on sub-pages, so the in-page anchors point back at the home page. */
+  home?: string;
+}
+
+const { home = "" } = Astro.props;
 ---
 
 <header class="site-header">
-  <a class="wordmark" href="#inicio" aria-label="Ir al inicio">
+  <a class="wordmark" href={`${home}#inicio`} aria-label="Ir al inicio">
     {meta.initials}
     <span>®</span>
   </a>
@@ -66,6 +73,6 @@ import { meta, nav } from "../data/content";
   inert
 >
   {nav.map(({ href, label }, index) => (
-    <T t={label} as="a" href={href} style={`--i:${index}`} />
+    <T t={label} as="a" href={`${home}${href}`} style={`--i:${index}`} />
   ))}
 </nav>

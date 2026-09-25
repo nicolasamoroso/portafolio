@@ -3,6 +3,16 @@ import Icon from "../components/Icon.astro";
 import "../styles/base.css";
 import "../styles/custom.css";
 import { meta } from "../data/content";
+import type { L } from "../data/content";
+
+interface Props {
+  title?: L;
+  description?: L;
+  /** Path of the page, for the canonical URL. */
+  path?: string;
+}
+
+const { title = meta.title, description = meta.description, path = "/" } = Astro.props;
 ---
 
 <!doctype html>
@@ -12,18 +22,18 @@ import { meta } from "../data/content";
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content={meta.description.es}
+      content={description.es}
       data-i18n-meta
-      data-es={meta.description.es}
-      data-en={meta.description.en}
+      data-es={description.es}
+      data-en={description.en}
     />
-    <link rel="canonical" href="https://nicolasamoroso.com/" />
-    <title data-i18n-title data-es={meta.title.es} data-en={meta.title.en}>{meta.title.es}</title>
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <title data-i18n-title data-es={title.es} data-en={title.en}>{title.es}</title>
     <link rel="icon" type="image/svg+xml" href="/icons/na.svg" />
     <meta name="theme-color" content="#0a0a0a" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={meta.title.es} />
-    <meta property="og:description" content={meta.description.es} />
+    <meta property="og:title" content={title.es} />
+    <meta property="og:description" content={description.es} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
