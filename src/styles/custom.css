@@ -176,6 +176,13 @@
   color: #9a471f;
   border-color: #9a471f;
 }
+/* Keeps the label and its arrow together as one flex item, so a wrap moves
+   both instead of stranding the arrow on a line of its own. */
+.cover-resume-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
 .cover-contact-resume {
   display: flex;
   flex-wrap: wrap;

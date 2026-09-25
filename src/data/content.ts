@@ -568,7 +568,7 @@ export const cv = {
     method: { es: "// CÓMO TRABAJO", en: "// HOW I WORK" } satisfies L,
   },
 
-  resumeLabel: { es: "CV en PDF", en: "Résumé PDF" } satisfies L,
+  resumeLabel: { es: "CV / Resume", en: "CV / Resume" } satisfies L,
   resumeEs: { es: "Español", en: "Spanish" } satisfies L,
   resumeEn: { es: "Inglés", en: "English" } satisfies L,
 
@@ -682,7 +682,7 @@ export const contact = {
     es: "Si tenés una idea, una propuesta o ganas de charlar, escribime. Contesto todo, incluso los mensajes raros.",
     en: "If you have an idea, a proposal or just feel like talking, write to me. I answer everything, weird messages included.",
   } satisfies L,
-  resume: { es: "CV en PDF", en: "Résumé PDF" } satisfies L,
+  resume: { es: "CV / Resume", en: "CV / Resume" } satisfies L,
   resumeEs: { es: "Español", en: "Spanish" } satisfies L,
   resumeEn: { es: "Inglés", en: "English" } satisfies L,
   backTop: { es: "VOLVER ARRIBA", en: "BACK TO TOP" } satisfies L,
