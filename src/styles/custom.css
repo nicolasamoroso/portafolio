@@ -1619,6 +1619,7 @@ html[data-theme="light"].menu-open .site-header.site-header {
    under the fixed header of), the theme's own surface in light and dark. */
 .project-page-cover,
 .project-file-shot {
+  padding: 0;
   font: inherit;
   color: inherit;
   cursor: pointer;
@@ -1719,7 +1720,7 @@ html[data-theme="dark"] .project-page-links a:hover {
   width: 100%;
   overflow: hidden;
   border: 1px solid var(--pp-line);
-  background: #1b1b1b;
+  background: none;
   cursor: zoom-in;
 }
 .project-page-cover img {
@@ -1794,13 +1795,19 @@ html[data-theme="dark"] .project-page-links a:hover {
   padding: 0;
   overflow: hidden;
   border: 1px solid var(--pp-line);
-  background: #1b1b1b;
+  background: none;
   cursor: zoom-in;
 }
 .project-page-shots img {
   display: block;
   width: 100%;
+  /* One shape for every shot: the captures were cropped to different
+     heights, and left as they came they made the row uneven. Anchored to the
+     top-left so the site's header is what stays in frame. */
+  aspect-ratio: 2.2 / 1;
   height: auto;
+  object-fit: cover;
+  object-position: top left;
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .project-page-shots button:hover img {
