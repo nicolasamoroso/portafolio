@@ -98,6 +98,29 @@
   document.querySelectorAll("img").forEach((media) => {
     media.draggable = false;
   });
+
+  /* ── Scroll progress ─────────────────────────────────────────────────── */
+
+  const progress = document.querySelector(".scroll-progress");
+  if (progress) {
+    let queued = false;
+    const paintProgress = () => {
+      queued = false;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!queued) {
+          queued = true;
+          requestAnimationFrame(paintProgress);
+        }
+      },
+      { passive: true }
+    );
+    paintProgress();
+  }
   document.addEventListener("dragstart", (event) => {
     if (event.target.closest("img")) event.preventDefault();
   });
@@ -701,10 +724,15 @@
       // down tips the top toward you, which is why Y drives X and is negated.
       portrait.style.setProperty("--portrait-ry", `${(x * MAX * 2).toFixed(2)}deg`);
       portrait.style.setProperty("--portrait-rx", `${(-y * MAX * 2).toFixed(2)}deg`);
+      // Light comes from the cursor, so the shadow falls on the opposite side.
+      portrait.style.setProperty("--shadow-x", `${(-x * 40).toFixed(1)}px`);
+      portrait.style.setProperty("--shadow-y", `${(-y * 40).toFixed(1)}px`);
     });
     portrait.addEventListener("pointerleave", () => {
       portrait.style.setProperty("--portrait-ry", "0deg");
       portrait.style.setProperty("--portrait-rx", "0deg");
+      portrait.style.removeProperty("--shadow-x");
+      portrait.style.removeProperty("--shadow-y");
     });
   }
 

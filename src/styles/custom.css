@@ -91,7 +91,8 @@
   justify-self: start;
   background: #fffefa;
   border: 1px solid rgba(10, 10, 10, 0.32);
-  box-shadow: 12px 14px 0 rgba(10, 10, 10, 0.1);
+  /* Offset set by site.js from the cursor: the shadow falls away from it. */
+  box-shadow: var(--shadow-x, 12px) var(--shadow-y, 14px) 0 rgba(10, 10, 10, 0.1);
 }
 .cover-portrait img {
   /* The base only positions the image inside `.cv-board-profile`; without
@@ -110,7 +111,7 @@
 }
 @media (hover: hover) {
   .cover-portrait:hover {
-    box-shadow: 16px 18px 0 rgba(10, 10, 10, 0.13);
+    box-shadow: var(--shadow-x, 16px) var(--shadow-y, 18px) 0 rgba(10, 10, 10, 0.13);
   }
 }
 /* A finger has no hover state, and the tilt would only fight the scroll. */
@@ -1209,7 +1210,7 @@ html[data-theme="dark"] .cv-stickers .tool-badge {
 html[data-theme="dark"] .cover-portrait {
   background: var(--dark-surface-alt);
   border-color: var(--dark-line);
-  box-shadow: 12px 14px 0 rgba(242, 241, 237, 0.1);
+  box-shadow: var(--shadow-x, 12px) var(--shadow-y, 14px) 0 rgba(242, 241, 237, 0.1);
 }
 html[data-theme="dark"] .cover-portrait img {
   animation-name: profile-draw-inverted;
@@ -1859,5 +1860,75 @@ html[data-theme="dark"] .project-page-links a:hover {
 @media (max-width: 760px) {
   .project-page-body {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── Molten background ───────────────────────────────────────────────────────
+   public/js/molten.js renders faint flowing filaments of light with a WebGL
+   shader in each section, in the section's own text colour. The layer is at
+   z-index -1 in a section that is its own stacking context, so text and
+   images always paint above it. */
+.molten-host {
+  position: relative;
+  isolation: isolate;
+}
+.molten {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.molten canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Film grain that actually moves: the noise tile jumps a few pixels on every
+   step, which reads as grain flicker rather than a static texture. */
+.grain {
+  inset: -60px;
+  animation: grain-shift 0.9s steps(5) infinite;
+}
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-24px, 14px);
+  }
+  40% {
+    transform: translate(18px, -30px);
+  }
+  60% {
+    transform: translate(-12px, 26px);
+  }
+  80% {
+    transform: translate(30px, 8px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Reading progress along the top edge. */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 12;
+  height: 2px;
+  background: #f08b2e;
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
   }
 }
