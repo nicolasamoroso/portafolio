@@ -32,110 +32,120 @@ const shots = detail.gallery.slice(1);
 <Layout title={title} description={detail.summary} path={`/proyectos/${project.id}/`}>
   <Header home="/" />
   <main class="project-page">
-    <div class="project-page-wrap section-shell">
-      <a class="project-page-back" href="/#proyectos">
-        <Icon name="arrow-left" size={14} />
-        <T t={projectsCopy.back} />
-      </a>
+    <div class="project-band project-band-head">
+      <div class="project-page-wrap section-shell">
+        <a class="project-page-back" href="/#proyectos">
+          <Icon name="arrow-left" size={14} />
+          <T t={projectsCopy.back} />
+        </a>
 
-      <header class="project-page-head">
-        <T t={project.kicker} as="p" class="eyebrow" />
-        <h1>{project.title}</h1>
-        <p class="project-page-meta">
-          <span>{project.year}</span>
-          {project.badge && <T t={project.badge} as="em" class="project-page-badge" />}
-        </p>
-        <p class="project-page-links">
-          <a href={project.href} target="_blank" rel="noopener noreferrer">
-            <T t={projectsCopy.visit} /> <Icon name="arrow-up-right" />
-          </a>
-          {project.github && (
-            <a href={project.github} target="_blank" rel="noopener noreferrer">
-              <T t={projectsCopy.code} /> <Icon name="arrow-up-right" />
+        <header class="project-page-head">
+          <T t={project.kicker} as="p" class="eyebrow" />
+          <h1>{project.title}</h1>
+          <p class="project-page-meta">
+            <span>{project.year}</span>
+            {project.badge && <T t={project.badge} as="em" class="project-page-badge" />}
+          </p>
+          <p class="project-page-links">
+            <a href={project.href} target="_blank" rel="noopener noreferrer">
+              <T t={projectsCopy.visit} /> <Icon name="arrow-up-right" />
             </a>
-          )}
-        </p>
-      </header>
+            {project.github && (
+              <a href={project.github} target="_blank" rel="noopener noreferrer">
+                <T t={projectsCopy.code} /> <Icon name="arrow-up-right" />
+              </a>
+            )}
+          </p>
+        </header>
 
-      <button
-        type="button"
-        class="project-page-cover"
-        data-lightbox={project.src}
-        aria-label="Ampliar captura"
-      >
-        <img
-          src={project.src}
-          alt={`Captura del sitio ${project.title}`}
-          width="1080"
-          height="542"
-          decoding="async"
-        />
-      </button>
+        <button
+          type="button"
+          class="project-page-cover"
+          data-lightbox={project.src}
+          aria-label="Ampliar captura"
+        >
+          <img
+            src={project.src}
+            alt={`Captura del sitio ${project.title}`}
+            width="1080"
+            height="542"
+            decoding="async"
+          />
+        </button>
+      </div>
+    </div>
 
-      <div class="project-page-body">
-        <section class="project-page-block project-page-summary">
-          <T t={projectsCopy.summaryLabel} as="h2" />
-          <T t={detail.summary} as="p" />
-        </section>
+    <div class="project-band project-band-ink">
+      <div class="project-page-wrap section-shell">
+        <div class="project-page-body">
+          <section class="project-page-block project-page-summary">
+            <T t={projectsCopy.summaryLabel} as="h2" />
+            <T t={detail.summary} as="p" />
+          </section>
+
+          <section class="project-page-block">
+            <T t={projectsCopy.useCasesLabel} as="h2" />
+            <ul>
+              {detail.useCases.map((item) => (
+                <T t={item} as="li" />
+              ))}
+            </ul>
+          </section>
+
+          <section class="project-page-block">
+            <T t={projectsCopy.builtLabel} as="h2" />
+            <ul>
+              {detail.built.map((item) => (
+                <T t={item} as="li" />
+              ))}
+            </ul>
+          </section>
+        </div>
 
         <section class="project-page-block">
-          <T t={projectsCopy.useCasesLabel} as="h2" />
-          <ul>
-            {detail.useCases.map((item) => (
-              <T t={item} as="li" />
-            ))}
-          </ul>
-        </section>
-
-        <section class="project-page-block">
-          <T t={projectsCopy.builtLabel} as="h2" />
-          <ul>
-            {detail.built.map((item) => (
-              <T t={item} as="li" />
+          <T t={projectsCopy.stackLabel} as="h2" />
+          <ul class="project-page-tags">
+            {project.tags.map((tag) => (
+              <li>{tag}</li>
             ))}
           </ul>
         </section>
       </div>
+    </div>
 
-      <section class="project-page-block">
-        <T t={projectsCopy.stackLabel} as="h2" />
-        <ul class="project-page-tags">
-          {project.tags.map((tag) => (
-            <li>{tag}</li>
-          ))}
-        </ul>
-      </section>
+    <div class="project-band">
+      <div class="project-page-wrap section-shell">
+        {shots.length > 0 && (
+          <section class="project-page-block">
+            <T t={projectsCopy.galleryLabel} as="h2" />
+            <div class="project-page-shots">
+              {shots.map((shot) => (
+                <figure>
+                  <button type="button" data-lightbox={shot.src} aria-label="Ampliar captura">
+                    <img
+                      src={shot.src}
+                      alt={project.title}
+                      width="1552"
+                      height="652"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </button>
+                  <T t={shot.caption} as="figcaption" />
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
 
-      {shots.length > 0 && (
-        <section class="project-page-block">
-          <T t={projectsCopy.galleryLabel} as="h2" />
-          <div class="project-page-shots">
-            {shots.map((shot) => (
-              <figure>
-                <button type="button" data-lightbox={shot.src} aria-label="Ampliar captura">
-                  <img
-                    src={shot.src}
-                    alt={project.title}
-                    width="1552"
-                    height="652"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </button>
-                <T t={shot.caption} as="figcaption" />
-              </figure>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <a class="project-page-next" href={`/proyectos/${next.id}/`}>
-        <T t={projectsCopy.next} as="span" class="eyebrow" />
-        <strong>
-          {next.title}
-          <Icon name="arrow-right" size={28} />
-        </strong>
-      </a>
+        <a class="project-page-next" href={`/proyectos/${next.id}/`}>
+          <T t={projectsCopy.next} as="span" class="eyebrow" />
+          <strong>
+            {next.title}
+            <Icon name="arrow-right" size={28} />
+          </strong>
+        </a>
+      </div>
     </div>
   </main>
 </Layout>

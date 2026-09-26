@@ -1631,27 +1631,45 @@ html[data-theme="light"].menu-open .site-header.site-header {
   vertical-align: -0.15em;
   margin-left: 4px;
 }
+/* The page is a stack of bands, like the home page: paper / ink / paper in
+   "mixed", one surface in "light", one dark surface in "dark". Each band
+   carries its own --pp-* tokens, so everything inside just uses them. */
 .project-page {
+  min-height: 100svh;
+  background: var(--ink);
+}
+.project-band {
   --pp-bg: var(--paper);
   --pp-fg: var(--ink);
   --pp-muted: rgba(10, 10, 10, 0.62);
   --pp-line: rgba(10, 10, 10, 0.22);
-  min-height: 100svh;
-  padding-block: clamp(110px, 13vw, 170px) var(--section-y);
+  padding-block: var(--section-y);
   background: var(--pp-bg);
   color: var(--pp-fg);
 }
-html[data-theme="light"] .project-page {
+.project-band-head {
+  padding-top: clamp(110px, 13vw, 170px);
+}
+.project-band-ink {
+  --pp-bg: var(--ink);
+  --pp-fg: var(--paper);
+  --pp-muted: rgba(242, 241, 237, 0.62);
+  --pp-line: rgba(242, 241, 237, 0.22);
+}
+html[data-theme="light"] .project-band {
   --pp-bg: var(--surface);
   --pp-fg: var(--surface-text);
   --pp-muted: var(--surface-muted);
   --pp-line: var(--line);
 }
-html[data-theme="dark"] .project-page {
+html[data-theme="dark"] .project-band {
   --pp-bg: var(--dark-surface);
   --pp-fg: var(--dark-text);
   --pp-muted: var(--dark-muted);
   --pp-line: var(--dark-line);
+}
+html[data-theme="dark"] .project-band-ink {
+  --pp-bg: var(--dark-surface-alt);
 }
 .project-page-wrap {
   display: grid;
