@@ -1909,3 +1909,9 @@ html[data-theme="dark"] .project-page-links a:hover {
     animation: none;
   }
 }
+
+/* From main: reserve the scrollbar's space so the layout doesn't shift when
+   the page stops scrolling (e.g. while the full-screen menu is open). */
+html {
+  scrollbar-gutter: stable;
+}
