@@ -126,6 +126,11 @@ import { projects, projectsCopy } from "../../data/content";
           ))}
         </ul>
         <p class="project-file-links">
+          {project.detail && (
+            <a class="project-link" href={`/proyectos/${project.id}/`}>
+              <T t={projectsCopy.more} /> <Icon name="arrow-right" />
+            </a>
+          )}
           <a class="project-link" href={project.href} target="_blank" rel="noopener noreferrer">
             <T t={projectsCopy.visit} /> <Icon name="arrow-up-right" />
           </a>

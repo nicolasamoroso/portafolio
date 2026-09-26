@@ -109,7 +109,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: "annsweets",
-    src: "/img/annsweets.png",
+    src: "/img/annsweets.webp",
     title: "AnnSweets",
     year: "2026",
     badge: { es: "TESIS", en: "THESIS" },
@@ -194,7 +194,7 @@ export const projects: Project[] = [
         },
       ],
       gallery: [
-        { src: "/img/annsweets.png", caption: { es: "Inicio de la tienda", en: "Store home" } },
+        { src: "/img/annsweets.webp", caption: { es: "Inicio de la tienda", en: "Store home" } },
         {
           src: "/img/projects/annsweets-gallery.webp",
           caption: { es: "Galería de tortas personalizadas", en: "Made-to-order cake gallery" },
@@ -213,7 +213,7 @@ export const projects: Project[] = [
   },
   {
     id: "dardanelli",
-    src: "/img/familiadardanelli.png",
+    src: "/img/familiadardanelli.webp",
     title: "Familia Dardanelli",
     year: "2025",
     kicker: { es: "FAMILIA DARDANELLI / 2025", en: "FAMILIA DARDANELLI / 2025" },
@@ -301,7 +301,7 @@ export const projects: Project[] = [
         },
       ],
       gallery: [
-        { src: "/img/familiadardanelli.png", caption: { es: "Inicio del sitio", en: "Site home" } },
+        { src: "/img/familiadardanelli.webp", caption: { es: "Inicio del sitio", en: "Site home" } },
         {
           src: "/img/projects/dardanelli-experiences.webp",
           caption: { es: "Experiencias con reserva online", en: "Experiences with online booking" },
@@ -317,7 +317,7 @@ export const projects: Project[] = [
   },
   {
     id: "casagrande",
-    src: "/img/vinoscasagrande.png",
+    src: "/img/vinoscasagrande.webp",
     title: "Casa Grande",
     year: "2024",
     kicker: { es: "VINOS CASA GRANDE / 2024", en: "VINOS CASA GRANDE / 2024" },
@@ -402,7 +402,7 @@ export const projects: Project[] = [
         { es: "Página para personalizar botellas.", en: "A page to personalize bottles." },
       ],
       gallery: [
-        { src: "/img/vinoscasagrande.png", caption: { es: "Inicio del sitio", en: "Site home" } },
+        { src: "/img/vinoscasagrande.webp", caption: { es: "Inicio del sitio", en: "Site home" } },
         {
           src: "/img/projects/casagrande-tourism.webp",
           caption: { es: "Enoturismo: experiencias", en: "Wine tourism: experiences" },
@@ -421,7 +421,7 @@ export const projects: Project[] = [
   },
   {
     id: "basement",
-    src: "/img/basementchallenge.png",
+    src: "/img/basementchallenge.webp",
     title: "Basement Challenge",
     year: "2023",
     kicker: { es: "BASEMENT CHALLENGE / 2023", en: "BASEMENT CHALLENGE / 2023" },
@@ -445,6 +445,7 @@ export const projectsCopy = {
   visit: { es: "Ver", en: "Visit" } satisfies L,
   code: { es: "Código", en: "Code" } satisfies L,
   openDetail: { es: "Ver detalle", en: "View details" } satisfies L,
+  more: { es: "Saber más", en: "Learn more" } satisfies L,
   back: { es: "Proyectos", en: "Projects" } satisfies L,
   next: { es: "SIGUIENTE PROYECTO", en: "NEXT PROJECT" } satisfies L,
   summaryLabel: { es: "RESUMEN", en: "SUMMARY" } satisfies L,
