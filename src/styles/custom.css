@@ -1863,29 +1863,6 @@ html[data-theme="dark"] .project-page-links a:hover {
   }
 }
 
-/* ── Molten background ───────────────────────────────────────────────────────
-   public/js/molten.js renders faint flowing filaments of light with a WebGL
-   shader in each section, in the section's own text colour. The layer is at
-   z-index -1 in a section that is its own stacking context, so text and
-   images always paint above it. */
-.molten-host {
-  position: relative;
-  isolation: isolate;
-}
-.molten {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
-}
-.molten canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
 /* Film grain that actually moves: the noise tile jumps a few pixels on every
    step, which reads as grain flicker rather than a static texture. */
 .grain {
