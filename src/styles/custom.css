@@ -1,0 +1,1917 @@
+/* ==========================================================================
+   Site-specific layer on top of the editorial base.
+   Everything here either (a) parameterises a base component that was hard-coded
+   to the reference's content, or (b) adds a block the base didn't have.
+   ========================================================================== */
+/* ── Header: language switch ─────────────────────────────────────────────── */
+.header-actions {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 26px);
+}
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+.lang-switch span {
+  opacity: 0.4;
+}
+.lang-switch button {
+  padding: 4px 2px;
+  border: 0;
+  background: none;
+  color: inherit;
+  opacity: 0.45;
+  border-bottom: 1px solid transparent;
+  transition:
+    opacity 0.2s,
+    border-color 0.2s;
+}
+.lang-switch button[aria-pressed="true"] {
+  opacity: 1;
+  border-bottom-color: currentColor;
+}
+.lang-switch button:hover {
+  opacity: 1;
+}
+.lang-switch button:focus-visible {
+  outline: 2px solid #f08b2e;
+  outline-offset: 3px;
+}
+/* ── Hero: editorial cover ───────────────────────────────────────────────── */
+.cover {
+  justify-content: center;
+}
+/* The base's hero-bottom is a two-item space-between; the third (empty) track
+   is what pulls the scroll prompt to the optical centre. */
+.cover .hero-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+}
+.cover .scroll-prompt {
+  justify-content: center;
+}
+.cover-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(200px, 0.62fr) minmax(0, 1.38fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 84px);
+  width: 100%;
+}
+.cover-portrait {
+  /* Tilt follows the cursor on hover only: no pointerdown handler, so the
+     illustration can't be dragged out of its frame. The base declares these
+     custom properties on `.cv-board-profile .profile-sketch`, a selector this
+     layout doesn't match, so they're re-declared here. */
+  --portrait-rx: 0deg;
+  --portrait-ry: 0deg;
+  transform: perspective(850px) rotateX(var(--portrait-rx)) rotateY(var(--portrait-ry));
+  transform-style: preserve-3d;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+
+  /* The base's .profile-sketch hard-codes grid-column:2 / grid-row:1-3 for the
+     reference's own layout; the cover needs it back in the first column. */
+  grid-column: 1;
+  grid-row: auto;
+  align-self: center;
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 1;
+  margin: 0;
+  justify-self: start;
+  background: #fffefa;
+  border: 1px solid rgba(10, 10, 10, 0.32);
+  /* Offset set by site.js from the cursor: the shadow falls away from it. */
+  box-shadow: var(--shadow-x, 12px) var(--shadow-y, 14px) 0 rgba(10, 10, 10, 0.1);
+}
+.cover-portrait img {
+  /* The base only positions the image inside `.cv-board-profile`; without
+     position:absolute the translateX(-50%) below drags it out of the frame. */
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  /* Transparent PNG, so it sits on the frame without a blend mode. */
+  mix-blend-mode: normal;
+  /* Lifted off the frame so the tilt reads as parallax rather than as the
+     whole card rotating flat. */
+  transform: translateX(-50%) scale(1.02) translateZ(20px);
+}
+@media (hover: hover) {
+  .cover-portrait:hover {
+    box-shadow: var(--shadow-x, 16px) var(--shadow-y, 18px) 0 rgba(10, 10, 10, 0.13);
+  }
+}
+/* A finger has no hover state, and the tilt would only fight the scroll. */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .cover-portrait {
+    transform: none;
+  }
+}
+.cover-portrait span {
+  box-shadow: 0 0 0 5px #fffefa;
+}
+.cover.visible .cover-portrait img,
+.cover-portrait img {
+  animation: profile-draw 1.5s 0.2s cubic-bezier(0.2, 0.78, 0.25, 1) both;
+}
+.cover-portrait span {
+  animation: portrait-scan 1.5s 0.2s cubic-bezier(0.2, 0.78, 0.25, 1) forwards;
+}
+.cover-copy {
+  grid-column: 2;
+  min-width: 0;
+}
+.cover-label {
+  margin: 0 0 clamp(14px, 1.8vw, 24px);
+  color: rgba(10, 10, 10, 0.55);
+}
+/* Overrides the base's single-line, centred wordmark. */
+.hero h1.cover-title {
+  display: block;
+  white-space: normal;
+  text-align: left;
+  transform: none;
+  font-size: clamp(44px, 8.6vw, 168px);
+  line-height: 0.82;
+  letter-spacing: -0.075em;
+}
+.cover-line {
+  display: flex;
+  align-items: baseline;
+}
+.cover-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px clamp(16px, 2vw, 30px);
+  margin-top: clamp(28px, 3.4vw, 48px);
+  font: 14px var(--mono);
+}
+.cover-contact a {
+  border-bottom: 1px solid rgba(10, 10, 10, 0.42);
+  padding-bottom: 3px;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.cover-contact a:hover {
+  color: #9a471f;
+  border-color: #9a471f;
+}
+/* Keeps the label and its arrow together as one flex item, so a wrap moves
+   both instead of stranding the arrow on a line of its own. */
+.cover-resume-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.cover-contact-resume {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 5px 11px;
+  font-size: 12px;
+  color: #6b665d;
+}
+@media (max-width: 980px) {
+  .cover-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .cover-portrait {
+    grid-column: 1;
+    max-width: min(56vw, 300px);
+  }
+  .cover-copy {
+    grid-column: 1;
+  }
+  .hero h1.cover-title {
+    font-size: clamp(40px, 13vw, 96px);
+  }
+}
+/* ── Language: one word per language, both in the DOM ────────────────────── */
+html[data-lang="en"] .hero-letter[data-only="es"],
+html[data-lang="es"] .hero-letter[data-only="en"] {
+  display: none;
+}
+/* The base removes the leading kern from :first-child; with two words present
+   the active word needs it flagged explicitly. */
+.hero-letter.hero-letter-first {
+  margin-left: 0;
+}
+/* ── CV board: brand-coloured tool chips ─────────────────────────────────── */
+/* ── Currículum ──────────────────────────────────────────────────────────
+   Follows the reference's own row idiom: a mono `// LABEL` in a narrow left
+   column, the content in the wide right one, a hairline between rows.
+   ------------------------------------------------------------------------ */
+.cv-section {
+  padding: 14vh 0 12vh;
+  background: #f3f2ee;
+  color: var(--ink);
+}
+.cv-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.cv-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 0.4fr) minmax(0, 1.6fr);
+  gap: clamp(18px, 3vw, 50px);
+  padding: clamp(24px, 3vw, 38px) 0;
+  border-top: 1px solid rgba(10, 10, 10, 0.24);
+}
+.cv-row:last-child {
+  border-bottom: 1px solid rgba(10, 10, 10, 0.24);
+}
+.cv-row > h3 {
+  margin: 0;
+  font: 700 14px/1.15 var(--mono);
+  letter-spacing: 0.02em;
+}
+.cv-row-body {
+  min-width: 0;
+}
+/* Experience -------------------------------------------------------------- */
+.cv-jobs {
+  display: grid;
+  gap: clamp(32px, 4vw, 54px);
+}
+.cv-job-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  margin: 0;
+}
+.cv-job-head b {
+  font-size: clamp(21px, 2.1vw, 30px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-weight: 700;
+}
+.cv-job-head em {
+  font-style: normal;
+  font: 700 13px var(--mono);
+  color: #a6541f;
+}
+.cv-job-role {
+  margin: 9px 0 0;
+  font: 13px/1.5 var(--mono);
+  color: #5c574f;
+}
+.cv-job-items {
+  margin: clamp(16px, 1.8vw, 24px) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 9px;
+  max-width: 78ch;
+}
+.cv-job-items li {
+  position: relative;
+  padding-left: 21px;
+  font: 14px/1.6 var(--mono);
+  color: #34322c;
+}
+.cv-job-items li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: rgba(10, 10, 10, 0.38);
+}
+/* Project names inside a job's bullet points link out to the live site. */
+.cv-job-items a {
+  color: inherit;
+  border-bottom: 1px solid rgba(10, 10, 10, 0.4);
+  padding-bottom: 1px;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.cv-job-items a:hover {
+  color: #9a471f;
+  border-color: #9a471f;
+}
+.cv-job-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: clamp(16px, 1.8vw, 24px) 0 0;
+}
+.cv-job-stack span {
+  padding: 6px 9px;
+  border: 1px solid rgba(10, 10, 10, 0.3);
+  font: 10px var(--mono);
+  letter-spacing: 0.04em;
+}
+/* Education --------------------------------------------------------------- */
+.cv-records {
+  display: grid;
+  gap: clamp(20px, 2.4vw, 30px);
+}
+.cv-record {
+  display: grid;
+  gap: 5px;
+  font: 14px/1.45 var(--mono);
+}
+.cv-record b {
+  font-weight: 700;
+}
+.cv-record span {
+  color: #5c574f;
+}
+.cv-record a {
+  width: max-content;
+  margin-top: 3px;
+  font-size: 12px;
+  color: inherit;
+  border-bottom: 1px solid rgba(10, 10, 10, 0.4);
+  padding-bottom: 2px;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.cv-record a:hover {
+  color: #9a471f;
+  border-color: #9a471f;
+}
+@media (max-width: 760px) {
+  .cv-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+.interests-head {
+  display: block;
+}
+/* ── Index: three marks floating on the page ─────────────────────────────────
+   No card, no frame — the 3D object sits directly on the paper with its own
+   shadow, and the number and label are typeset around it.
+   -------------------------------------------------------------------------- */
+.index-picks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 70px);
+  /* Stretch, not start: every pick fills the row's full height (set by
+     "Casos Técnicos", the one label that wraps to two lines), which is what
+     lets `align-content: space-between` below push each keycap down to a
+     shared baseline instead of the one after a two-line label sitting lower
+     than its one-line neighbours. */
+  align-items: stretch;
+  padding-top: clamp(30px, 4vw, 60px);
+}
+.pick {
+  /* Belt and braces with the JS: never let the browser pick these up as a
+     draggable link, which would swallow the pointerup that lifts the cap. */
+  -webkit-user-drag: none;
+  user-select: none;
+  display: grid;
+  justify-items: center;
+  /* Label pinned to the top, keycap to the bottom, `gap` as the minimum
+     between them — see the comment on `.index-picks`. */
+  align-content: space-between;
+  gap: clamp(16px, 1.8vw, 26px);
+  padding: clamp(16px, 2vw, 30px) 0;
+}
+.pick-object {
+  display: grid;
+  place-items: center;
+  width: min(62%, 188px);
+  /* Matches the cropped viewBox, so the cap is never letterboxed. */
+  aspect-ratio: 168 / 150;
+}
+/* Contact shadow on the desk, under the skirt rather than under the whole box:
+   the cap's footprint is the lower half of the drawing. */
+.pick-object::before {
+  content: "";
+  grid-area: 1 / 1;
+  z-index: 0;
+  align-self: end;
+  width: 78%;
+  aspect-ratio: 3.4;
+  margin-bottom: 4%;
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.6);
+  filter: blur(16px);
+  opacity: 0.3;
+  transform-origin: center bottom;
+  transition:
+    opacity 0.35s,
+    filter 0.35s,
+    transform 0.32s cubic-bezier(0.18, 1.3, 0.4, 1);
+}
+.keycap {
+  grid-area: 1 / 1;
+  /* Above the glow: the cap is opaque, the light escapes around it, never
+     across its front wall. */
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transition: filter 0.3s ease;
+}
+/* Pressed: the top face is redrawn lower instead of the whole drawing being
+   squashed with `scaleY` — a uniform vertical scale shrinks the top face's
+   two corners by different amounts (they sit at different heights, a result
+   of the same asymmetric projection described above), which reads as the cap
+   tipping sideways rather than sinking straight down.
+   That redraw is driven entirely from `site.js`, not from a CSS transition:
+   registered custom properties (`@property`) are the usual way to let CSS own
+   the easing while script reads the interpolated value back each frame, but
+   Chromium computes them to their initial value on SVG elements regardless of
+   the cascade, so `--press` never actually changed here. The script runs its
+   own eased tween instead, using the same curve and durations this rule used
+   to carry — a switch bottoms out faster than the spring pushes it back up. */
+.pick.is-held .pick-object::before {
+  transform: scale(0.88);
+  filter: blur(9px);
+  transition-duration: 0.18s;
+}
+/* No halo around the body: the cap is opaque ABS, so the only thing the LED
+   lights up is the legend itself. */
+.keycap-legend {
+  fill: #ececed;
+  font: 700 38px/1 var(--sans);
+  letter-spacing: -0.04em;
+  transition:
+    fill 0.25s,
+    filter 0.25s;
+}
+/* Lucide glyphs are outlines, not filled shapes, so the ink is a stroke. The
+   element deliberately does NOT also carry `.keycap-legend`: that rule's `fill`
+   would win on hover and flood the outline into a solid blob. */
+.keycap-glyph-line {
+  fill: none;
+  stroke: #ececed;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.25s;
+}
+.pick:hover .keycap-glyph-line,
+.pick:focus-visible .keycap-glyph-line {
+  stroke: var(--pick-accent);
+}
+/* Backlight: the only place each area's colour shows, and the only thing that
+   changes on hover. The legend swaps white for the accent and nothing else: a
+   blur here reads as the glyph losing its shape, not as light. */
+.pick:hover .keycap-legend,
+.pick:focus-visible .keycap-legend {
+  fill: var(--pick-accent);
+}
+.pick:hover .pick-object::before,
+.pick:focus-visible .pick-object::before {
+  opacity: 0.36;
+}
+.pick-label {
+  font: 700 clamp(14px, 1.3vw, 20px) / 1.2 var(--mono);
+  letter-spacing: 0.01em;
+  text-align: center;
+  padding-bottom: 7px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+.pick:hover .pick-label,
+.pick:focus-visible .pick-label {
+  border-bottom-color: currentColor;
+}
+.pick:focus-visible {
+  outline: 2px solid var(--pick-accent);
+  outline-offset: 8px;
+}
+/* Per-area accent: used only for the backlight, so the caps stay graphite.
+   The glow tints are spelled out rather than derived, so the alpha is tuned per
+   hue — the orange reads much hotter than the blue at the same opacity. */
+.interest-frontend {
+  --pick-accent: #5aa9ff;
+  --pick-glow-tight: rgba(90, 169, 255, 0.85);
+  --pick-glow-wide: rgba(90, 169, 255, 0.45);
+}
+.interest-backend {
+  --pick-accent: #62d17c;
+  --pick-glow-tight: rgba(98, 209, 124, 0.8);
+  --pick-glow-wide: rgba(98, 209, 124, 0.4);
+}
+.interest-cloud {
+  --pick-accent: #ffab45;
+  --pick-glow-tight: rgba(255, 171, 69, 0.75);
+  --pick-glow-wide: rgba(255, 171, 69, 0.36);
+}
+@media (max-width: 760px) {
+  /* All three stay in one row — smaller caps rather than a long vertical
+     scroll of three stacked keys. The row-gap (irrelevant with one row, but
+     harmless) is set separately further down, next to the other
+     `--section-y`-scaled spacing; this only owns the columns. */
+  .index-picks {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 3vw;
+  }
+  .pick-object {
+    width: min(24vw, 110px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pick-key,
+  .pick-object::before {
+    animation: none;
+  }
+}
+/* ── Chapter heading ─────────────────────────────────────────────────────────
+   One treatment for 01, 02 and 03. The number sits above the title rather than
+   behind it: as a watermark it collided with any heading longer than a word,
+   and it read differently in every section.
+   -------------------------------------------------------------------------- */
+.chapter-head {
+  display: grid;
+  justify-items: start;
+  gap: clamp(6px, 0.8vw, 14px);
+  padding-top: 2vh;
+  padding-bottom: clamp(48px, 8vh, 110px);
+}
+.chapter-head-number {
+  font: 800 clamp(56px, 8.5vw, 132px) / 0.76 var(--sans);
+  letter-spacing: -0.08em;
+  /* Tied to the text colour rather than a fixed grey, so it holds up on every
+     chapter background and in all three themes. */
+  color: currentColor;
+  opacity: 0.17;
+}
+.chapter-head h2 {
+  margin: 0;
+  font-size: clamp(40px, 8.4vw, 128px);
+  line-height: 0.84;
+  letter-spacing: -0.075em;
+  overflow-wrap: break-word;
+}
+/* Each chapter keeps its own wording, so the serif accent has to survive. */
+.chapter-head h2 em,
+.chapter-head-sub em {
+  font-family: var(--serif);
+  font-weight: 400;
+}
+/* Clearly subordinate to the title — around half its size — so the pair reads
+   as a heading and its standfirst instead of two competing headlines. */
+.chapter-head-sub {
+  max-width: 26ch;
+  margin: clamp(14px, 1.4vw, 24px) 0 0;
+  font-size: clamp(22px, 3.4vw, 52px);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  font-weight: 600;
+}
+/* ── 01 · Projects ───────────────────────────────────────────────────────── */
+.chapter-projects {
+  background: var(--ink);
+}
+/* Arrow bar, flush right above the reel. */
+.project-reel-bar {
+  display: flex;
+  justify-content: flex-end;
+  /* The base gives the reel 48px of top padding; the bar has to clear the
+     chapter's hairline by roughly the same amount or it sits on the rule. */
+  padding-top: clamp(28px, 3.4vw, 52px);
+  padding-bottom: 6px;
+}
+.reel-nav {
+  display: flex;
+  gap: 10px;
+}
+.reel-arrow {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  /* The chapter is ink by default, so the pill inverts against it; under the
+     light theme it flips to black on paper. */
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 19px;
+  line-height: 1;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.25s;
+}
+.reel-arrow:hover {
+  transform: scale(1.08);
+}
+.reel-arrow:active {
+  transform: scale(0.94);
+}
+.reel-arrow:focus-visible {
+  outline: 2px solid #f08b2e;
+  outline-offset: 3px;
+}
+/* Screenshots are landscape; the base reel is tuned for 4:5 posters. */
+.project-reel.photo-reel.project-carousel button {
+  flex-basis: min(52vw, 720px);
+  aspect-ratio: 16 / 9;
+  background: transparent;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+.project-reel.photo-reel.project-carousel img {
+  object-fit: cover;
+}
+/* The base lifts the whole slide on hover; here the image zooms inside a fixed
+   frame instead, so neighbouring slides never shift. */
+.project-reel.photo-reel.project-carousel button:hover,
+.project-reel.photo-reel.project-carousel button:focus-visible {
+  transform: none;
+}
+.project-reel.photo-reel.project-carousel button:hover img,
+.project-reel.photo-reel.project-carousel button:focus-visible img {
+  transform: scale(1.07);
+}
+.project-file {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.6fr) minmax(0, 1.4fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: start;
+  padding-top: 12vh;
+  padding-bottom: 12vh;
+  border-top: 1px solid var(--line);
+}
+.project-file-alt {
+  background: #141414;
+}
+.project-file-head {
+  position: sticky;
+  top: 108px;
+}
+.project-file-head h3 {
+  margin: 16px 0 0;
+  font-size: clamp(32px, 3.9vw, 62px);
+  line-height: 0.86;
+  letter-spacing: -0.075em;
+}
+.project-file-head h3 em {
+  font-family: var(--serif);
+  font-weight: 400;
+}
+.project-file-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 0;
+  font: 11px var(--mono);
+  color: rgba(242, 241, 237, 0.6);
+}
+.project-badge {
+  padding: 4px 8px;
+  border: 1px solid rgba(242, 241, 237, 0.45);
+  color: var(--paper);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+.project-file-shot {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #1b1b1b;
+}
+.project-file-shot img {
+  width: 100%;
+  height: auto;
+  transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.project-file-shot:hover img {
+  transform: scale(1.03);
+}
+.project-file-shot span {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 10px 14px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 10px var(--mono);
+  letter-spacing: 0.06em;
+}
+.project-file-copy {
+  max-width: 62ch;
+  margin: 28px 0 0;
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.62;
+  color: rgba(242, 241, 237, 0.82);
+}
+.project-features {
+  display: grid;
+  gap: 8px;
+  max-width: 62ch;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.project-features li {
+  position: relative;
+  padding-left: 21px;
+  font: 13px/1.55 var(--mono);
+  color: rgba(242, 241, 237, 0.72);
+}
+.project-features li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  color: rgba(242, 241, 237, 0.4);
+}
+html[data-theme="light"] .project-features li {
+  color: var(--surface-muted);
+}
+html[data-theme="light"] .project-features li::before {
+  color: rgba(10, 10, 10, 0.4);
+}
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.project-tags li {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  font: 10px var(--mono);
+  letter-spacing: 0.04em;
+}
+.project-file-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  margin: 30px 0 0;
+}
+.project-link {
+  font: 600 15px var(--mono);
+  border-bottom: 1px solid var(--paper);
+  padding-bottom: 5px;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.project-link:hover {
+  color: #f08b2e;
+  border-color: #f08b2e;
+}
+/* ── 02 · Case studies ───────────────────────────────────────────────────── */
+.chapter-cases {
+  background: #151515;
+}
+/* The base selector is hard-coded to three campaigns. */
+.chapter-cases .campaign-selector {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+.case-side {
+  min-width: 0;
+}
+.case-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+.case-stack li {
+  padding: 8px 11px;
+  border: 1px solid #c2beb5;
+  background: #e9e5db;
+  font: 11px var(--mono);
+  letter-spacing: 0.03em;
+}
+.case-details {
+  margin-top: 26px;
+  /* The label used to sit inside a <summary> with its own padding; now that
+     it's a plain heading it needs that breathing room back, or it reads as
+     jammed against the divider above it. */
+  padding-top: 22px;
+}
+.case-details .campaign-details-body p {
+  margin: 0 0 14px;
+  font: 13px/1.62 var(--mono);
+  color: #4f4a43;
+}
+.case-details .campaign-details-body p:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 760px) {
+  .campaign-case-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .case-side {
+    order: 2;
+  }
+}
+/* Two metric columns leave ~78px of usable width on a phone, and the values are
+   words ("DynamoDB", "Redshift"), not short numbers — they ran straight out of
+   their cells. One column below this, and the value wraps rather than clips. */
+@media (max-width: 560px) {
+  .campaign-metrics,
+  .campaign-facts,
+  .campaign-breakdown {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .campaign-metrics dd {
+    font-size: clamp(26px, 9vw, 40px);
+    overflow-wrap: anywhere;
+  }
+  .campaign-facts dd,
+  .case-stack li {
+    overflow-wrap: anywhere;
+  }
+}
+/* ── 03 · Stack, as a keyboard ───────────────────────────────────────────────
+   Same isometric caps as the index. Positions come from the component, which
+   works them out from the cap's own u/v basis; everything here is presentation.
+   -------------------------------------------------------------------------- */
+.stack-board-wrap {
+  padding-bottom: 4vh;
+}
+.stack-board {
+  position: relative;
+  /* The keys carry z-index values in the hundreds to sort themselves by depth.
+     Without a stacking context of its own those compete at the root against the
+     fixed header (z-index 10) and the board paints over the nav. */
+  isolation: isolate;
+  width: min(100%, 880px);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  aspect-ratio: var(--board-aspect);
+}
+.stack-key {
+  position: absolute;
+  width: var(--cap-w);
+  transform: translate(-50%, -50%);
+}
+/* The hit area is a button so touch and keyboard reach it; it carries no
+   chrome of its own. */
+.stack-key-hit {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.stack-key-hit:focus-visible {
+  outline: 2px solid var(--pick-accent);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+.stack-key .keycap {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: center 95.5%;
+  transition:
+    transform 0.3s cubic-bezier(0.18, 1.3, 0.4, 1),
+    filter 0.3s ease;
+}
+.stack-key .keycap-legend {
+  fill: #d8d8db;
+  transition:
+    fill 0.25s,
+    filter 0.25s;
+}
+/* Hovered key: only the backlight comes on, and the key keeps its place in the
+   stack. Lifting its z-index made a key at the back paint over the ones in
+   front of it, which broke the projection — and the glow sits on the top face,
+   which nothing in front ever covers anyway. */
+.stack-key-hit:hover .keycap-legend,
+.stack-key-hit.is-active .keycap-legend {
+  fill: var(--pick-accent);
+}
+.stack-readout {
+  display: grid;
+  gap: 6px;
+  min-height: 3.4em;
+  margin: clamp(26px, 3vw, 44px) 0 0;
+  text-align: center;
+}
+.stack-readout b {
+  font: 700 clamp(16px, 1.6vw, 22px) / 1.2 var(--mono);
+  color: var(--paper);
+}
+.stack-readout small {
+  font: 13px/1.5 var(--mono);
+  color: rgba(245, 243, 237, 0.62);
+}
+@media (max-width: 760px) {
+  .stack-board {
+    width: 132%;
+    margin-left: -16%;
+  }
+  .stack-readout small {
+    font-size: 12px;
+  }
+}
+/* ── Contact ─────────────────────────────────────────────────────────────── */
+/* Stacked under the location so the right half of the footer is the laptop's. */
+.contact-section .back-top {
+  left: 11vw;
+  right: auto;
+  bottom: 22px;
+}
+.contact-section .contact-location {
+  bottom: 44px;
+}
+@media (max-width: 760px) {
+  .contact-section .back-top {
+    left: 6vw;
+  }
+}
+.contact-body {
+  max-width: 48ch;
+  margin: 26px 0 0;
+  font: 14px/1.65 var(--mono);
+  color: rgba(242, 241, 237, 0.72);
+}
+.contact-actions {
+  display: block;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 26px 40px;
+  margin-top: 7vh;
+  max-width: 900px;
+}
+.contact-grid p {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+}
+.contact-grid .eyebrow {
+  color: rgba(242, 241, 237, 0.5);
+}
+.contact-grid a {
+  width: max-content;
+  font: 15px var(--mono);
+  border-bottom: 1px solid rgba(242, 241, 237, 0.4);
+  padding-bottom: 4px;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.contact-grid a:hover {
+  color: #f08b2e;
+  border-color: #f08b2e;
+}
+.contact-resume {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.contact-resume i {
+  font-style: normal;
+  opacity: 0.4;
+}
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 980px) {
+  .project-file {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .project-file-head {
+    position: static;
+  }
+  .logo-section .logo-section-head {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+@media (max-width: 760px) {
+  .header-actions {
+    gap: 14px;
+  }
+  .lang-switch {
+    font-size: 9px;
+  }
+  .project-reel.photo-reel.project-carousel button {
+    flex-basis: 86vw;
+  }
+  .project-file {
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+  }
+  .project-file-head h3 {
+    font-size: clamp(28px, 9vw, 46px);
+  }
+  .cv-stickers {
+    gap: 10px 16px;
+  }
+  .contact-grid {
+    margin-top: 5vh;
+  }
+}
+/* The reference's pencil sweep animates translateX(calc(100% + 12px)), but the
+   element is the 2px pencil itself — so it travels 14px and parks across the
+   card instead of sweeping off it.
+   Animating `left` rather than a transform: percentages on `left` resolve
+   against the frame, so the sweep always crosses it whatever width it ends up
+   at, with no measurement handed in from JS. */
+@keyframes portrait-scan {
+  0% {
+    left: -12px;
+    transform: rotate(-6deg);
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    left: calc(100% + 12px);
+    transform: rotate(6deg);
+    opacity: 0;
+  }
+}
+/* ==========================================================================
+   Themes
+   The base design alternates: paper hero / CV / index, ink chapters. That is
+   the "mixed" theme and needs no overrides. "light" pulls the ink sections up
+   to paper; "dark" pushes the paper sections down to ink.
+   ========================================================================== */
+/* ── Light: everything on paper ──────────────────────────────────────────── */
+html[data-theme="light"] {
+  --line: rgba(20, 19, 15, 0.2);
+  --surface: #f4f3ef;
+  --surface-alt: #e9e7e0;
+  --surface-text: #14130f;
+  --surface-muted: rgba(20, 19, 15, 0.64);
+  color-scheme: light;
+}
+html[data-theme="light"] body {
+  background: var(--surface);
+  color: var(--surface-text);
+}
+html[data-theme="light"] .grain {
+  opacity: 0.045;
+}
+html[data-theme="light"] .site-header.scrolled {
+  background: rgba(244, 243, 239, 0.86);
+  border-color: var(--line);
+  color: var(--surface-text);
+}
+html[data-theme="light"] .site-nav {
+  background: var(--surface-alt);
+  color: var(--surface-text);
+  border-color: var(--line);
+}
+html[data-theme="light"] .chapter,
+html[data-theme="light"] .chapter-projects,
+html[data-theme="light"] .chapter-cases,
+html[data-theme="light"] .logo-section,
+html[data-theme="light"] .contact-section {
+  background: var(--surface);
+  color: var(--surface-text);
+}
+html[data-theme="light"] .project-file-alt {
+  background: var(--surface-alt);
+}
+html[data-theme="light"] .project-file-copy,
+html[data-theme="light"] .project-file-meta,
+html[data-theme="light"] .contact-body,
+html[data-theme="light"] .contact-grid .eyebrow,
+html[data-theme="light"] .campaign-select-hint,
+html[data-theme="light"] .campaign-source,
+html[data-theme="light"] .stack-readout small {
+  color: var(--surface-muted);
+}
+html[data-theme="light"] .project-badge,
+html[data-theme="light"] .stack-readout b,
+html[data-theme="light"] .contact-grid a {
+  color: var(--surface-text);
+}
+html[data-theme="light"] .reel-arrow {
+  background: #0f0f0e;
+  color: #f4f3ef;
+}
+html[data-theme="light"] .project-file-shot span {
+  background: var(--surface-text);
+  color: var(--surface);
+}
+html[data-theme="light"] .project-link,
+html[data-theme="light"] .contact-link {
+  border-color: var(--surface-text);
+}
+html[data-theme="light"] .contact-grid a {
+  border-color: rgba(20, 19, 15, 0.35);
+}
+html[data-theme="light"] .campaign-selector button {
+  border-color: rgba(20, 19, 15, 0.32);
+  color: var(--surface-text);
+}
+html[data-theme="light"] .campaign-case {
+  background: var(--surface-alt);
+}
+/* ── Dark: everything on ink ─────────────────────────────────────────────────
+   The base's own dark chapters already work; what this theme does is push the
+   three paper sections (hero, CV, index) down to ink. The --ink/--paper tokens
+   are deliberately left alone — the dark chapters are built on them, so
+   swapping the pair fixes these three sections and breaks every other one.
+   -------------------------------------------------------------------------- */
+html[data-theme="dark"] {
+  --dark-surface: #0d0d0c;
+  --dark-surface-alt: #171715;
+  --dark-text: #f2f1ed;
+  --dark-muted: rgba(242, 241, 237, 0.62);
+  --dark-line: rgba(242, 241, 237, 0.22);
+  color-scheme: dark;
+}
+html[data-theme="dark"] .hero,
+html[data-theme="dark"] .cv-section,
+html[data-theme="dark"] .interests-section {
+  background: var(--dark-surface);
+  color: var(--dark-text);
+}
+/* The header has no colour of its own once scrolled — it inherits from body. */
+html[data-theme="dark"] .site-header:not(.scrolled),
+html[data-theme="dark"] .site-header.scrolled {
+  color: var(--dark-text);
+}
+html[data-theme="dark"] .site-header.scrolled {
+  background: rgba(13, 13, 12, 0.86);
+  border-color: var(--dark-line);
+}
+/* Hero furniture: the grid and the scan line are drawn in ink. */
+html[data-theme="dark"] .hero::before {
+  background:
+    linear-gradient(90deg, transparent 49.94%, rgba(255, 255, 255, 0.12) 50%, transparent 50.06%),
+    linear-gradient(0deg, transparent 49.94%, rgba(255, 255, 255, 0.09) 50%, transparent 50.06%);
+}
+html[data-theme="dark"] .hero::after {
+  background: var(--dark-text);
+}
+/* The base sets `color: var(--ink)` directly on the hero title. */
+html[data-theme="dark"] .hero h1,
+html[data-theme="dark"] .interests-head h2 {
+  color: var(--dark-text);
+}
+html[data-theme="dark"] .cover-label,
+html[data-theme="dark"] .cover-contact-resume,
+html[data-theme="dark"] .cv-job-role,
+html[data-theme="dark"] .cv-record span,
+html[data-theme="dark"] .interests-head > p:last-child,
+html[data-theme="dark"] .device-tilt-control p {
+  color: var(--dark-muted);
+}
+html[data-theme="dark"] .cv-job-items li {
+  color: rgba(242, 241, 237, 0.84);
+}
+html[data-theme="dark"] .cv-job-items li::before {
+  color: rgba(242, 241, 237, 0.4);
+}
+html[data-theme="dark"] .cv-row,
+html[data-theme="dark"] .cv-row:last-child,
+html[data-theme="dark"] .cv-job-stack span {
+  border-color: var(--dark-line);
+}
+html[data-theme="dark"] .cover-contact a,
+html[data-theme="dark"] .cv-record a,
+html[data-theme="dark"] .cv-job-items a {
+  border-color: rgba(242, 241, 237, 0.45);
+}
+html[data-theme="dark"] .cover-contact a:hover,
+html[data-theme="dark"] .cv-job-items a:hover,
+html[data-theme="dark"] .cv-record a:hover {
+  color: #f08b2e;
+  border-color: #f08b2e;
+}
+html[data-theme="dark"] .cv-job-head em {
+  color: #f08b2e;
+}
+/* The base paints tool chips for a dark ground, but the CV block re-tints them
+   for its paper one; on ink they go back to paper. */
+html[data-theme="dark"] .cv-stickers .tool-badge {
+  color: var(--dark-text);
+}
+/* On a dark page the frame goes dark and the ink illustration is inverted with
+   it. The invert has to live in the keyframes: the base animates `filter` with
+   fill-mode forwards, so a static `filter` declaration would lose to it. */
+html[data-theme="dark"] .cover-portrait {
+  background: var(--dark-surface-alt);
+  border-color: var(--dark-line);
+  box-shadow: var(--shadow-x, 12px) var(--shadow-y, 14px) 0 rgba(242, 241, 237, 0.1);
+}
+html[data-theme="dark"] .cover-portrait img {
+  animation-name: profile-draw-inverted;
+}
+html[data-theme="dark"] .cover-portrait span {
+  box-shadow: 0 0 0 5px var(--dark-surface-alt);
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="dark"] .cover-portrait img {
+    animation: none;
+    filter: invert(1);
+    clip-path: inset(0);
+    opacity: 1;
+  }
+}
+@keyframes profile-draw-inverted {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.08;
+    filter: invert(1) blur(2px);
+  }
+  72% {
+    opacity: 1;
+    filter: invert(1) blur(0);
+  }
+  100% {
+    clip-path: inset(0);
+    opacity: 1;
+    filter: invert(1) blur(0);
+  }
+}
+/* Case panels are paper by default — on ink they become a raised dark card. */
+html[data-theme="dark"] .campaign-case {
+  background: var(--dark-surface-alt);
+  color: var(--dark-text);
+}
+html[data-theme="dark"] .campaign-case-heading,
+html[data-theme="dark"] .campaign-facts,
+html[data-theme="dark"] .campaign-details,
+html[data-theme="dark"] .campaign-metrics {
+  border-color: rgba(242, 241, 237, 0.2);
+}
+html[data-theme="dark"] .campaign-metrics {
+  background: rgba(242, 241, 237, 0.2);
+}
+html[data-theme="dark"] .campaign-metrics > div {
+  background: #212120;
+}
+html[data-theme="dark"] .campaign-case-heading .eyebrow,
+html[data-theme="dark"] .campaign-facts dt,
+html[data-theme="dark"] .campaign-metrics small,
+html[data-theme="dark"] .campaign-results-label,
+html[data-theme="dark"] .case-details .campaign-details-body p {
+  color: var(--dark-muted);
+}
+html[data-theme="dark"] .case-stack li {
+  background: #212120;
+  border-color: rgba(242, 241, 237, 0.2);
+  color: var(--dark-text);
+}
+/* ── Theme switch ────────────────────────────────────────────────────────── */
+.theme-switch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.theme-switch button {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.55;
+  border-radius: 50%;
+  transition:
+    opacity 0.2s,
+    background 0.2s;
+}
+.theme-switch button[aria-pressed="true"] {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.22);
+}
+.theme-switch button:hover {
+  opacity: 1;
+}
+.theme-switch button:focus-visible {
+  outline: 2px solid #f08b2e;
+  outline-offset: 2px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+@media (max-width: 760px) {
+  .theme-switch button {
+    width: 26px;
+    height: 26px;
+  }
+}
+/* ── Icons ───────────────────────────────────────────────────────────────────
+   Lucide, inlined at build time by Icon.astro. They inherit `currentColor` and
+   size in `em` by default, so they follow whatever type they sit next to.
+   -------------------------------------------------------------------------- */
+.icon {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: -0.14em;
+}
+/* Arrows that trail a link read better slightly smaller than the text. */
+a .icon,
+.cover-contact .icon,
+.cv-record .icon,
+.contact-grid .icon,
+.project-link .icon {
+  width: 0.82em;
+  height: 0.82em;
+}
+.scroll-prompt .icon,
+.back-top .icon {
+  vertical-align: -0.2em;
+}
+/* The reference rotated the `+` glyph 45° to make an ×; with a real icon the
+   rotation is the whole animation. */
+.campaign-details summary .icon {
+  transition: transform 0.2s;
+}
+.campaign-details[open] summary .icon {
+  transform: rotate(45deg);
+}
+.reel-arrow .icon {
+  width: 19px;
+  height: 19px;
+}
+.theme-switch .icon {
+  width: 13px;
+  height: 13px;
+  vertical-align: 0;
+}
+.lightbox-close .icon {
+  width: 22px;
+  height: 22px;
+  vertical-align: 0;
+}
+/* ── Responsive corrections ──────────────────────────────────────────────────
+   The base was written for the reference's own copy. Ours is longer in places,
+   and the stack board is a shape the base never had, so a few of its mobile
+   rules need revisiting.
+   -------------------------------------------------------------------------- */
+@media (max-width: 760px) {
+  /* The base sets chapter titles to 17vw, which was fine for its one-word
+     headings. "PROYECTOS" and "todos los días." both run past the shell. */
+  /* Was 132% with a negative margin, which hung off both edges. */
+  .stack-board {
+    width: 100%;
+    margin-left: 0;
+  }
+  .stack-board-wrap {
+    padding-inline: 6vw;
+  }
+  /* 26 characters of email at the desktop size overflow the shell and push the
+     trailing icon onto its own line. */
+  /* The address is a fixed 26 characters, so the size is tuned to that: at
+     ~0.52em per character it needs to stay under the shell's inner width or the
+     trailing icon drops to its own line. */
+  .contact-section .contact-link {
+    font-size: clamp(15px, 5.4vw, 40px);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+  .contact-section .contact-link .icon {
+    width: 0.6em;
+    height: 0.6em;
+  }
+  /* The base pins these to the bottom corner, where on a narrow screen they
+     land on top of the contact grid. Let them flow after it instead. */
+  .contact-section .contact-location,
+  .contact-section .back-top {
+    position: static;
+    left: auto;
+    bottom: auto;
+  }
+  .contact-section .contact-location {
+    margin-top: clamp(28px, 6vw, 48px);
+  }
+  .contact-section .back-top {
+    width: max-content;
+    margin-top: 10px;
+  }
+}
+/* ── Section rhythm ──────────────────────────────────────────────────────────
+   The base inherited a different padding per section from the reference — 2.3vw
+   on the hero against 11vw everywhere else, and vertical values from 13vh to
+   15vh that balloon on a tall phone while the content stays small. Two tokens
+   replace the lot, so every section breathes the same and the scale follows the
+   viewport's width rather than its height.
+   -------------------------------------------------------------------------- */
+:root {
+  /* Scales with width, not height: vh-based padding balloons on a tall phone
+     while the content stays the same size. The upper bounds keep the desktop
+     margins close to what the base had (11vw) without carrying that down. */
+  --gutter: clamp(20px, 8vw, 190px);
+  --section-y: clamp(44px, 8.5vw, 132px);
+}
+.section-shell,
+.contact-section {
+  padding-inline: var(--gutter);
+}
+.hero {
+  /* Extra at the top for the fixed header, which is 76px tall (64 on mobile). */
+  padding: calc(var(--section-y) + 76px) var(--gutter) var(--section-y);
+}
+.cv-section,
+.interests-section,
+.logo-section {
+  padding-top: var(--section-y);
+  padding-bottom: var(--section-y);
+}
+.chapter {
+  padding-top: var(--section-y);
+  padding-bottom: 0;
+}
+.contact-section {
+  padding-top: var(--section-y);
+  padding-bottom: var(--section-y);
+}
+/* Blocks that set their own vertical rhythm inside a section follow the same
+   token, at a fraction, so nothing ends up doubling to a dead screenful. */
+.chapter-head {
+  padding-top: 0;
+  padding-bottom: calc(var(--section-y) * 0.72);
+}
+.project-file {
+  padding-top: calc(var(--section-y) * 0.9);
+  padding-bottom: calc(var(--section-y) * 0.9);
+}
+.stack-board-wrap {
+  padding-bottom: calc(var(--section-y) * 0.3);
+}
+.index-picks {
+  padding-top: calc(var(--section-y) * 0.4);
+}
+.interests-head {
+  padding-bottom: calc(var(--section-y) * 0.5);
+}
+.campaign-showcase {
+  padding-bottom: calc(var(--section-y) * 0.8);
+}
+@media (max-width: 760px) {
+  .hero {
+    padding-top: calc(var(--section-y) + 64px);
+  }
+  .stack-board-wrap {
+    padding-inline: var(--gutter);
+  }
+  .index-picks {
+    /* row-gap only: the `gap` shorthand would reset the column-gap set
+       above back to this value too, collapsing the two-column layout. */
+    row-gap: calc(var(--section-y) * 0.8);
+  }
+}
+/* ── Serif accents ───────────────────────────────────────────────────────────
+   The italic <em> inside a display heading inherits that heading's tracking,
+   which is cut to −0.075em for Archivo Black. On Instrument Serif italic that
+   is enough to close the word spaces entirely ("in one product" reads as one
+   word), so the accent gets its own metrics. Inheritance always loses to a
+   direct declaration, which is why one rule covers every heading.
+   -------------------------------------------------------------------------- */
+h1 em,
+h2 em,
+h3 em,
+h4 em,
+.contact-section em {
+  letter-spacing: 0;
+  word-spacing: 0.07em;
+}
+/* ── Touch behaviour ─────────────────────────────────────────────────────────
+   Two things the reference's rules got wrong for a touch screen.
+   -------------------------------------------------------------------------- */
+/* The base pins the carousels to `touch-action: pan-y` below 760px, which tells
+   the browser it may only pan vertically — so a horizontal swipe is never
+   delivered to the scroller and the reel can't be moved with a finger at all.
+   Allowing both axes hands horizontal swipes to the carousel and vertical ones
+   to the page, which is the native behaviour for an overflow-x scroller. */
+@media (max-width: 760px) {
+  .project-carousel,
+  .catalog-track {
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+}
+/* Tapping anything interactive was painting the platform's blue highlight over
+   it, and a long press could start selecting the labels inside. */
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+.stack-key-hit,
+.pick,
+.reel-arrow,
+.theme-switch button,
+.lang-switch button,
+.campaign-selector button {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* ── Menu: full-screen overlay ───────────────────────────────────────────────
+   Replaces the small floating panel. The links are set large, one per line,
+   and fade in one after another; the header stays on top so the theme and
+   language switches and the close button keep working. */
+.site-header {
+  z-index: 11;
+}
+.site-nav {
+  z-index: 10;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  max-height: none;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(2px, 1.2vh, 12px);
+  padding: 96px var(--gutter) 48px;
+  border: 0;
+  transform: none;
+  opacity: 0;
+  visibility: hidden;
+  /* Closing: the links leave first (see `.site-nav a`), then the overlay
+     fades once they're gone. */
+  transition:
+    opacity 0.3s ease 0.25s,
+    visibility 0s linear 0.55s;
+}
+.site-nav.open {
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.25s ease,
+    visibility 0s;
+}
+.site-nav a {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  font: 800 clamp(30px, 8.4vw, 68px) / 1.12 var(--sans);
+  letter-spacing: -0.045em;
+  opacity: 0;
+  transform: translateY(14px);
+  /* Closing runs the stagger in reverse: last link out first. */
+  transition:
+    opacity 0.28s ease calc((var(--n, 6) - 1 - var(--i, 0)) * 30ms),
+    transform 0.28s ease calc((var(--n, 6) - 1 - var(--i, 0)) * 30ms),
+    color 0.2s;
+}
+.site-nav.open a {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.4s ease calc(var(--i, 0) * 45ms + 60ms),
+    transform 0.4s ease calc(var(--i, 0) * 45ms + 60ms),
+    color 0.2s;
+}
+.site-nav a:hover {
+  padding: 0;
+  color: #f08b2e;
+}
+html.menu-open {
+  overflow: hidden;
+}
+/* While it's open the header sits on the overlay, so it drops its own
+   background and takes the overlay's foreground colour. */
+html.menu-open .site-header.site-header {
+  background: transparent;
+  border-color: transparent;
+  backdrop-filter: none;
+  color: var(--paper);
+}
+html[data-theme="light"].menu-open .site-header.site-header {
+  color: var(--surface-text);
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-nav,
+  .site-nav a {
+    transition: none;
+  }
+}
+
+/* ── Project page ────────────────────────────────────────────────────────────
+   /proyectos/<id>/ — a project's write-up on its own page. The surface follows
+   the theme through the --pp-* tokens: paper in "mixed" (like the hero it sits
+   under the fixed header of), the theme's own surface in light and dark. */
+.project-page-cover,
+.project-file-shot {
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.project-file-shot span b {
+  font-weight: inherit;
+}
+.project-file-shot span .icon {
+  vertical-align: -0.15em;
+  margin-left: 4px;
+}
+/* The page is a stack of bands, like the home page: paper / ink / paper in
+   "mixed", one surface in "light", one dark surface in "dark". Each band
+   carries its own --pp-* tokens, so everything inside just uses them. */
+.project-page {
+  min-height: 100svh;
+  background: var(--ink);
+}
+.project-band {
+  --pp-bg: var(--paper);
+  --pp-fg: var(--ink);
+  --pp-muted: rgba(10, 10, 10, 0.62);
+  --pp-line: rgba(10, 10, 10, 0.22);
+  padding-block: var(--section-y);
+  background: var(--pp-bg);
+  color: var(--pp-fg);
+}
+.project-band-head {
+  padding-top: clamp(110px, 13vw, 170px);
+}
+.project-band-ink {
+  --pp-bg: var(--ink);
+  --pp-fg: var(--paper);
+  --pp-muted: rgba(242, 241, 237, 0.62);
+  --pp-line: rgba(242, 241, 237, 0.22);
+}
+html[data-theme="light"] .project-band {
+  --pp-bg: var(--surface);
+  --pp-fg: var(--surface-text);
+  --pp-muted: var(--surface-muted);
+  --pp-line: var(--line);
+}
+html[data-theme="dark"] .project-band {
+  --pp-bg: var(--dark-surface);
+  --pp-fg: var(--dark-text);
+  --pp-muted: var(--dark-muted);
+  --pp-line: var(--dark-line);
+}
+html[data-theme="dark"] .project-band-ink {
+  --pp-bg: var(--dark-surface-alt);
+}
+.project-page-wrap {
+  display: grid;
+  gap: clamp(40px, 5.5vw, 80px);
+}
+.project-page-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--pp-line);
+  font: 12px var(--mono);
+  letter-spacing: 0.04em;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.project-page-back:hover,
+.project-page-links a:hover {
+  color: #9a471f;
+  border-color: #9a471f;
+}
+html[data-theme="dark"] .project-page-back:hover,
+html[data-theme="dark"] .project-page-links a:hover {
+  color: #f08b2e;
+  border-color: #f08b2e;
+}
+.project-page-head h1 {
+  margin: 14px 0 18px;
+  font: 800 clamp(52px, 11vw, 160px) / 0.9 var(--sans);
+  letter-spacing: -0.06em;
+}
+.project-page-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font: 11px var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--pp-muted);
+}
+.project-page-badge {
+  padding: 3px 7px;
+  border: 1px solid var(--pp-line);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+.project-page-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  margin: clamp(22px, 2.6vw, 34px) 0 0;
+}
+.project-page-links a {
+  padding-bottom: 3px;
+  border-bottom: 1px solid currentColor;
+  font: 600 15px var(--mono);
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.project-page-cover {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--pp-line);
+  background: none;
+  cursor: zoom-in;
+}
+.project-page-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.project-page-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: clamp(28px, 3.4vw, 48px) clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+.project-page-summary {
+  grid-column: 1 / -1;
+}
+.project-page-block h2 {
+  margin: 0 0 16px;
+  font: 400 11px var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--pp-muted);
+}
+.project-page-summary p {
+  max-width: 44ch;
+  margin: 0;
+  font: 600 clamp(24px, 3vw, 44px) / 1.18 var(--sans);
+  letter-spacing: -0.03em;
+}
+.project-page-block ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.project-page-block li {
+  position: relative;
+  padding-left: 21px;
+  font: 14px/1.62 var(--mono);
+}
+.project-page-block li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  color: var(--pp-muted);
+}
+.project-page-block .project-page-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.project-page-block .project-page-tags li {
+  padding: 7px 10px;
+  border: 1px solid var(--pp-line);
+  font: 10px var(--mono);
+  letter-spacing: 0.04em;
+}
+.project-page-block .project-page-tags li::before {
+  content: none;
+}
+.project-page-shots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 20px;
+}
+.project-page-shots figure {
+  margin: 0;
+}
+.project-page-shots button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--pp-line);
+  background: none;
+  cursor: zoom-in;
+}
+.project-page-shots img {
+  display: block;
+  width: 100%;
+  /* One shape for every shot: the captures were cropped to different
+     heights, and left as they came they made the row uneven. Anchored to the
+     top-left so the site's header is what stays in frame. */
+  aspect-ratio: 2.2 / 1;
+  height: auto;
+  object-fit: cover;
+  object-position: top left;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.project-page-shots button:hover img {
+  transform: scale(1.03);
+}
+.project-page-shots figcaption {
+  margin-top: 10px;
+  font: 11px/1.5 var(--mono);
+  color: var(--pp-muted);
+}
+.project-page-next {
+  display: grid;
+  gap: 10px;
+  padding-top: 28px;
+  border-top: 1px solid var(--pp-line);
+}
+.project-page-next .eyebrow {
+  color: var(--pp-muted);
+}
+.project-page-next strong {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font: 800 clamp(34px, 6vw, 84px) / 1 var(--sans);
+  letter-spacing: -0.05em;
+  transition: gap 0.3s;
+}
+.project-page-next:hover strong {
+  gap: 26px;
+}
+@media (max-width: 760px) {
+  .project-page-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Film grain that actually moves: the noise tile jumps a few pixels on every
+   step, which reads as grain flicker rather than a static texture. */
+.grain {
+  inset: -60px;
+  animation: grain-shift 0.9s steps(5) infinite;
+}
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-24px, 14px);
+  }
+  40% {
+    transform: translate(18px, -30px);
+  }
+  60% {
+    transform: translate(-12px, 26px);
+  }
+  80% {
+    transform: translate(30px, 8px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Reading progress along the top edge. */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 12;
+  height: 2px;
+  background: #f08b2e;
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
+}
+
+/* From main: reserve the scrollbar's space so the layout doesn't shift when
+   the page stops scrolling (e.g. while the full-screen menu is open). */
+html {
+  scrollbar-gutter: stable;
+}

@@ -1,0 +1,51 @@
+---
+/**
+ * Inlines a Lucide icon at build time.
+ *
+ * Reads the SVG straight off `lucide-static` and strips its own sizing and
+ * class so the page controls both — which means no icon font, no client-side
+ * JS, and only the handful of icons actually used ever reach the output.
+ *
+ * `stroke="currentColor"` survives, so icons take the colour of their context.
+ */
+import fs from "node:fs";
+import path from "node:path";
+
+interface Props {
+  name: string;
+  size?: number | string;
+  stroke?: number;
+  class?: string;
+}
+
+const { name, size = "1em", stroke = 2, class: className } = Astro.props;
+
+const file = path.join(process.cwd(), "node_modules", "lucide-static", "icons", `${name}.svg`);
+
+if (!fs.existsSync(file)) {
+  throw new Error(`Icon "${name}" not found in lucide-static.`);
+}
+
+// Keep only the drawing; every presentational attribute is re-set below.
+const body = fs
+  .readFileSync(file, "utf8")
+  .replace(/<!--[\s\S]*?-->/g, "")
+  .replace(/^[\s\S]*?<svg[^>]*>/, "")
+  .replace(/<\/svg>\s*$/, "")
+  .trim();
+---
+
+<svg
+  class:list={["icon", className]}
+  xmlns="http://www.w3.org/2000/svg"
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={stroke}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  set:html={body}
+/>

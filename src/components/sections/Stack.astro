@@ -1,0 +1,106 @@
+---
+import ChapterMarker from "../ChapterMarker.astro";
+import T from "../T.astro";
+import Keycap from "../Keycap.astro";
+import * as si from "simple-icons";
+import { stack, stackCopy } from "../../data/content";
+import { extraIcons } from "../../data/icons";
+
+function logoPath(slug: string) {
+  const key = "si" + slug.charAt(0).toUpperCase() + slug.slice(1);
+  return (
+    (si as Record<string, { path: string } | undefined>)[key]?.path ?? extraIcons[slug] ?? null
+  );
+}
+
+/**
+ * The stack laid out as a keyboard, in the same isometric projection as the
+ * index keycaps.
+ *
+ * A key at grid position (col, row) sits at `col·u + row·v`, reusing the u/v
+ * basis the cap itself is drawn with (yaw 30°, elevation 30°). Each row is
+ * nudged along the column axis the way a real board staggers its rows.
+ *
+ * The cap's SVG is 1.73 grid pitches wide — its base rhombus spans 2·s·cos30 of
+ * a 168-unit viewBox — so with a cap width of W the pitch is W/1.73. Positions
+ * are computed in pitches and converted to percentages of the board at the end,
+ * which keeps the whole thing fluid without any JS.
+ */
+const U = { x: 0.866, y: 0.25 };
+const V = { x: -0.5, y: 0.433 };
+const ROWS = [
+  { count: 4, offset: 0 },
+  { count: 4, offset: 0.3 },
+  { count: 4, offset: 0.6 },
+];
+
+const slots: { x: number; y: number }[] = [];
+ROWS.forEach((row, r) => {
+  for (let c = 0; c < row.count; c += 1) {
+    const col = c + row.offset;
+    slots.push({ x: col * U.x + r * V.x, y: col * U.y + r * V.y });
+  }
+});
+
+// The cap's base rhombus spans exactly one pitch, so at a pitch of 1/1.73 the
+// bases sit edge to edge and adjacent walls touch — which reads as the caps
+// intersecting rather than sitting side by side. Real keycaps leave a gap.
+const GAP = 1.2;
+const PITCH = (1 / 1.73) * GAP; // cap widths between key centres
+const CAP_H = 150 / 168; // cap height as a fraction of its width
+const minX = Math.min(...slots.map((s) => s.x));
+const maxX = Math.max(...slots.map((s) => s.x));
+const maxY = Math.max(...slots.map((s) => s.y));
+const boardW = (maxX - minX) * PITCH + 1;
+const boardH = maxY * PITCH + CAP_H;
+
+const keys = stack.slice(0, slots.length).map((tech, index) => {
+  const slot = slots[index];
+  return {
+    tech,
+    path: logoPath(tech.slug),
+    left: (((slot.x - minX) * PITCH + 0.5) / boardW) * 100,
+    top: ((slot.y * PITCH + CAP_H / 2) / boardH) * 100,
+    // Anything lower on screen is nearer the viewer, so it paints on top.
+    depth: Math.round(slot.y * 100),
+  };
+});
+---
+
+<section id="stack" class="logo-section" aria-labelledby="stack-title">
+  <ChapterMarker index="03" title={stackCopy.title} id="stack-title" />
+
+  <div class="stack-board-wrap section-shell reveal">
+    <ul
+      class="stack-board"
+      style={`--board-aspect:${(boardW / boardH).toFixed(3)};--cap-w:${(100 / boardW).toFixed(3)}%`}
+      aria-label="Stack de Nicolás Amoroso"
+    >
+      {keys.map(({ tech, path, left, top, depth }) => (
+        <li
+          class="stack-key"
+          style={`left:${left.toFixed(2)}%;top:${top.toFixed(2)}%;z-index:${depth};--pick-accent:#${tech.hex}`}
+        >
+          {/* A button, not a bare <li>: a phone has no hover, so the readout has
+              to be reachable by tap — and by keyboard while we're at it. */}
+          <button
+            type="button"
+            class="stack-key-hit"
+            data-tech={tech.name}
+            data-note-es={tech.note.es}
+            data-note-en={tech.note.en}
+          >
+            <Keycap path={path} legend={tech.name.slice(0, 2)} id={tech.slug} />
+            <span class="sr-only">{tech.name}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+
+    {/* Reads out whichever key the pointer is over; idles on the hint. */}
+    <p class="stack-readout">
+      <b data-readout-name></b>
+      <T t={stackCopy.hint} as="small" data-readout-note />
+    </p>
+  </div>
+</section>

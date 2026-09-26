@@ -1,8 +1,7 @@
 import { defineConfig } from 'astro/config';
 
-import tailwind from "@astrojs/tailwind";
-
-// https://astro.build/config
+// No framework integrations: the whole site is static HTML/CSS with a small
+// vanilla runtime in public/js.
 export default defineConfig({
-  integrations: [tailwind()]
+  site: 'https://nicolasamoroso.com',
 });

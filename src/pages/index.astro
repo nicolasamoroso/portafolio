@@ -1,18 +1,24 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import NavBar from "../components/NavBar.astro";
-import About from "../components/AboutMe.astro";
-import Experience from "../components/Experience.astro";
-import Projects from "../components/Projects.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/sections/Hero.astro";
+import CvBoard from "../components/sections/CvBoard.astro";
+import Areas from "../components/sections/Areas.astro";
+import Projects from "../components/sections/Projects.astro";
+import Cases from "../components/sections/Cases.astro";
+import Stack from "../components/sections/Stack.astro";
+import Contact from "../components/sections/Contact.astro";
 ---
 
-<Layout title="Nicolás Amoroso">
-  <div class="w-full max-w-3xl mx-auto px-6 flex-grow">
-    <NavBar />
-    <main id="main">
-      <About />
-      <Experience />
-      <Projects />
-    </main>
-  </div>
+<Layout>
+  <Header />
+  <main>
+    <Hero />
+    <CvBoard />
+    <Areas />
+    <Projects />
+    <Cases />
+    <Stack />
+    <Contact />
+  </main>
 </Layout>

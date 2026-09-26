@@ -1,0 +1,146 @@
+---
+import ChapterMarker from "../ChapterMarker.astro";
+import Icon from "../Icon.astro";
+import T from "../T.astro";
+import { projects, projectsCopy } from "../../data/content";
+---
+
+<section id="proyectos" class="chapter chapter-projects" aria-labelledby="projects-title">
+  <ChapterMarker index="01" title={projectsCopy.title} id="projects-title" />
+
+  <div class="project-reel-bar section-shell">
+    <div class="reel-nav">
+      <button
+        type="button"
+        class="reel-arrow"
+        data-reel="prev"
+        aria-controls="project-reel"
+        aria-label="Anterior"
+      >
+        <Icon name="arrow-left" size={19} />
+      </button>
+      <button
+        type="button"
+        class="reel-arrow"
+        data-reel="next"
+        aria-controls="project-reel"
+        aria-label="Siguiente"
+      >
+        <Icon name="arrow-right" size={19} />
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="project-reel"
+    class="project-reel photo-reel project-carousel"
+    data-autoplay="by-card"
+    aria-label="Capturas de los proyectos"
+  >
+    {projects.map((project) => (
+      <button
+        type="button"
+        data-lightbox={project.src}
+        aria-label={`Ampliar captura de ${project.title}`}
+      >
+        <img
+          src={project.src}
+          alt={`Captura del sitio ${project.title}`}
+          width="1080"
+          height="542"
+          loading="lazy"
+          decoding="async"
+        />
+      </button>
+    ))}
+  </div>
+  {projects.map((project, index) => (
+    <article
+      class:list={[
+        "project-file",
+        "section-shell",
+        "reveal",
+        index % 2 === 1 && "project-file-alt",
+      ]}
+    >
+      <div class="project-file-head">
+        <T t={project.kicker} as="p" class="eyebrow" />
+        <T t={project.headline} as="h3" />
+        <p class="project-file-meta">
+          <span>{project.year}</span>
+          {project.badge && <T t={project.badge} as="em" class="project-badge" />}
+        </p>
+      </div>
+
+      <div class="project-file-body">
+        {project.detail ? (
+          <a
+            class="project-file-shot"
+            href={`/proyectos/${project.id}/`}
+            aria-label={`Ver detalle de ${project.title}`}
+          >
+            <img
+              src={project.src}
+              alt={`Captura del sitio ${project.title}`}
+              width="1080"
+              height="542"
+              loading="lazy"
+              decoding="async"
+            />
+            <span aria-hidden="true">
+              <T t={projectsCopy.openDetail} as="b" /> <Icon name="arrow-right" />
+            </span>
+          </a>
+        ) : (
+          <a
+            class="project-file-shot"
+            href={project.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Visitar ${project.title}`}
+          >
+            <img
+              src={project.src}
+              alt={`Captura del sitio ${project.title}`}
+              width="1080"
+              height="542"
+              loading="lazy"
+              decoding="async"
+            />
+            <span aria-hidden="true">
+              {project.title} <Icon name="arrow-up-right" />
+            </span>
+          </a>
+        )}
+        <T t={project.description} as="p" class="project-file-copy" />
+        {project.features && (
+          <ul class="project-features">
+            {project.features.map((feature) => (
+              <T t={feature} as="li" />
+            ))}
+          </ul>
+        )}
+        <ul class="project-tags">
+          {project.tags.map((tag) => (
+            <li>{tag}</li>
+          ))}
+        </ul>
+        <p class="project-file-links">
+          {project.detail && (
+            <a class="project-link" href={`/proyectos/${project.id}/`}>
+              <T t={projectsCopy.more} /> <Icon name="arrow-right" />
+            </a>
+          )}
+          <a class="project-link" href={project.href} target="_blank" rel="noopener noreferrer">
+            <T t={projectsCopy.visit} /> <Icon name="arrow-up-right" />
+          </a>
+          {project.github && (
+            <a class="project-link" href={project.github} target="_blank" rel="noopener noreferrer">
+              <T t={projectsCopy.code} /> <Icon name="arrow-up-right" />
+            </a>
+          )}
+        </p>
+      </div>
+    </article>
+  ))}
+</section>

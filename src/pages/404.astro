@@ -1,33 +1,69 @@
 ---
+import Icon from "../components/Icon.astro";
 import Layout from "../layouts/Layout.astro";
-import NavBar from "../components/NavBar.astro";
+import Header from "../components/Header.astro";
 ---
 
-<Layout title="404 - Nicolás Amoroso">
-  <div class="max-w-3xl mx-auto px-6 flex-grow">
-    <NavBar />
-    <main
-      id="main"
-      class="flex flex-col items-center justify-center py-32 gap-6 text-center"
-    >
-      <h1 class="text-8xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-        404
+<Layout>
+  <Header />
+  <main>
+    <section class="hero not-found" aria-labelledby="not-found-title">
+      <div class="hero-top meta-copy">
+        ERROR 404
+        <br />
+        PÁGINA NO ENCONTRADA
+      </div>
+      <p class="hero-index">404</p>
+      <h1 id="not-found-title">
+        {[..."404"].map((letter, index) => (
+          <span
+            class:list={["hero-letter", index === 0 && "hero-letter-first"]}
+            style={`--letter:${index}`}
+          >
+            {letter}
+          </span>
+        ))}
       </h1>
-      <p class="text-zinc-500 dark:text-zinc-400">Page not found.</p>
-      <a
-        href="/"
-        class="text-sm text-zinc-900 dark:text-zinc-100 hover:text-zinc-500 dark:hover:text-zinc-400 transition-colors underline underline-offset-4"
-      >
-        ← Back home
-      </a>
-      <img
-        src="/img/this-is-fine-404.gif"
-        alt="This is fine meme"
-        width="500"
-        height="375"
-        loading="lazy"
-        class="w-full max-w-sm h-auto mt-6 rounded-lg"
-      />
-    </main>
-  </div>
+      <div class="hero-bottom">
+        <p>
+          <span data-i18n data-es="Esta página no existe." data-en="This page doesn't exist.">
+            Esta página no existe.
+          </span>
+        </p>
+        <a class="scroll-prompt" href="/">
+          <span data-i18n data-es="VOLVER AL INICIO" data-en="BACK HOME">
+            VOLVER AL INICIO
+          </span>
+          <Icon name="arrow-down-left" class="scroll-icon" size={17} />
+        </a>
+      </div>
+      <img class="not-found-art" src="/img/this-is-fine-404.gif" alt="" width="500" height="375" />
+    </section>
+  </main>
 </Layout>
+
+<style>
+  .not-found h1 {
+    letter-spacing: -0.09em;
+  }
+
+  .not-found-art {
+    position: absolute;
+    z-index: 1;
+    right: 2.3vw;
+    bottom: 96px;
+    width: min(260px, 34vw);
+    height: auto;
+    border: 1px solid rgba(10, 10, 10, 0.3);
+    filter: grayscale(1) contrast(1.1);
+    mix-blend-mode: multiply;
+  }
+
+  @media (max-width: 760px) {
+    .not-found-art {
+      right: 6vw;
+      bottom: 110px;
+      width: 42vw;
+    }
+  }
+</style>
